@@ -1,13 +1,13 @@
+import 'package:co_learning_mobile_app/src/feature/onboarding/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../feature/shared/splash/presentation/screens/splash_screen.dart';
-
 
 class AppRoute {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   static const String splashScreen = "splashScreen";
-
+  static const String onboardingScreen = "onboardingScreen";
 }
 
 mixin RouteGenerator {
@@ -17,6 +17,9 @@ mixin RouteGenerator {
         switch (setting.name) {
           ///StartUp
           case AppRoute.splashScreen:
+            return const SplashScreen();
+          case AppRoute.onboardingScreen:
+            return const OnboardingScreen();
 
           default:
             return const SplashScreen();

@@ -23,7 +23,77 @@ class _SplashScreenState extends State<SplashScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+         /*   Padding(
               padding: const EdgeInsets.all(8.0),
               child: Image.asset(
                 ImageAssets.icLogo,
@@ -31,7 +101,7 @@ class _SplashScreenState extends State<SplashScreen>
                 fit: BoxFit.cover,
                 height: size.s64+size.s64,
               ),
-            ),
+            ),*/
 
           /*  Text(
               label(e: en.splashScreenText, b: bn.splashScreenText),
