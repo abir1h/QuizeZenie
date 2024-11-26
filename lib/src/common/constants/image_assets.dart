@@ -2,7 +2,9 @@ class ImageAssets {
   const ImageAssets._();
 
   //:::::::::::::::::: IMAGE SETS ::::::::::::::::::
-  static String get icOnBoarding1 => 'onboading_1'.jpg;
+  static String get icOnBoarding1 => 'onboarding_1'.svg;
+  static String get icOnBoarding2 => 'onboarding_2'.svg;
+  static String get icOnBoarding3 => 'onboarding_3'.svg;
 
 
 /* static String get emptyProfile => 'img'.png;

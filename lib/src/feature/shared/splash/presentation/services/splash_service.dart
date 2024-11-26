@@ -7,8 +7,8 @@ import '../../../../../common/network/api_service.dart';
 
 abstract class _ViewModel {
   void showWarning(String message);
+  void navigateToOnBoardingScreen();
   void navigateToLandingScreen();
-  void navigateToMentorLandingScreen();
   void navigateToAuthenticationScreen();
 }
 
@@ -42,6 +42,7 @@ mixin SplashService<T extends StatefulWidget> on State<T>
 
     ///Navigate to logical page
     App.getCurrentSession().then((session) async {
+      _view.navigateToOnBoardingScreen();
      /* if (session.userType != UserType.Mentor) {
         _view.navigateToLandingScreen();
       } else {
