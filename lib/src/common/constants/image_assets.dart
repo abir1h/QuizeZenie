@@ -5,6 +5,10 @@ class ImageAssets {
   static String get icOnBoarding1 => 'onboarding_1'.svg;
   static String get icOnBoarding2 => 'onboarding_2'.svg;
   static String get icOnBoarding3 => 'onboarding_3'.svg;
+  static String get signInIcon => 'signInIcon'.png;
+  static String get icFacebook => '_Facebook'.svg;
+  static String get icGoogle => '_Google'.svg;
+  static String get signUpIcon => 'signUpIcon'.png;
 
 
 /* static String get emptyProfile => 'img'.png;

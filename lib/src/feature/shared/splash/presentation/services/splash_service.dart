@@ -42,19 +42,21 @@ mixin SplashService<T extends StatefulWidget> on State<T>
 
     ///Navigate to logical page
     App.getCurrentSession().then((session) async {
-      _view.navigateToOnBoardingScreen();
-     /* if (session.userType != UserType.Mentor) {
+
+
+      if(session.isEmpty){
+        ///Navigate to login screens
+       App.getOnboardUser().then((value){
+         if(!value){
+           _view.navigateToOnBoardingScreen();
+         }else{
+           _view.navigateToAuthenticationScreen();
+         }
+       });
+      }else{
+        ///Navigate to landing page
         _view.navigateToLandingScreen();
-      } else {
-        _view.navigateToMentorLandingScreen();
-      }*/
-      // if(session.isEmpty){
-      //   ///Navigate to login screens
-      //   _view.navigateToAuthenticationScreen();
-      // }else{
-      //   ///Navigate to landing page
-      //   _view.navigateToLandingScreen();
-      // }
+      }
     });
   }
 
