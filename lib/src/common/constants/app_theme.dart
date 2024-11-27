@@ -14,10 +14,15 @@ class ThemeColor {
   static ThemeColor get instance => _instance ?? (_instance = ThemeColor._());
 
   Color get appPrimaryColor => HexColor("175CD3");
+  Color get backgroundColor => HexColor("FCFCFD");
 
-  Color get iconicBlue => HexColor("006BFF");
-  Color get lightPurpleColor => HexColor("F0EFFF");
-  Color get backgroundColor => HexColor("EEF3F6");
+  Color get grayColor => HexColor("9DA0A7");
+  Color get iconGrey => HexColor("D9D9D9");
+  Color get iconBorderColor => HexColor("7CCA52");
+
+  Color get bgColorWhite => HexColor("F2F1F9");
+  Color get cardStrokeColor => HexColor("4E4E4E");
+
   Color get scaffoldBackgroundColor2 => HexColor("ECFBF7");
   Color get secondaryBackgroundColor => HexColor("FFFEFE");
   Color get strokeColorBlue => HexColor("7CB1E2");
@@ -27,7 +32,6 @@ class ThemeColor {
   Color get textGrey => HexColor("4a4b65");
   Color get dottedBorderColor => HexColor("E8E8E8");
   Color get inactiveGray => HexColor("4D4D4D");
-  Color get iconGrey => HexColor("D9D9D9");
   Color get iconGrayDeepColor => HexColor("9D9CA4");
   Color get textFieldStrokeColor => HexColor("E8E8E8");
   Color get textFieldFilllor => HexColor("F1F1F1");
@@ -84,7 +88,6 @@ class ThemeColor {
   Color get secondaryTextColor => HexColor("3D3D3D");
   Color get textColorAppleBlack => HexColor("1D1D1F");
   Color get textColorBlack => HexColor("202020");
-  Color get textColorGray => HexColor("757575");
   Color get placeHolderTextColorGray => HexColor("9F9F9F");
   Color get blackText => HexColor("222222");
   Color get warningRedText => HexColor("FE7878");
@@ -172,6 +175,7 @@ class ThemeSize {
   double get textXXXSmall => 10.sp;
 
   double get s1 => 1.w;
+  double get s2 => 2.w;
   double get s4 => 4.w;
   double get s8 => 8.w;
   double get s10 => 10.w;

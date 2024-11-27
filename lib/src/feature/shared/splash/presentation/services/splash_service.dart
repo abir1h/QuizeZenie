@@ -42,7 +42,7 @@ mixin SplashService<T extends StatefulWidget> on State<T>
 
     ///Navigate to logical page
     App.getCurrentSession().then((session) async {
-      _view.navigateToOnBoardingScreen();
+      _view.navigateToLandingScreen();
      /* if (session.userType != UserType.Mentor) {
         _view.navigateToLandingScreen();
       } else {

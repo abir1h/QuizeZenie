@@ -1,6 +1,8 @@
-import 'package:co_learning_mobile_app/src/feature/onboarding/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../feature/home/screens/home_screen.dart';
+import '../../feature/landing/screens/landing_screen.dart';
+import '../../feature/onboarding/screens/onboarding_screen.dart';
 import '../../feature/shared/splash/presentation/screens/splash_screen.dart';
 
 class AppRoute {
@@ -8,6 +10,8 @@ class AppRoute {
 
   static const String splashScreen = "splashScreen";
   static const String onboardingScreen = "onboardingScreen";
+  static const String landingScreen = "landingScreen";
+  static const String homeScreen = "homeScreen";
 }
 
 mixin RouteGenerator {
@@ -20,6 +24,10 @@ mixin RouteGenerator {
             return const SplashScreen();
           case AppRoute.onboardingScreen:
             return const OnboardingScreen();
+          case AppRoute.landingScreen:
+            return const LandingScreen();
+          case AppRoute.homeScreen:
+            return const HomeScreen();
 
           default:
             return const SplashScreen();

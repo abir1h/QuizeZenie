@@ -6,6 +6,16 @@ class ImageAssets {
   static String get icOnBoarding2 => 'onboarding_2'.svg;
   static String get icOnBoarding3 => 'onboarding_3'.svg;
 
+  static String get imgHomeBG => 'home_bg'.png;
+
+  static String get icHome => 'Home'.svg;
+  static String get icHomeFilled => 'Home-1'.svg;
+  static String get icBookmark => 'bookmark-1'.svg;
+  static String get icBookmarkFilled => 'bookmark'.svg;
+  static String get icRecord => 'screen_record'.svg;
+  static String get icRecordFilled => 'screen_record-1'.svg;
+  static String get icProfile => 'profile-1'.svg;
+  static String get icProfileFilled => 'profile'.svg;
 
 /* static String get emptyProfile => 'img'.png;
   static String get animEmpty => 'Animation - 1706009676891'.json;

@@ -18,7 +18,7 @@ class App {
   static App get instance => _app ?? (_app = App._());
 
   //App Language
-  static AppLanguage _appLanguage = AppLanguage.bangla;
+  static AppLanguage _appLanguage = AppLanguage.english;
   static AppLanguage get currentAppLanguage => _appLanguage;
 
   ///Set current language

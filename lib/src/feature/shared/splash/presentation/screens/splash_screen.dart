@@ -67,8 +67,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void navigateToLandingScreen() {
-    /*Navigator.of(context)
-        .pushNamedAndRemoveUntil(AppRoute.landingScreen, (x) => false);*/
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(AppRoute.landingScreen, (x) => false);
   }
 
   @override
