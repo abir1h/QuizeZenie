@@ -2,13 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../common/routes/app_route.dart';
 import '../../../../common/widgets/action_button.dart';
 import '../../../../common/widgets/text_field_widget.dart';
 import '../../../../common/constants/common_imports.dart';
 import '../../../../common/utility/app_label.dart';
 import '../../../../common/widgets/app_scaffold.dart';
 import '../../../../common/widgets/app_scroll_view.dart';
-import '../services/sign_up_screen_service.dart';
+import '../services/authentication_screen_service.dart';
 import '../../../../common/widgets/custom_toasty.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -61,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                   prefixIconHorizontalPadding: size.s8,
                   prefixIconVerticalPadding: size.s10,
                   hintText: label(e: en.nameText, b: bn.nameText),
-                  controller: TextEditingController()),
+                  controller: userNameController),
               size.s16.kHeight,
               AppTextField(
                   outlined: true,
@@ -69,7 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                   prefixIconHorizontalPadding: size.s8,
                   prefixIconVerticalPadding: size.s10,
                   hintText: label(e: en.nameOrEmailText, b: bn.nameOrEmailText),
-                  controller: TextEditingController()),
+                  controller: phoneOrEmailController),
               size.s16.kHeight,
               AppTextField(
                   outlined: true,
@@ -78,7 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                   prefixIconVerticalPadding: size.s10,
                   obscureText: true,
                   hintText: label(e: en.passwordText, b: bn.passwordText),
-                  controller: TextEditingController()),
+                  controller: passwordController),
               size.s8.kHeight,
               Row(
                 children: [
@@ -218,6 +219,7 @@ class _SignUpScreenState extends State<SignUpScreen>
               ),
               size.s16.kHeight,
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
@@ -236,7 +238,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                                 color: clr.appPrimaryColor,
                                 fontSize: size.textXSmall,
                                 fontWeight: FontWeight.w400),
-                            recognizer: TapGestureRecognizer()..onTap = () {},
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => Navigator.pushNamed(
+                                  context, AppRoute.signInScreen),
                           ),
                         ],
                       ),
@@ -246,7 +250,6 @@ class _SignUpScreenState extends State<SignUpScreen>
               ),
               size.s64.kHeight,
               size.s64.kHeight,
-
             ],
           )),
     );

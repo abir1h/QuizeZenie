@@ -1,7 +1,6 @@
-import 'package:co_learning_mobile_app/src/common/constants/app_theme.dart';
-import 'package:co_learning_mobile_app/src/common/constants/common_imports.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../common/constants/common_imports.dart';
 
 class OnboardingWidget extends StatelessWidget with AppTheme {
   final String image, title, subtitile;

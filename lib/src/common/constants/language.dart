@@ -26,6 +26,11 @@ class LanguageEn {
   String signUpTitleText = "Sign Up";
   String signUpSubTitleText = "Want to evaluate your skills and share your learning feedbacks with everyone? Signup.";
   String signUpText = "Create Account";
+  String forgotPasswordTitleText = "Forget Password";
+  String forgotPasswordSubTitleText = "Please enter your email address or mobile number to reset your password.";
+  String continueText = "Continue";
+  String otpTitleText = "Enter OTP";
+  String otpSubTitleText = "Enter the OTP code we just sent you on your registered Email/Phone number";
 
 
 }
@@ -53,5 +58,11 @@ class LanguageBn {
   String signUpTitleText = "ចុះឈ្មោះ";
   String signUpSubTitleText = "ចង់វាយតម្លៃជំនាញរបស់អ្នក និងចែករំលែកមតិកែលម្អការរៀនសូត្ររបស់អ្នកជាមួយអ្នករាល់គ្នា? ចុះឈ្មោះ។";
   String signUpText = "បង្កើតគណនី";
+  String forgotPasswordTitleText = "បញ្ចប់ពាក្យសម្ងាត់";
+  String forgotPasswordSubTitleText = "សូមបញ្ចូលអាសយដ្ឋានអ៊ីមែលរបស់អ្នកឬលេខទូរស័ព្ទដើម្បីកំណត់ពាក្យសម្ងាត់របស់អ្នកឡើងវិញ។";
+  String continueText = "បន្ត";
+  String otpTitleText = "បញ្ចូល OTP";
+  String otpSubTitleText = "បញ្ចូលកូដ OTP ដែលយើងបានផ្ញើទៅអ៊ីមែល/លេខទូរស័ព្ទដែលបានចុះបញ្ជីរបស់អ្នក";
+
 
 }

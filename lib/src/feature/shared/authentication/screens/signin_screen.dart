@@ -9,7 +9,7 @@ import '../../../../common/constants/common_imports.dart';
 import '../../../../common/utility/app_label.dart';
 import '../../../../common/widgets/app_scaffold.dart';
 import '../../../../common/widgets/app_scroll_view.dart';
-import '../services/sign_up_screen_service.dart';
+import '../services/authentication_screen_service.dart';
 import '../../../../common/routes/app_route.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -61,7 +61,7 @@ class _SignInScreenState extends State<SignInScreen> with AppTheme, Language,Use
                   prefixIconHorizontalPadding: size.s8,
                   prefixIconVerticalPadding: size.s10,
                   hintText: label(e: en.nameOrEmailText, b: bn.nameOrEmailText),
-                  controller: TextEditingController()),
+                  controller: phoneOrEmailController),
               size.s16.kHeight,
               AppTextField(
                   outlined: true,
@@ -70,16 +70,19 @@ class _SignInScreenState extends State<SignInScreen> with AppTheme, Language,Use
                   prefixIconVerticalPadding: size.s10,
                   obscureText: true,
                   hintText: label(e: en.passwordText, b: bn.passwordText),
-                  controller: TextEditingController()),
+                  controller:passwordController),
               size.s8.kHeight,
               Align(
                 alignment: Alignment.topRight,
-                child: Text(
-                  label(e: en.forgetPasswordText, b: bn.forgetPasswordText),
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: size.textXXSmall,
-                      color: clr.forgotPasswordTextColor),
+                child: GestureDetector(
+                  onTap: ()=>Navigator.pushNamed(context,AppRoute.forgotPasswordScreen),
+                  child: Text(
+                    label(e: en.forgetPasswordText, b: bn.forgetPasswordText),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: size.textXXSmall,
+                        color: clr.forgotPasswordTextColor),
+                  ),
                 ),
               ),
               size.s16.kHeight,
@@ -150,7 +153,7 @@ class _SignInScreenState extends State<SignInScreen> with AppTheme, Language,Use
                 },
               ),
               size.s16.kHeight,
-              Row(
+              Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),

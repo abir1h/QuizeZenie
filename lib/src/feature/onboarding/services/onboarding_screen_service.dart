@@ -1,12 +1,7 @@
-import 'dart:async';
-
-import 'package:co_learning_mobile_app/src/common/constants/app_theme.dart';
-import 'package:co_learning_mobile_app/src/common/utility/color_tools.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/config/app.dart';
+import '../../../common/constants/app_theme.dart';
 
 abstract class _ViewModel {
   void onPageChanged(int index);
