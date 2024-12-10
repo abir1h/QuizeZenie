@@ -35,7 +35,7 @@ class ThemeColor {
   Color get onBoardBgColor3 => HexColor("435FE5");
   Color get textGray => HexColor("61677D");
 
-  Color get backgroundColor => HexColor("EEF3F6");
+  Color get backgroundColor1 => HexColor("EEF3F6");
   Color get secondaryBackgroundColor => HexColor("FFFEFE");
   Color get inactiveGray => HexColor("4D4D4D");
   Color get iconGrayDeepColor => HexColor("9D9CA4");
