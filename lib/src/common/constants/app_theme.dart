@@ -71,6 +71,8 @@ class ThemeColor {
 
   Color get textFieldFilllor => HexColor("F5F9FE");
   Color get forgotPasswordTextColor => HexColor("7C8BA0");
+  Color get selectedToggleColor => HexColor("566E9C");
+  Color get inactiveToggleColor => HexColor("F5F5F5");
 }
 
 // final localStorage = Get.find<LocalStorageServiceWithGetX>();

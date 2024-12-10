@@ -48,6 +48,8 @@ class LanguageEn {
 
   String resetPasswordSubTitleText =
       "It was popularised in the 1960s with the release of Letraset sheetscontaining Lorem Ipsum.";
+  String myProfileText =
+      "My Profile";
 }
 
 class LanguageBn {
@@ -94,4 +96,6 @@ class LanguageBn {
   String resetPasswordSubTitleText =
       "វាត្រូវបានពេញនិយមនៅក្នុងទសវត្សរពីរ ១៩៦០ នៅពេលបញ្ចេញសន្លឹក Letraset ដែលមាន Lorem Ipsum។";
   String confirmPasswordText = "បញ្ជាក់កូដសម្ងាត់ ";
+  String myProfileText =
+      "ប្រវត្តិរូបរបស់ខ្ញុំ";
 }
