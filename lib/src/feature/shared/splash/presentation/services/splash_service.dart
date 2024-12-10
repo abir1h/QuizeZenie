@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../../../../common/config/app.dart';
@@ -44,17 +43,21 @@ mixin SplashService<T extends StatefulWidget> on State<T>
     App.getCurrentSession().then((session) async {
       _view.navigateToLandingScreen();
      /* if (session.userType != UserType.Mentor) {
+
+
+      if(session.isEmpty){
+        ///Navigate to login screens
+       App.getOnboardUser().then((value){
+         if(!value){
+           _view.navigateToOnBoardingScreen();
+         }else{
+           _view.navigateToAuthenticationScreen();
+         }
+       });
+      }else{
+        ///Navigate to landing page
         _view.navigateToLandingScreen();
-      } else {
-        _view.navigateToMentorLandingScreen();
-      }*/
-      // if(session.isEmpty){
-      //   ///Navigate to login screens
-      //   _view.navigateToAuthenticationScreen();
-      // }else{
-      //   ///Navigate to landing page
-      //   _view.navigateToLandingScreen();
-      // }
+      }
     });
   }
 

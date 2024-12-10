@@ -73,8 +73,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void navigateToAuthenticationScreen() {
-    /* Navigator.of(context)
-        .pushNamedAndRemoveUntil(AppRoute.userAuthenticationScreen, (x) => false);*/
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(AppRoute.signInScreen, (x) => false);
   }
 
   @override

@@ -9,6 +9,7 @@ class UserSession {
   final String address;
   final String image;
   final String token;
+  bool isOnboarded;
 
   UserSession(
       {required this.id,
@@ -19,7 +20,8 @@ class UserSession {
       required this.organizationId,
       required this.address,
       required this.token,
-      required this.image});
+      required this.image, this.isOnboarded=false
+      });
 
   factory UserSession.empty() => UserSession(
       id: -1,
@@ -30,7 +32,9 @@ class UserSession {
       organizationId: -1,
       address: "",
       token: "",
-      image: "");
+      image: "",
+      isOnboarded: true
+  );
 
   factory UserSession.fromJson(Map<String, dynamic> json) => UserSession(
       id: json["id"] ?? -1,
@@ -41,7 +45,9 @@ class UserSession {
       organizationId: json["organization_id"] ?? -1,
       address: json["address"] ?? "",
       token: json["token"] ?? "",
-      image: json["image"] ?? "");
+      image: json["image"] ?? "",
+
+  );
 
   Map<String, dynamic> toJson() => {
         "id": id,
