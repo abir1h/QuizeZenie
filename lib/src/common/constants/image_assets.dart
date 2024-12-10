@@ -17,6 +17,10 @@ class ImageAssets {
   static String get icProfile => 'profile-1'.svg;
   static String get icProfileFilled => 'profile'.svg;
 
+  static String get icReel => 'FilmReel'.svg;
+  static String get icBook => 'BookOpenUser'.svg;
+  static String get icBank => 'Bank'.svg;
+
 /* static String get emptyProfile => 'img'.png;
   static String get animEmpty => 'Animation - 1706009676891'.json;
   static String get emptyAnimation => 'empty'.json;

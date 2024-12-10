@@ -23,6 +23,12 @@ class ThemeColor {
   Color get bgColorWhite => HexColor("F2F1F9");
   Color get cardStrokeColor => HexColor("4E4E4E");
 
+  Color get iconColorGrey => HexColor("929292");
+  Color get textColorGrey => HexColor("B0B0B0");
+  Color get textColorGrey2 => HexColor("5F5F5F");
+  Color get imgBorderColor => HexColor("9CABC2");
+  Color get dotColor => HexColor("D5D7DA");
+
   Color get scaffoldBackgroundColor2 => HexColor("ECFBF7");
   Color get secondaryBackgroundColor => HexColor("FFFEFE");
   Color get strokeColorBlue => HexColor("7CB1E2");
@@ -45,13 +51,11 @@ class ThemeColor {
   Color get lightBlueColor => HexColor("1670C6");
   Color get darkBlueColor => HexColor("0B365F");
   Color get ratingColor => HexColor("FFA500");
-  Color get textColorGrey => HexColor("535252");
   Color get dividerColorBlue => HexColor("5897D2");
   Color get shadowColor => HexColor("3C404326");
   Color get secondaryBackgroundLight => const Color(0xFFD8D8ED);
   Color get dividerColorGrey => HexColor("7E7E7E");
   Color get borderColor => HexColor("C4D8EC");
-  Color get textColorGrey2 => HexColor("535252");
   Color get timeLineCircleColor => HexColor("E7FFF0");
   Color get checkColor => HexColor("42996F");
   Color get progressColorGreen => HexColor("67E573");
