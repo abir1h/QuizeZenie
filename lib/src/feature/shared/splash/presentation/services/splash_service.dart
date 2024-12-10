@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../../../../common/config/app.dart';
@@ -7,8 +6,8 @@ import '../../../../../common/network/api_service.dart';
 
 abstract class _ViewModel {
   void showWarning(String message);
+  void navigateToOnBoardingScreen();
   void navigateToLandingScreen();
-  void navigateToMentorLandingScreen();
   void navigateToAuthenticationScreen();
 }
 
@@ -42,18 +41,19 @@ mixin SplashService<T extends StatefulWidget> on State<T>
 
     ///Navigate to logical page
     App.getCurrentSession().then((session) async {
-     /* if (session.userType != UserType.Mentor) {
-        _view.navigateToLandingScreen();
+      if (session.isEmpty) {
+        ///Navigate to login screens
+        App.getOnboardUser().then((value) {
+          if (!value) {
+            _view.navigateToOnBoardingScreen();
+          } else {
+            _view.navigateToAuthenticationScreen();
+          }
+        });
       } else {
-        _view.navigateToMentorLandingScreen();
-      }*/
-      // if(session.isEmpty){
-      //   ///Navigate to login screens
-      //   _view.navigateToAuthenticationScreen();
-      // }else{
-      //   ///Navigate to landing page
-      //   _view.navigateToLandingScreen();
-      // }
+        ///Navigate to landing page
+        _view.navigateToLandingScreen();
+      }
     });
   }
 

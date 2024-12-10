@@ -2,8 +2,30 @@ class ImageAssets {
   const ImageAssets._();
 
   //:::::::::::::::::: IMAGE SETS ::::::::::::::::::
-  static String get icOnBoarding1 => 'onboading_1'.jpg;
+  static String get icOnBoarding1 => 'onboarding_1'.svg;
+  static String get icOnBoarding2 => 'onboarding_2'.svg;
+  static String get icOnBoarding3 => 'onboarding_3'.svg;
+  static String get signInIcon => 'signInIcon'.png;
+  static String get icFacebook => '_Facebook'.svg;
+  static String get icGoogle => '_Google'.svg;
+  static String get signUpIcon => 'signUpIcon'.png;
+  static String get forgotPasswordIcon => 'forgotPasswordIcon'.png;
+  static String get resetPasswordIcon => 'restePasswordIcon'.png;
 
+  static String get imgHomeBG => 'home_bg'.png;
+
+  static String get icHome => 'Home'.svg;
+  static String get icHomeFilled => 'Home-1'.svg;
+  static String get icBookmark => 'bookmark-1'.svg;
+  static String get icBookmarkFilled => 'bookmark'.svg;
+  static String get icRecord => 'screen_record'.svg;
+  static String get icRecordFilled => 'screen_record-1'.svg;
+  static String get icProfile => 'profile-1'.svg;
+  static String get icProfileFilled => 'profile'.svg;
+
+  static String get icReel => 'FilmReel'.svg;
+  static String get icBook => 'BookOpenUser'.svg;
+  static String get icBank => 'Bank'.svg;
 
 /* static String get emptyProfile => 'img'.png;
   static String get animEmpty => 'Animation - 1706009676891'.json;

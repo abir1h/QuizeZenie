@@ -93,7 +93,7 @@ class _AppTextFieldState extends State<AppTextField> with AppTheme {
             color: clr.greyColor,
           ),
         ),
-        contentPadding: EdgeInsets.symmetric(vertical: size.s12),
+        contentPadding: EdgeInsets.symmetric(vertical: size.s12,horizontal: size.s20),
         focusedBorder: widget.outlined==true?InputBorder.none:UnderlineInputBorder(
           borderRadius: BorderRadius.zero,
           borderSide: BorderSide(
@@ -120,7 +120,7 @@ class _AppTextFieldState extends State<AppTextField> with AppTheme {
             ? Padding(
                 padding: EdgeInsets.symmetric(horizontal:widget.prefixIconHorizontalPadding??size.s20,vertical: widget.prefixIconVerticalPadding??0),
                 child: SvgPicture.asset(widget.prefixIcon,color: widget.iconColor,))
-            : const Offstage(),
+            : null,
       ),
       style: TextStyle(
         color: clr.textFieldTextColor,
