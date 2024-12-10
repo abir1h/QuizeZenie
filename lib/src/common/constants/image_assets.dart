@@ -26,6 +26,13 @@ class ImageAssets {
   static String get icReel => 'FilmReel'.svg;
   static String get icBook => 'BookOpenUser'.svg;
   static String get icBank => 'Bank'.svg;
+  static String get changePassword => 'changePassword'.svg;
+  static String get myActivity => 'myActivity'.svg;
+  static String get myVideos => 'myVideos'.svg;
+  static String get accountDetails => 'accountDetails'.svg;
+  static String get organistaion => 'organistaion'.svg;
+  static String get shield => 'shield'.svg;
+  static String get changeLanguage => 'changeLanguage'.svg;
 
 /* static String get emptyProfile => 'img'.png;
   static String get animEmpty => 'Animation - 1706009676891'.json;
