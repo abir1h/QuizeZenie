@@ -21,6 +21,7 @@ class LanguageEn {
   String nameText = "Name";
   String nameOrEmailText = "Email/Phone Number";
   String passwordText = "Password";
+  String confirmPasswordText = "Confirm Password";
   String forgetPasswordText = "Forget Password?";
   String loginText = "Log In";
   String signUpTitleText = "Sign Up";
@@ -31,6 +32,9 @@ class LanguageEn {
   String continueText = "Continue";
   String otpTitleText = "Enter OTP";
   String otpSubTitleText = "Enter the OTP code we just sent you on your registered Email/Phone number";
+  String resetPasswordTitleText = "Reset Password";
+
+  String resetPasswordSubTitleText = "It was popularised in the 1960s with the release of Letraset sheetscontaining Lorem Ipsum.";
 
 
 }
@@ -63,6 +67,9 @@ class LanguageBn {
   String continueText = "បន្ត";
   String otpTitleText = "បញ្ចូល OTP";
   String otpSubTitleText = "បញ្ចូលកូដ OTP ដែលយើងបានផ្ញើទៅអ៊ីមែល/លេខទូរស័ព្ទដែលបានចុះបញ្ជីរបស់អ្នក";
+  String resetPasswordTitleText = "ប្តូរកូដសម្ងាត់";
+  String resetPasswordSubTitleText = "វាត្រូវបានពេញនិយមនៅក្នុងទសវត្សរពីរ ១៩៦០ នៅពេលបញ្ចេញសន្លឹក Letraset ដែលមាន Lorem Ipsum។";
+  String confirmPasswordText = "បញ្ជាក់កូដសម្ងាត់ ";
 
 
 }

@@ -10,6 +10,7 @@ class ImageAssets {
   static String get icGoogle => '_Google'.svg;
   static String get signUpIcon => 'signUpIcon'.png;
   static String get forgotPasswordIcon => 'forgotPasswordIcon'.png;
+  static String get resetPasswordIcon => 'restePasswordIcon'.png;
 
 
 /* static String get emptyProfile => 'img'.png;

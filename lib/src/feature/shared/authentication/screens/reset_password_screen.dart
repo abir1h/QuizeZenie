@@ -11,14 +11,14 @@ import '../../../../common/widgets/app_scaffold.dart';
 import '../../../../common/widgets/app_scroll_view.dart';
 import '../services/authentication_screen_service.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
+class _ResetPasswordScreenState extends State<ResetPasswordScreen>
     with AppTheme, Language, UserAuthenticationService {
 
   @override
@@ -32,12 +32,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               size.s64.kHeight,
-              Center(child: Image.asset(ImageAssets.forgotPasswordIcon)),
+              Center(child: Image.asset(ImageAssets.resetPasswordIcon)),
               size.s28.kHeight,
               Center(
                 child: Text(
                   label(
-                      e: en.forgotPasswordTitleText,
+                      e: en.resetPasswordTitleText,
                       b: bn.forgotPasswordTitleText),
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -49,7 +49,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               Center(
                 child: Text(
                   label(
-                      e: en.forgotPasswordSubTitleText,
+                      e: en.resetPasswordSubTitleText,
                       b: bn.forgotPasswordSubTitleText),
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -60,12 +60,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               ),
               size.s20.kHeight,
               AppTextField(
-                  outlined: true,
+                  outlined: true,obscureText: true,
                   fillColor: clr.textFieldFilllor,
                   prefixIconHorizontalPadding: size.s8,
                   prefixIconVerticalPadding: size.s10,
-                  hintText: label(e: en.nameOrEmailText, b: bn.nameOrEmailText),
-                  controller: phoneOrEmailController),
+                  hintText: label(e: en.passwordText, b: bn.passwordText),
+                  controller: phoneOrEmailController),  size.s20.kHeight,
+              AppTextField(
+                  outlined: true,obscureText: true,
+                  fillColor: clr.textFieldFilllor,
+                  prefixIconHorizontalPadding: size.s8,
+                  prefixIconVerticalPadding: size.s10,
+                  hintText: label(e: en.confirmPasswordText, b: bn.confirmPasswordText),
+                  controller: confirmPasswordController),
               size.s16.kHeight,
               size.s16.kHeight,
 /*
@@ -79,7 +86,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 onSuccess: (success) {},
               ),
 */
-            CustomButton(onTap: ()=>Navigator.pushNamed(context,AppRoute.verifyOtpScreen), title: "Continue")
+              CustomButton(onTap: ()=>Navigator.pushNamed(context,AppRoute.verifyOtpScreen), title: "Continue")
             ],
           )),
     );

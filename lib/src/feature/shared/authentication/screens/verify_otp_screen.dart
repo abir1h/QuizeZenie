@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import '../../../../common/routes/app_route.dart';
 import '../../../../common/widgets/action_button.dart';
+import '../../../../common/widgets/custom_button.dart';
 import '../../../../common/widgets/custom_toasty.dart';
 import '../../../../common/constants/common_imports.dart';
 import '../../../../common/utility/app_label.dart';
@@ -122,7 +124,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
               ),size.s16.kHeight,
               size.s16.kHeight,
               size.s16.kHeight,
-              ActionButton<dynamic>(
+              /*ActionButton<dynamic>(
                 title: label(e: en.continueText, b: bn.continueText),
                 onCheck: () => validateLoginWithPhoneOrEmailData(
                     phoneOrEmailController.text.trim()),
@@ -130,7 +132,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                 textColor: clr.whiteColor,
                 tapAction: () => throw UnimplementedError(),
                 onSuccess: (success) {},
-              ),
+              ),*/              CustomButton(onTap: ()=>Navigator.pushNamed(context,AppRoute.resetPasswordScreen), title: "Continue")
+
             ],
           )),
     );

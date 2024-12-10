@@ -1,3 +1,4 @@
+import 'package:co_learning_mobile_app/src/feature/profile/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../feature/shared/splash/presentation/screens/splash_screen.dart';
@@ -6,6 +7,7 @@ import '../../feature/onboarding/screens/onboarding_screen.dart';
 import '../../feature/shared/authentication/screens/forgot_password_screen.dart';
 import '../../feature/shared/authentication/screens/sign_up_screen.dart';
 import '../../feature/shared/authentication/screens/signin_screen.dart';
+import '../../feature/shared/authentication/screens/reset_password_screen.dart';
 
 class AppRoute {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -16,6 +18,8 @@ class AppRoute {
   static const String signUpScreen = "signUpScreen";
   static const String forgotPasswordScreen = "forgotPasswordScreen";
   static const String verifyOtpScreen = "verifyOtpScreen";
+  static const String resetPasswordScreen = "resetPasswordScreen";
+  static const String profileScreen = "profileScreen";
 }
 
 mixin RouteGenerator {
@@ -36,6 +40,10 @@ mixin RouteGenerator {
             return const ForgotPasswordScreen();
           case AppRoute.verifyOtpScreen:
             return const VerifyOtpScreen();
+          case AppRoute.resetPasswordScreen:
+            return const ResetPasswordScreen();
+          case AppRoute.profileScreen:
+            return const ProfileScreen();
 
           default:
             return const SplashScreen();
