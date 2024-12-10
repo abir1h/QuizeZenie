@@ -38,7 +38,7 @@ mixin RouteGenerator {
           case AppRoute.onboardingScreen:
             return const OnboardingScreen();
           case AppRoute.landingScreen:
-            return const LandingScreen();
+            return  LandingScreen();
           case AppRoute.homeScreen:
             return const HomeScreen();
           case AppRoute.signInScreen:

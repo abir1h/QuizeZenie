@@ -34,6 +34,7 @@ class ThemeColor {
   Color get onBoardBgColor2 => HexColor("E8A635");
   Color get onBoardBgColor3 => HexColor("435FE5");
   Color get textGray => HexColor("61677D");
+  Color get greyBorder => HexColor("E9EAEB");
 
   Color get backgroundColor1 => HexColor("EEF3F6");
   Color get secondaryBackgroundColor => HexColor("FFFEFE");
@@ -71,6 +72,12 @@ class ThemeColor {
 
   Color get textFieldFilllor => HexColor("F5F9FE");
   Color get forgotPasswordTextColor => HexColor("7C8BA0");
+  Color get selectedToggleColor => HexColor("566E9C");
+  Color get inactiveToggleColor => HexColor("F5F5F5");
+  Color get profileCardTextColor => HexColor("252B37");
+  Color get lightGray => HexColor("A4A7AE");
+  Color get iconColorGray => HexColor("717680");
+  Color get amber => HexColor("FFAD3A");
 }
 
 // final localStorage = Get.find<LocalStorageServiceWithGetX>();

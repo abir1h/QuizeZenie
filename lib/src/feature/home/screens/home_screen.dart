@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme {
   ];
 
   double expandedHeight = 1.sw * 1.05;
-  double collapsedHeight = 1.sw * .15;
+  double collapsedHeight = 1.sw * .2;
   bool isContentVisible = true;
 
   void onScroll(double scrollPosition, double appBarHeight) {

@@ -1,3 +1,4 @@
+import 'package:co_learning_mobile_app/src/feature/profile/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -8,8 +9,7 @@ import '../../home/screens/home_screen.dart';
 import '../services/landing_screen_services.dart';
 
 class LandingScreen extends StatefulWidget {
-  final Object? arguments;
-  const LandingScreen({Key? key, this.arguments}) : super(key: key);
+
 
   @override
   State<LandingScreen> createState() => _LandingScreenState();
@@ -25,7 +25,7 @@ class _LandingScreenState extends State<LandingScreen>
     const HomeScreen(),
     Container(),
     Container(),
-    Container(),
+    ProfileScreen(),
   ];
 
   @override
@@ -182,7 +182,7 @@ class NavBarItemWidget extends StatelessWidget with AppTheme {
         children: [
           SvgPicture.asset(
             svgIcon,
-            width: size.s24,
+            width: size.s20,
           ),
           Text(
             title,

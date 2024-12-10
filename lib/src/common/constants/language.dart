@@ -34,20 +34,22 @@ class LanguageEn {
   String forgetPasswordText = "Forget Password?";
   String loginText = "Log In";
   String signUpTitleText = "Sign Up";
-  String signUpSubTitleText =
-      "Want to evaluate your skills and share your learning feedbacks with everyone? Signup.";
+  String signUpSubTitleText = "Want to evaluate your skills and share your learning feedbacks with everyone? Signup.";
   String signUpText = "Create Account";
   String forgotPasswordTitleText = "Forget Password";
-  String forgotPasswordSubTitleText =
-      "Please enter your email address or mobile number to reset your password.";
+  String forgotPasswordSubTitleText = "Please enter your email address or mobile number to reset your password.";
   String continueText = "Continue";
   String otpTitleText = "Enter OTP";
-  String otpSubTitleText =
-      "Enter the OTP code we just sent you on your registered Email/Phone number";
+  String otpSubTitleText = "Enter the OTP code we just sent you on your registered Email/Phone number";
   String resetPasswordTitleText = "Reset Password";
 
-  String resetPasswordSubTitleText =
-      "It was popularised in the 1960s with the release of Letraset sheetscontaining Lorem Ipsum.";
+  String resetPasswordSubTitleText = "It was popularised in the 1960s with the release of Letraset sheetscontaining Lorem Ipsum.";
+  String myProfileText = "My Profile";
+  String accountDetails = "Account Details";
+  String myVideos = "My Videos";
+  String myActivity = "My Activity";
+  String changeLanguage = "Change Language";
+  String changePassword = "Change Password";
 }
 
 class LanguageBn {
@@ -94,4 +96,11 @@ class LanguageBn {
   String resetPasswordSubTitleText =
       "វាត្រូវបានពេញនិយមនៅក្នុងទសវត្សរពីរ ១៩៦០ នៅពេលបញ្ចេញសន្លឹក Letraset ដែលមាន Lorem Ipsum។";
   String confirmPasswordText = "បញ្ជាក់កូដសម្ងាត់ ";
+  String myProfileText =
+      "ប្រវត្តិរូបរបស់ខ្ញុំ";
+  String accountDetails = "ព័ត៌មានគណនី";
+  String myVideos = "វីដេអូរបស់ខ្ញុំ";
+  String myActivity = "សកម្មភាពរបស់ខ្ញុំ";
+  String changeLanguage = "ប្ដូរភាសា";
+  String changePassword = "ប្ដូរលេខសម្ងាត់";
 }
