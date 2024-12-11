@@ -119,20 +119,23 @@ class _SignInScreenState extends State<SignInScreen> with AppTheme, Language,Use
                   ),
                   )),
                   size.s16.kWidth,
-                  Expanded(child: Container(
-                    padding: EdgeInsets.all(size.s16),
+                  Expanded(child: GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, AppRoute.videoUploadInfoScreen),
+                    child: Container(
+                      padding: EdgeInsets.all(size.s16),
 
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(size.s12),
-                        color: clr.textFieldFilllor
-                    ),child: Row(
-                    children: [
-                      SvgPicture.asset(ImageAssets.icFacebook),
-                      size.s16.kWidth,
-                      Text("Facebook",style: TextStyle(fontWeight: FontWeight.w500,fontSize: size.textSmall,color: clr.textGray),)
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(size.s12),
+                          color: clr.textFieldFilllor
+                      ),child: Row(
+                      children: [
+                        SvgPicture.asset(ImageAssets.icFacebook),
+                        size.s16.kWidth,
+                        Text("Facebook",style: TextStyle(fontWeight: FontWeight.w500,fontSize: size.textSmall,color: clr.textGray),)
 
-                    ],
-                  ),
+                      ],
+                    ),
+                    ),
                   )),
 
                 ],

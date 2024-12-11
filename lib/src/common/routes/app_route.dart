@@ -1,8 +1,10 @@
-import 'package:co_learning_mobile_app/src/feature/onboarding/screens/onboarding_screen.dart';
-import 'package:co_learning_mobile_app/src/feature/shared/authentication/screens/sign_up_screen.dart';
-import 'package:co_learning_mobile_app/src/feature/shared/authentication/screens/signin_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../feature/video/screens/video_record_screen.dart';
+import '../../feature/video/screens/video_upload_info_screen.dart';
+import '../../feature/onboarding/screens/onboarding_screen.dart';
+import '../../feature/shared/authentication/screens/sign_up_screen.dart';
+import '../../feature/shared/authentication/screens/signin_screen.dart';
 import '../../feature/shared/splash/presentation/screens/splash_screen.dart';
 
 class AppRoute {
@@ -12,6 +14,8 @@ class AppRoute {
   static const String onboardingScreen = "onboardingScreen";
   static const String signInScreen = "signInScreen";
   static const String signUpScreen = "signUpScreen";
+  static const String videoUploadInfoScreen = "videoUploadInfoScreen";
+  static const String videoRecordScreen = "videoRecordScreen";
 }
 
 mixin RouteGenerator {
@@ -28,6 +32,10 @@ mixin RouteGenerator {
             return const SignInScreen();
           case AppRoute.signUpScreen:
             return const SignUpScreen();
+          case AppRoute.videoUploadInfoScreen:
+            return const VideoUploadInfoScreen();
+          case AppRoute.videoRecordScreen:
+            return VideoRecordScreen();
 
           default:
             return const SplashScreen();

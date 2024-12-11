@@ -42,6 +42,9 @@ class ThemeColor {
 
   Color get textFieldFilllor => HexColor("F5F9FE");
   Color get forgotPasswordTextColor => HexColor("7C8BA0");
+  Color get darkGreyHeaderTextColor => HexColor("717680");
+  Color get amberColor => HexColor("FFAD3A");
+
 }
 
 // final localStorage = Get.find<LocalStorageServiceWithGetX>();
@@ -81,6 +84,7 @@ class ThemeSize {
   double get s28 => 28.w;
   double get s32 => 32.w;
   double get s42 => 42.w;
+  double get s48 => 48.w;
   double get s56 => 56.w;
   double get s64 => 64.w;
 }
