@@ -1,5 +1,3 @@
-import 'package:co_learning_mobile_app/src/common/routes/app_route.dart';
-import 'package:co_learning_mobile_app/src/common/utility/app_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,6 +5,8 @@ import '../../../common/constants/common_imports.dart';
 import '../../../common/widgets/custom_button.dart';
 import '../services/onboarding_screen_service.dart';
 import '../widgets/onboarding_widget.dart';
+import '../../../common/routes/app_route.dart';
+import '../../../common/utility/app_label.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

@@ -11,7 +11,30 @@ class ImageAssets {
   static String get signUpIcon => 'signUpIcon'.png;
   static String get imgVideoObject => 'video-object'.png;
   static String get icFlipCamera => 'flip_camera'.svg;
+  static String get forgotPasswordIcon => 'forgotPasswordIcon'.png;
+  static String get resetPasswordIcon => 'restePasswordIcon'.png;
 
+  static String get imgHomeBG => 'home_bg'.png;
+
+  static String get icHome => 'Home'.svg;
+  static String get icHomeFilled => 'Home-1'.svg;
+  static String get icBookmark => 'bookmark-1'.svg;
+  static String get icBookmarkFilled => 'bookmark'.svg;
+  static String get icRecord => 'screen_record'.svg;
+  static String get icRecordFilled => 'screen_record-1'.svg;
+  static String get icProfile => 'profile-1'.svg;
+  static String get icProfileFilled => 'profile'.svg;
+
+  static String get icReel => 'FilmReel'.svg;
+  static String get icBook => 'BookOpenUser'.svg;
+  static String get icBank => 'Bank'.svg;
+  static String get changePassword => 'changePassword'.svg;
+  static String get myActivity => 'myActivity'.svg;
+  static String get myVideos => 'myVideos'.svg;
+  static String get accountDetails => 'accountDetails'.svg;
+  static String get organistaion => 'organistaion'.svg;
+  static String get shield => 'shield'.svg;
+  static String get changeLanguage => 'changeLanguage'.svg;
 
 /* static String get emptyProfile => 'img'.png;
   static String get animEmpty => 'Animation - 1706009676891'.json;
