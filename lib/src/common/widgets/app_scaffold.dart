@@ -42,6 +42,7 @@ class _AppScaffoldState extends State<AppScaffold> with AppTheme{
               padding: EdgeInsets.symmetric(horizontal: size.s16, ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
                     onTap:() {
@@ -62,15 +63,20 @@ class _AppScaffoldState extends State<AppScaffold> with AppTheme{
                     ),
                   ),
                   Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: size.s8),
-                      child: Text(
-                        widget.title,
-                        style: TextStyle(
-                          color: clr.blackColor,
-                          fontSize: size.textLarge,overflow: TextOverflow.ellipsis
+                    child: Container(
+                     alignment: Alignment.center,
+                      child: Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: size.s8),
+                          child: Text(
+                            widget.title,
+                            style: TextStyle(
+                              color: clr.blackColor,
+                              fontSize: size.textLarge,overflow: TextOverflow.ellipsis
+                            ),
+                            maxLines: widget.maxLine,
+                          ),
                         ),
-                        maxLines: widget.maxLine,
                       ),
                     ),
                   ),
