@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme {
                   alignment: Alignment.topCenter,
                   child: Padding(
                     padding: EdgeInsets.only(
-                        top: 100, right: size.s16, left: size.s16),
+                        top: 1.sw * .21, right: size.s16, left: size.s16),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
