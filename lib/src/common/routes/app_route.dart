@@ -1,20 +1,16 @@
-import 'package:co_learning_mobile_app/src/feature/profile/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../feature/profile/screens/profile_screen.dart';
 import '../../feature/home/screens/home_screen.dart';
 import '../../feature/landing/screens/landing_screen.dart';
 import '../../feature/onboarding/screens/onboarding_screen.dart';
 import '../../feature/video/screens/video_record_screen.dart';
 import '../../feature/video/screens/video_upload_info_screen.dart';
-import '../../feature/onboarding/screens/onboarding_screen.dart';
 import '../../feature/shared/authentication/screens/sign_up_screen.dart';
 import '../../feature/shared/authentication/screens/signin_screen.dart';
 import '../../feature/shared/splash/presentation/screens/splash_screen.dart';
 import '../../feature/shared/authentication/screens/verify_otp_screen.dart';
-import '../../feature/onboarding/screens/onboarding_screen.dart';
 import '../../feature/shared/authentication/screens/forgot_password_screen.dart';
-import '../../feature/shared/authentication/screens/sign_up_screen.dart';
-import '../../feature/shared/authentication/screens/signin_screen.dart';
 import '../../feature/shared/authentication/screens/reset_password_screen.dart';
 
 class AppRoute {

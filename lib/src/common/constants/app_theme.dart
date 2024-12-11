@@ -77,9 +77,8 @@ class ThemeColor {
   Color get profileCardTextColor => HexColor("252B37");
   Color get lightGray => HexColor("A4A7AE");
   Color get iconColorGray => HexColor("717680");
-  Color get amber => HexColor("FFAD3A");
-  Color get darkGreyHeaderTextColor => HexColor("717680");
   Color get amberColor => HexColor("FFAD3A");
+  Color get darkGreyHeaderTextColor => HexColor("717680");
 
 }
 
