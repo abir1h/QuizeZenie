@@ -60,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme {
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
+            automaticallyImplyLeading: false,
             expandedHeight: expandedHeight,
             collapsedHeight: collapsedHeight,
             floating: false,

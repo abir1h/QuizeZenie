@@ -9,8 +9,6 @@ import '../../home/screens/home_screen.dart';
 import '../services/landing_screen_services.dart';
 
 class LandingScreen extends StatefulWidget {
-
-
   @override
   State<LandingScreen> createState() => _LandingScreenState();
 }
@@ -38,6 +36,7 @@ class _LandingScreenState extends State<LandingScreen>
       //   preferredSize: Size.fromHeight(size.s56),
       //   child: Text("AppABr"),
       // ),
+
       body: pages[_selectedIndex],
       floatingActionButton: FloatingActionButton(
         onPressed: () => () {},
@@ -84,14 +83,14 @@ class _LandingScreenState extends State<LandingScreen>
                 ),
               ],
             ),
-            Text(
-              label(e: en.captureText, b: bn.captureText),
-              style: TextStyle(
-                  color: clr.grayColor,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: StringData.fontFamilyRoboto,
-                  fontSize: size.textXXSmall),
-            ),
+            // Text(
+            //   label(e: en.captureText, b: bn.captureText),
+            //   style: TextStyle(
+            //       color: clr.grayColor,
+            //       fontWeight: FontWeight.w500,
+            //       fontFamily: StringData.fontFamilyRoboto,
+            //       fontSize: size.textXXSmall),
+            // ),
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
