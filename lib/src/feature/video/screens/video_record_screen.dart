@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../common/constants/common_imports.dart';
 import '../services/video_record_service.dart';
 import '../../../common/widgets/custom_toasty.dart';
+import '../widgets/video_save_dialog_widget.dart';
 
 class VideoRecordScreen extends StatefulWidget {
   const VideoRecordScreen({super.key});
@@ -115,117 +117,185 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: size.s12, horizontal: size.s32),
-                    decoration: BoxDecoration(
-                      color: clr.whiteColor,
-                      border: Border(
-                        top: BorderSide(
-                          color: clr.darkGreyHeaderTextColor,
-                          width: 1.0,
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: size.s4),
+                        decoration: BoxDecoration(color: clr.whiteColor),
+                        width: double.infinity,
+                        child: DropdownButtonFormField<String>(
+                          value: itemList[1],
+                          dropdownColor: clr.whiteColor,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: size.s8,
+                              vertical: size.s8,
+                            ),
+                            isDense: false,
+                            filled: true,
+                            fillColor: clr.whiteColor,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          icon: SvgPicture.asset(ImageAssets.icDropdown),
+                          isExpanded: true,
+                          style: TextStyle(
+                              color: clr.blackColor,
+                              fontSize: size.textSmall,
+                              overflow: TextOverflow.ellipsis),
+                          items: itemList.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: SizedBox(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.done,
+                                      color: qualityDropDownValue == value
+                                          ? clr.iconColorGray
+                                          : Colors.transparent,
+                                      size: 20.r,
+                                    ),
+                                    size.s4.kWidth,
+                                    Expanded(
+                                        child: Text(
+                                      value,
+                                      style: TextStyle(
+                                          color: clr.iconColorGray,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: size.textXSmall),
+                                    ))
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              qualityDropDownValue = newValue!;
+                            });
+                          },
                         ),
                       ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            size.s4.kHeight,
-                            GestureDetector(
-                                onTap: !isRecording ? flipCamera : null,
-                                child: SvgPicture.asset(
-                                  ImageAssets.icFlipCamera,
-                                  color: !isRecording
-                                      ? clr.darkGreyHeaderTextColor
-                                      : Colors.transparent,
-                                )),
-                            size.s1.kHeight,
-                            Text(!isFrontCamera ? "Front" : "Back",
-                                style: TextStyle(
-                                    fontSize: size.textXXXSmall,
-                                    color: !isRecording
-                                        ? clr.blackColor
-                                        : Colors.transparent)),
-                          ],
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: size.s12, horizontal: size.s32),
+                        decoration: BoxDecoration(
+                          color: clr.whiteColor,
+                          border: Border(
+                            top: BorderSide(
+                              color: clr.darkGreyHeaderTextColor,
+                              width: 1.0,
+                            ),
+                          ),
                         ),
-                        50.w.kWidth,
-                        // Record button
-                        GestureDetector(
-                          onTap: isRecording ? stopRecording : startRecording,
-                          child: isRecording
-                              ? Container(
-                                  constraints: BoxConstraints(
-                                    maxWidth: size.s56,
-                                    maxHeight: size.s56,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: clr.amberColor, width: 3.w),
-                                    color: clr.amberColor,
-                                  ),
-                                  child: Container(
-                                    margin: EdgeInsets.all(size.s8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.w),
-                                      color: clr.whiteColor,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                size.s4.kHeight,
+                                GestureDetector(
+                                    onTap: !isRecording ? flipCamera : null,
+                                    child: SvgPicture.asset(
+                                      ImageAssets.icFlipCamera,
+                                      color: !isRecording
+                                          ? clr.darkGreyHeaderTextColor
+                                          : Colors.transparent,
+                                    )),
+                                size.s1.kHeight,
+                                Text(!isFrontCamera ? "Front" : "Back",
+                                    style: TextStyle(
+                                        fontSize: size.textXXXSmall,
+                                        color: !isRecording
+                                            ? clr.blackColor
+                                            : Colors.transparent)),
+                              ],
+                            ),
+                            50.w.kWidth,
+                            // Record button
+                            GestureDetector(
+                              onTap:
+                                  isRecording ? stopRecording : startRecording,
+                              child: isRecording
+                                  ? Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth: size.s56,
+                                        maxHeight: size.s56,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: clr.amberColor, width: 3.w),
+                                        color: clr.amberColor,
+                                      ),
+                                      child: Container(
+                                        margin: EdgeInsets.all(size.s8),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.w),
+                                          color: clr.whiteColor,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth: size.s56,
+                                        maxHeight: size.s56,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: clr.amberColor, width: 3.w),
+                                        color: clr.whiteColor,
+                                      ),
+                                      child: Container(
+                                        margin: EdgeInsets.all(size.s4),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: clr.amberColor,
+                                              width: 1.w),
+                                          color: clr.whiteColor,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                )
-                              : Container(
-                                  constraints: BoxConstraints(
-                                    maxWidth: size.s56,
-                                    maxHeight: size.s56,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: clr.amberColor, width: 3.w),
-                                    color: clr.whiteColor,
-                                  ),
-                                  child: Container(
-                                    margin: EdgeInsets.all(size.s4),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: clr.amberColor, width: 1.w),
-                                      color: clr.whiteColor,
-                                    ),
+                            ),
+                            50.w.kWidth,
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                size.s4.kHeight,
+                                GestureDetector(
+                                  onTap:
+                                      isRecording ? pauseResumeRecording : null,
+                                  child: Icon(
+                                    isPaused
+                                        ? Icons.play_circle
+                                        : Icons.pause_circle,
+                                    size: size.s32 + size.s4,
+                                    color: isRecording
+                                        ? clr.darkGreyHeaderTextColor
+                                        : Colors.transparent,
                                   ),
                                 ),
-                        ),
-                        50.w.kWidth,
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            size.s4.kHeight,
-                            GestureDetector(
-                              onTap: isRecording ? pauseResumeRecording : null,
-                              child: Icon(
-                                isPaused
-                                    ? Icons.play_circle
-                                    : Icons.pause_circle,
-                                size: size.s32 + size.s4,
-                                color: isRecording
-                                    ? clr.darkGreyHeaderTextColor
-                                    : Colors.transparent,
-                              ),
-                            ),
-                            size.s1.kHeight,
-                            Text(isPaused ? "Play" : "Pause",
-                                style: TextStyle(
-                                    fontSize: size.textXXXSmall,
-                                    color: isRecording
-                                        ? clr.blackColor
-                                        : Colors.transparent)),
+                                size.s1.kHeight,
+                                Text(isPaused ? "Play" : "Pause",
+                                    style: TextStyle(
+                                        fontSize: size.textXXXSmall,
+                                        color: isRecording
+                                            ? clr.blackColor
+                                            : Colors.transparent)),
+                              ],
+                            )
                           ],
-                        )
-                      ],
-                    ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -247,5 +317,23 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
   @override
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
+  }
+
+  @override
+  void showVideoSaveDialog(File file) {
+    VideoSaveDialogWidget.show(
+      context: context,
+    ).then((value) {
+      if (value) {
+        ///Navigate to upload page
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => VideoApp(file: file)),
+        // );
+      } else {
+        //refresh
+        forceClose();
+      }
+    });
   }
 }

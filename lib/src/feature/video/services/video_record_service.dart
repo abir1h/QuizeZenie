@@ -5,11 +5,13 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 abstract class _ViewModel {
   void showWarning(String message);
   void showSuccess(String message);
   void forceClose();
+  void showVideoSaveDialog(File file);
 }
 
 mixin VideoRecordService<T extends StatefulWidget> on State<T>
@@ -27,11 +29,20 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
   // Keep track of the current camera index
   int _currentCameraIndex = 0;
   bool isFrontCamera = false;
+  String qualityDropDownValue = 'Average image quality/ smooth (about 90MB/ 30 minutes)';
+  List<String> itemList = [
+    'Mobile-friendly images quality (about 65MB/ 30 minutes)',
+    'Average image quality/ smooth (about 90MB/ 30 minutes)',
+    'Medium high image quality (about 180MB/ 30 minutes)',
+    'Medium image quality (about 150MB/ 30 minutes)',
+    'High quality (about 300MB/ 30 minutes)'
+  ];
 
   ///Service configurations
   @override
   void initState() {
     _view = this;
+    WakelockPlus.enable();
     super.initState();
   }
 
@@ -39,12 +50,17 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
   void dispose() {
     cameraController?.dispose();
     _timer?.cancel();
+    WakelockPlus.disable();
     super.dispose();
   }
 
   Future<bool> onGoBack() {
     _view.forceClose();
     return Future.value(false);
+  }
+
+  Future<List<String>> getItems() async {
+    return itemList;
   }
 
   Future<void> initializeCamera() async {
@@ -91,6 +107,7 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
     debugPrint('Inside Recording stopped: ${video.path}');
     debugPrint('Recording saved to: ${newFile.path}');
     // Navigate to Upload page
+    _view.showVideoSaveDialog(newFile);
   }
 
   Future<void> pauseResumeRecording() async {

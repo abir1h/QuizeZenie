@@ -35,6 +35,8 @@ class ImageAssets {
   static String get organistaion => 'organistaion'.svg;
   static String get shield => 'shield'.svg;
   static String get changeLanguage => 'changeLanguage'.svg;
+  static String get icDropdown => 'dropdown'.svg;
+  static String get icPersons => 'persons'.svg;
 
 /* static String get emptyProfile => 'img'.png;
   static String get animEmpty => 'Animation - 1706009676891'.json;

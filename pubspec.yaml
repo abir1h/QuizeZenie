@@ -50,6 +50,7 @@ dependencies:
   cached_network_image: ^3.4.1
   carousel_slider: ^5.0.0
   smooth_page_indicator: ^1.2.0+3
+  wakelock_plus: ^1.2.8
 
 dev_dependencies:
   flutter_test:
