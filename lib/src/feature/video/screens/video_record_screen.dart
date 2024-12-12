@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constants/common_imports.dart';
-import '../../../common/routes/app_route.dart';
 import '../../video_upload/video_upload_screen.dart';
 import '../services/video_record_service.dart';
 import '../../../common/widgets/custom_toasty.dart';
@@ -353,7 +352,7 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
         ///Navigate to upload page
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => VideoUploadScreen(videoAssets: file)),
+          MaterialPageRoute(builder: (context) => VideoUploadScreen(videoAssets: videoFile)),
         );
       }
     });
