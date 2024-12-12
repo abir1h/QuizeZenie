@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:co_learning_mobile_app/src/common/widgets/app_scaffold.dart';
 import 'package:co_learning_mobile_app/src/feature/video_upload/video_player_widget.dart';
 import 'package:co_learning_mobile_app/src/feature/video_upload/video_upload_screen_service.dart';
 import 'package:flutter/material.dart';
 
 class VideoUploadScreen extends StatefulWidget {
-  final String videoAssets;
+  final File videoAssets;
   const VideoUploadScreen({super.key, required this.videoAssets});
 
   @override
@@ -17,7 +19,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
   void initState() {
     ///Initially load course details
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      loadInitialData(widget.videoAssets);
+      loadInitialData(widget.videoAssets.path);
     });
     super.initState();
   }

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import '../../common/widgets/app_stream.dart';
 
 class PreviewPlayerWidget extends StatefulWidget {
-  final Stream<DataState<VideoContentViewModel>> playerStream;
+  final Stream<DataState<String>> playerStream;
   final Stream<DataState<bool>> playbackStream;
   final Widget? overlay;
 
-  final double Function(VideoContentViewModel currentContent,
+  final double Function(
       double seekPosition, double totalDuration)? interceptSeekTo;
-  final void Function(VideoContentViewModel currentContent,
+  final void Function(
       double playedPosition, double totalDuration)? onProgressChanged;
 
   const PreviewPlayerWidget({
@@ -30,8 +30,8 @@ class PreviewPlayerWidget extends StatefulWidget {
 class _PreviewPlayerWidgetState extends State<PreviewPlayerWidget> {
   final PreviewRawVideoPlayerController _playerController = PreviewRawVideoPlayerController();
 
-  VideoContentViewModel _currentContent = VideoContentViewModel.empty();
-  StreamSubscription<DataState<VideoContentViewModel>>? _subscription;
+  // VideoContentViewModel _currentContent = VideoContentViewModel.empty();
+  StreamSubscription<DataState<String>>? _subscription;
   StreamSubscription<DataState<bool>>? _playbackSubscription;
 
   @override
@@ -51,11 +51,11 @@ class _PreviewPlayerWidgetState extends State<PreviewPlayerWidget> {
     super.dispose();
   }
 
-  void _onPlayVideo(DataState<ContentDetailsEntity> event) {
+  void _onPlayVideo(DataState<String> event) {
     if (!mounted) return;
-    _currentContent = (event as DataLoadedState<VideoContentViewModel>).data;
+    // _currentContent = (event as DataLoadedState<String>).data;
     _playerController.play(
-      _currentContent.videoPath,
+      (event as DataLoadedState<String>).data,
       autoPlay: true,
       // playPosition:
       // _currentContent.video.lastStudyTime < _currentContent.video.duration
@@ -75,13 +75,13 @@ class _PreviewPlayerWidgetState extends State<PreviewPlayerWidget> {
 
   double _interceptSeekTo(double seekPosition, double totalDuration) {
     return widget.interceptSeekTo
-        ?.call(_currentContent, seekPosition, totalDuration) ??
+        ?.call( seekPosition, totalDuration) ??
         seekPosition;
   }
 
   void _onProgressChanged(double playedPosition, double totalDuration) {
     widget.onProgressChanged
-        ?.call(_currentContent, playedPosition, totalDuration);
+        ?.call( playedPosition, totalDuration);
   }
 
   @override

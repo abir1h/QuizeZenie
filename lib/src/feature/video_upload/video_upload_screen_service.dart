@@ -39,7 +39,7 @@ implements _ViewModel {
 
   final AppStreamController<bool> bookmarkStreamController =
   AppStreamController();
-  final AppStreamController<VideoContentViewModel> playerStreamController =
+  final AppStreamController<String> playerStreamController =
   AppStreamController();
   final AppStreamController<bool> playbackPausePlayStreamController =
   AppStreamController();
@@ -60,7 +60,7 @@ implements _ViewModel {
     //     onContentSelect(value.data!.allContents[0]);
     //   // }
     // });
-    _onPlayVideo(ContentDetailsEntity(videoPath: 'jshdgfhjsdg'));
+    _onPlayVideo(args);
   }
 
   // ///Change video playback orientation
@@ -92,7 +92,7 @@ implements _ViewModel {
 
 
   ///Video playback section
-  void _onPlayVideo(ContentDetailsEntity content) async {
+  void _onPlayVideo(String content) async {
     ///Debounce click
     // if(playerStreamController.value != null && (playerStreamController.value as DataLoadedState<CourseDetailsContent>).data.id == content.id) {
     //   playbackPausePlayStreamController.add(DataLoadedState<bool>(true));
@@ -112,12 +112,12 @@ implements _ViewModel {
 
     ///Play the video
     // _isPlaybackComplete = false;
-    var videoContent = VideoContentViewModel.fromJson(content.toJson());
+    // var videoContent = VideoContentViewModel.fromJson(content.toJson());
     playerStreamController
-        .add(DataLoadedState<VideoContentViewModel>(videoContent));
+        .add(DataLoadedState<String>(content));
   }
 
-  void onPlaybackProgressChanged(VideoContentViewModel currentContent,
+  void onPlaybackProgressChanged(
       double playedPosition, double totalDuration) {
     // ///Update last played position only if played position is larger
     // int playedPositionSec = (playedPosition ~/ 1000).round();
@@ -141,11 +141,11 @@ implements _ViewModel {
     //   });
     // }
   }
-  double onInterceptPlaybackSeekToPosition(VideoContentViewModel currentContent,
+  double onInterceptPlaybackSeekToPosition(
       double seekPosition, double totalDuration) {
     /// seekIntercept logic
     // return currentContent.lastStudyTimeSec * 1000 >= seekPosition ? seekPosition : (currentContent.lastStudyTimeSec * 1000).toDouble();
-    return 0.0;
+    return seekPosition;
   }
 
   ///HLS Player Service
@@ -172,33 +172,33 @@ implements _ViewModel {
 }
 
 
-class VideoContentViewModel extends ContentDetailsEntity {
-  VideoContentViewModel.fromJson(Map<String, dynamic> json)
-      : super.fromJson(json);
-  VideoContentViewModel.empty() : super.empty();
-}
-
-enum CourseContentType { video, script, mockTest, none }
-
-
-
-class ContentDetailsEntity {
-  late String videoPath;
-
-  ContentDetailsEntity({
-    required this.videoPath,
-  });
-
-  ContentDetailsEntity.empty() {
-    videoPath = "";
-
-  }
-
-  ContentDetailsEntity.fromJson(Map<String, dynamic> json) {
-    videoPath = json["videoPath"] ?? "";
-  }
-
-  Map<String, dynamic> toJson() => {
-    "videoPath": videoPath,
-  };
-}
+// class VideoContentViewModel extends ContentDetailsEntity {
+//   VideoContentViewModel.fromJson(Map<String, dynamic> json)
+//       : super.fromJson(json);
+//   VideoContentViewModel.empty() : super.empty();
+// }
+//
+// enum CourseContentType { video, script, mockTest, none }
+//
+//
+//
+// class ContentDetailsEntity {
+//   late String videoPath;
+//
+//   ContentDetailsEntity({
+//     required this.videoPath,
+//   });
+//
+//   ContentDetailsEntity.empty() {
+//     videoPath = "";
+//
+//   }
+//
+//   ContentDetailsEntity.fromJson(Map<String, dynamic> json) {
+//     videoPath = videoPath;
+//   }
+//
+//   Map<String, dynamic> toJson() => {
+//     "videoPath": videoPath,
+//   };
+// }

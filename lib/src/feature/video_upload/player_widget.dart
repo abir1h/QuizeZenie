@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
-class PreviewRawVideoPlayerController{
+class PreviewRawVideoPlayerController {
   void Function(String url, Duration? playPosition, bool? autoPlay)? _onPlay;
   void Function()? _onTogglePausePlay;
   void Function()? _onPause;
@@ -11,19 +12,26 @@ class PreviewRawVideoPlayerController{
   void Function(double playedPosition, double totalDuration)? onProgressChange;
   double Function(double seekPosition, double totalDuration)? interceptSeekTo;
 
-
-  void play(String url, {bool autoPlay = false, Duration? playPosition,}){
-    _onPlay?.call(url,playPosition,autoPlay);
+  void play(
+    String url, {
+    bool autoPlay = false,
+    Duration? playPosition,
+  }) {
+    _onPlay?.call(url, playPosition, autoPlay);
   }
-  void togglePausePlay(){
+
+  void togglePausePlay() {
     _onTogglePausePlay?.call();
   }
-  void pause(){
+
+  void pause() {
     _onPause?.call();
   }
-  void resume(){
+
+  void resume() {
     _onResume?.call();
   }
+
   void dispose() {
     _onPlay = null;
     _onTogglePausePlay = null;
@@ -33,22 +41,30 @@ class PreviewRawVideoPlayerController{
     _onResume = null;
   }
 }
+
 class PreviewRawVideoPlayer extends StatefulWidget {
   final PreviewRawVideoPlayerController controller;
   final Widget? overlay;
   final double aspectRatio;
-  const PreviewRawVideoPlayer({super.key,required this.controller, this.overlay, this.aspectRatio = 16/9 });
+  const PreviewRawVideoPlayer(
+      {super.key,
+      required this.controller,
+      this.overlay,
+      this.aspectRatio = 16 / 9});
 
   @override
   _PreviewRawVideoPlayerState createState() => _PreviewRawVideoPlayerState();
 }
+
 class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
-  final StreamController<String> _uiRefreshController = StreamController.broadcast();
-  Sink<String>? get _uiRefreshSink => _uiRefreshController.isClosed?null:_uiRefreshController.sink;
+  final StreamController<String> _uiRefreshController =
+      StreamController.broadcast();
+  Sink<String>? get _uiRefreshSink =>
+      _uiRefreshController.isClosed ? null : _uiRefreshController.sink;
   VideoPlayerController? _controller;
   Timer? _hideTimer;
-  double _playedPosition=0;
-  double _videoDuration=0;
+  double _playedPosition = 0;
+  double _videoDuration = 0;
   double _sliderValue = 0;
   bool _sliderInProgress = false;
   bool _controlVisible = true;
@@ -62,6 +78,7 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
     widget.controller._onResume = _resume;
     widget.controller._onTogglePausePlay = _togglePausePlay;
   }
+
   @override
   void dispose() {
     widget.controller.dispose();
@@ -72,73 +89,85 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
     super.dispose();
   }
 
-  void _onPlayNewVideo(String url, Duration? playPosition, bool? autoPlay) async{
+  void _onPlayNewVideo(
+      String url, Duration? playPosition, bool? autoPlay) async {
     try {
       await _controller?.dispose();
-    }catch(_){}
+    } catch (_) {}
     _controller = null;
     _loadingError = false;
-    _playedPosition=0;
-    _videoDuration=0;
+    _playedPosition = 0;
+    _videoDuration = 0;
     _sliderValue = 0;
     _sliderInProgress = false;
     _controlVisible = true;
     _loadingError = false;
-    if(mounted)setState(() {debugPrint("New file played");});
-    if(url.isEmpty) return;
+    if (mounted)
+      setState(() {
+        debugPrint("New file played");
+      });
+    if (url.isEmpty) return;
 
-    _controller =  VideoPlayerController.network(url);
+    _controller = VideoPlayerController.file(File(url));
     _controller?.addListener(_playerStateListener);
-    _controller?.initialize().then((value){
-      if((autoPlay??false) && (_controller?.value.isInitialized??false) && !_controller!.value.isPlaying){
+    _controller?.initialize().then((value) {
+      if ((autoPlay ?? false) &&
+          (_controller?.value.isInitialized ?? false) &&
+          !_controller!.value.isPlaying) {
         _togglePausePlay();
       }
-      if(playPosition != null && (_controller?.value.isInitialized??false)){
-        if(_controller!.value.duration > playPosition){
+      if (playPosition != null && (_controller?.value.isInitialized ?? false)) {
+        if (_controller!.value.duration > playPosition) {
           _seekToPosition(playPosition.inMilliseconds.toDouble());
         }
       }
-    }).catchError((value){
+    }).catchError((value) {
       _loadingError = true;
       _controlVisible = true;
-    }).whenComplete((){if(mounted)setState(() {});});
+    }).whenComplete(() {
+      if (mounted) setState(() {});
+    });
   }
 
   void _playerStateListener() {
-    if(_controller != null && _controller!.value.isInitialized){
-      _playedPosition = (_controller?.value.position.inMilliseconds.toDouble() ?? 0.0);
-      _videoDuration = (_controller?.value.duration.inMilliseconds.toDouble() ?? 0.0);
-      widget.controller.onProgressChange?.call(_playedPosition,_videoDuration);
+    if (_controller != null && _controller!.value.isInitialized) {
+      _playedPosition =
+          (_controller?.value.position.inMilliseconds.toDouble() ?? 0.0);
+      _videoDuration =
+          (_controller?.value.duration.inMilliseconds.toDouble() ?? 0.0);
+      widget.controller.onProgressChange?.call(_playedPosition, _videoDuration);
+
       ///Update player progress
-      if(!_sliderInProgress) {
+      if (!_sliderInProgress) {
         _sliderValue = _playedPosition;
-        if(_sliderValue > _videoDuration){
+        if (_sliderValue > _videoDuration) {
           _sliderValue = _videoDuration;
         }
 
         ///Video played complete
-        if(_videoDuration > 0 && _videoDuration == _playedPosition){
+        if (_videoDuration > 0 && _videoDuration == _playedPosition) {
           _sliderValue = 0;
           _playedPosition = 0;
           _controlVisible = true;
         }
       }
-    }else{
+    } else {
       _sliderValue = 0;
       _playedPosition = 0;
       _videoDuration = 0;
-      widget.controller.onProgressChange?.call(_playedPosition,_videoDuration);
+      widget.controller.onProgressChange?.call(_playedPosition, _videoDuration);
     }
     _uiRefreshSink?.add("refresh");
   }
+
   void _toggleOrientation() {
-    if(mounted){
+    if (mounted) {
       setState(() {
-        if(MediaQuery.of(context).orientation == Orientation.landscape){
+        if (MediaQuery.of(context).orientation == Orientation.landscape) {
           SystemChrome.setPreferredOrientations([
             DeviceOrientation.portraitUp,
           ]);
-        }else{
+        } else {
           SystemChrome.setPreferredOrientations([
             DeviceOrientation.landscapeLeft,
           ]);
@@ -146,29 +175,31 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
       });
     }
   }
+
   void _toggleControlVisibility() {
     _controlVisible = !_controlVisible;
     _uiRefreshSink?.add("refresh");
-    if(_controlVisible && (_controller?.value.isPlaying??false)){
+    if (_controlVisible && (_controller?.value.isPlaying ?? false)) {
       cancelAndRestartTimer();
-    }else{
+    } else {
       _hideTimer?.cancel();
     }
   }
+
   void _togglePausePlay() {
-    if(_controller != null && _controller!.value.isInitialized){
-      if(_controller!.value.isPlaying){
+    if (_controller != null && _controller!.value.isInitialized) {
+      if (_controller!.value.isPlaying) {
         _pause();
-      }else{
+      } else {
         _resume();
       }
     }
   }
 
   void _pause() {
-    if(_controller != null && _controller!.value.isInitialized){
-      if(_controller!.value.isPlaying){
-        _controller!.pause().whenComplete((){
+    if (_controller != null && _controller!.value.isInitialized) {
+      if (_controller!.value.isPlaying) {
+        _controller!.pause().whenComplete(() {
           _controlVisible = true;
           _hideTimer?.cancel();
         });
@@ -176,10 +207,11 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
       _uiRefreshSink?.add("refresh");
     }
   }
+
   void _resume() {
-    if(_controller != null && _controller!.value.isInitialized){
-      if(!_controller!.value.isPlaying){
-        _controller!.play().whenComplete((){
+    if (_controller != null && _controller!.value.isInitialized) {
+      if (!_controller!.value.isPlaying) {
+        _controller!.play().whenComplete(() {
           cancelAndRestartTimer();
         });
       }
@@ -191,19 +223,25 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
     _sliderInProgress = true;
     _sliderValue = value;
     _uiRefreshSink?.add("refresh");
-    if(_controller != null && _controller!.value.isInitialized && _playedPosition != value){
-      _controller?.seekTo(Duration(milliseconds: _sliderValue.toInt())).whenComplete((){
+    if (_controller != null &&
+        _controller!.value.isInitialized &&
+        _playedPosition != value) {
+      _controller
+          ?.seekTo(Duration(milliseconds: _sliderValue.toInt()))
+          .whenComplete(() {
         _sliderInProgress = false;
         cancelAndRestartTimer();
       });
-    }else{
+    } else {
       _sliderInProgress = false;
     }
   }
+
   void cancelAndRestartTimer() {
     _hideTimer?.cancel();
     _startHideTimer();
   }
+
   void _startHideTimer() {
     _controlVisible = true;
     _uiRefreshSink?.add("refresh");
@@ -212,6 +250,7 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
       _uiRefreshSink?.add("refresh");
     });
   }
+
   String formatDuration(Duration position) {
     final ms = position.inMilliseconds;
 
@@ -224,20 +263,20 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
     final hoursString = hours >= 10
         ? '$hours'
         : hours == 0
-        ? '0'
-        : '0$hours';
+            ? '0'
+            : '0$hours';
 
     final minutesString = minutes >= 10
         ? '$minutes'
         : minutes == 0
-        ? '0'
-        : '0$minutes';
+            ? '0'
+            : '0$minutes';
 
     final secondsString = seconds >= 10
         ? '$seconds'
         : seconds == 0
-        ? '00'
-        : '0$seconds';
+            ? '00'
+            : '0$seconds';
 
     final formattedTime =
         '${hoursString == '0' ? '' : '$hoursString:'}$minutesString:$secondsString';
@@ -245,9 +284,15 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
     return formattedTime;
   }
 
+  static const List<double> _examplePlaybackRates = <double>[
+    1.0,
+    1.25,
+    1.5,
+  ];
   @override
   Widget build(BuildContext context) {
     return OrientationDetectorWidget(
+      aspectRatio: _controller?.value.aspectRatio ?? 16 / 9,
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -257,22 +302,24 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
             height: double.maxFinite,
             color: Colors.black,
           ),
+
           ///Actual video player
-          if(_controller?.value.isInitialized ?? false) Center(
-            child: AspectRatio(
-              aspectRatio: _controller?.value.aspectRatio??16/9,
-              child: VideoPlayer(
-                _controller!,
+          if (_controller?.value.isInitialized ?? false)
+            Center(
+              child: AspectRatio(
+                aspectRatio: _controller?.value.aspectRatio ?? 16 / 9,
+                child: VideoPlayer(
+                  _controller!,
+                ),
               ),
             ),
-          ),
 
           ///Player controls
           StreamBuilder<String>(
               stream: _uiRefreshController.stream,
               builder: (context, snapshot) {
                 ///Error view
-                if(_loadingError) {
+                if (_loadingError) {
                   return Container(
                     height: double.maxFinite,
                     width: double.maxFinite,
@@ -286,7 +333,9 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
                             color: Colors.white,
                             size: 32,
                           ),
-                          SizedBox(height: 8,),
+                          SizedBox(
+                            height: 8,
+                          ),
                           Text(
                             "Loading failed!",
                             style: TextStyle(
@@ -302,7 +351,10 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
                   onTap: _toggleControlVisibility,
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 300),
-                    opacity: _controlVisible || (_controller?.value.isBuffering ?? false) ? 1:0.0,
+                    opacity: _controlVisible ||
+                            (_controller?.value.isBuffering ?? false)
+                        ? 1
+                        : 0.0,
                     child: Container(
                       height: double.maxFinite,
                       width: double.maxFinite,
@@ -311,78 +363,91 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
                         ignoring: !_controlVisible,
                         child: Stack(
                           children: [
-                            ///Loading control
-                            if(!(_controller?.value.isInitialized ?? false) || (_controller?.value.isBuffering ?? false)) const Align(
-                              alignment: Alignment.center,
-                              child: SizedBox(
-                                height: 64,
-                                width: 64,
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation(Colors.white),
-                                  strokeWidth: 3,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16,right: 16)
+                              ,child: Align(
+                                alignment: Alignment.topRight,
+                                child: GestureDetector(
+                                  onTap: _toggleOrientation,
+                                  child: const Icon(
+                                    Icons.screen_rotation,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
                                 ),
                               ),
                             ),
 
-                            ///Play or Pause control
-                            if((_controller?.value.isInitialized ?? false) && !(_controller?.value.isBuffering ?? false)) Align(
-                              alignment: Alignment.center,
-                              child: GestureDetector(
-                                onTap: _togglePausePlay,
-                                child: Container(
+                            ///Loading control
+                            if (!(_controller?.value.isInitialized ?? false) ||
+                                (_controller?.value.isBuffering ?? false))
+                              const Align(
+                                alignment: Alignment.center,
+                                child: SizedBox(
                                   height: 64,
                                   width: 64,
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 3,
-                                      )
+                                  child: CircularProgressIndicator(
+                                    valueColor:
+                                        AlwaysStoppedAnimation(Colors.white),
+                                    strokeWidth: 3,
                                   ),
-                                  child: FittedBox(
-                                    child: Icon(
-                                      _controller!.value.isPlaying ? Icons.pause_rounded: Icons.play_arrow_rounded,
-                                      size: 64,
-                                      color: Colors.white,
+                                ),
+                              ),
+
+                            ///Play or Pause control
+                            if ((_controller?.value.isInitialized ?? false) &&
+                                !(_controller?.value.isBuffering ?? false))
+                              Align(
+                                alignment: Alignment.center,
+                                child: GestureDetector(
+                                  onTap: _togglePausePlay,
+                                  child: Container(
+                                    height: 64,
+                                    width: 64,
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          width: 3,
+                                        )),
+                                    child: FittedBox(
+                                      child: Icon(
+                                        _controller!.value.isPlaying
+                                            ? Icons.pause_rounded
+                                            : Icons.play_arrow_rounded,
+                                        size: 64,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
 
                             ///Bottom bar controls
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 8,right: 16,bottom: 8),
+                                padding: const EdgeInsets.only(
+                                    left: 8, right: 16, bottom: 8),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ///Content duration and played duration
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10.0),
-                                      child: Text(
-                                        "${formatDuration(Duration(milliseconds: _sliderValue.toInt()))} / ${formatDuration((_controller?.value.duration ?? const Duration()))}",
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-
                                     ///Progress slider
                                     Row(
                                       children: [
                                         Expanded(
                                           child: SliderTheme(
                                             data: const SliderThemeData(
-                                              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
-                                              overlayShape: RoundSliderOverlayShape(overlayRadius: 12.0),
-                                              trackShape: PreviewCustomTrackShape(),
+                                              thumbShape: RoundSliderThumbShape(
+                                                  enabledThumbRadius: 6),
+                                              overlayShape:
+                                                  RoundSliderOverlayShape(
+                                                      overlayRadius: 12.0),
+                                              trackShape:
+                                                  PreviewCustomTrackShape(),
                                               trackHeight: 4,
                                               overlayColor: Colors.transparent,
                                               thumbColor: Colors.white,
@@ -393,9 +458,10 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
                                               min: 0,
                                               max: _videoDuration,
                                               activeColor: Colors.red,
-                                              inactiveColor: Colors.grey.withOpacity(.8),
-                                              value: _sliderValue ,
-                                              onChangeStart: (x){
+                                              inactiveColor:
+                                                  Colors.grey.withOpacity(.8),
+                                              value: _sliderValue,
+                                              onChangeStart: (x) {
                                                 _sliderInProgress = true;
                                                 _sliderValue = x;
                                                 _controlVisible = true;
@@ -403,22 +469,36 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
                                               },
                                               onChanged: (x) {
                                                 _controlVisible = true;
-                                                if(widget.controller.interceptSeekTo != null){
-                                                  double _value = widget.controller.interceptSeekTo!(x, _videoDuration);
-                                                  assert(_value <= _videoDuration,"Seek to value can't be greater than video duration");
+                                                if (widget.controller
+                                                        .interceptSeekTo !=
+                                                    null) {
+                                                  double _value = widget
+                                                          .controller
+                                                          .interceptSeekTo!(
+                                                      x, _videoDuration);
+                                                  assert(
+                                                      _value <= _videoDuration,
+                                                      "Seek to value can't be greater than video duration");
                                                   _sliderValue = _value;
-                                                }else{
+                                                } else {
                                                   _sliderValue = x;
                                                 }
                                                 _uiRefreshSink?.add("refresh");
                                               },
-                                              onChangeEnd:(x){
-                                                if(widget.controller.interceptSeekTo != null){
-                                                  double _value = widget.controller.interceptSeekTo!(x, _videoDuration);
-                                                  assert(_value <= _videoDuration,"Seek to value can't be greater than video duration");
+                                              onChangeEnd: (x) {
+                                                if (widget.controller
+                                                        .interceptSeekTo !=
+                                                    null) {
+                                                  double _value = widget
+                                                          .controller
+                                                          .interceptSeekTo!(
+                                                      x, _videoDuration);
+                                                  assert(
+                                                      _value <= _videoDuration,
+                                                      "Seek to value can't be greater than video duration");
                                                   _sliderValue = _value;
                                                   _seekToPosition(_sliderValue);
-                                                }else{
+                                                } else {
                                                   _sliderValue = x;
                                                   _seekToPosition(_sliderValue);
                                                 }
@@ -426,16 +506,79 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
                                             ),
                                           ),
                                         ),
-                                        GestureDetector(
-                                          onTap: _toggleOrientation,
-                                          child: const Icon(
-                                            Icons.zoom_out_map_rounded,
-                                            color: Colors.white,
-                                            size: 24,
-                                          ),
-                                        ),
+                                        // GestureDetector(
+                                        //   onTap: _toggleOrientation,
+                                        //   child: const Icon(
+                                        //     Icons.zoom_out_map_rounded,
+                                        //     color: Colors.white,
+                                        //     size: 24,
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
+
+                                    ///Content duration and played duration
+                                    Row(
+                                      // mainAxisAlignment:
+                                      //     MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: Text(
+                                            "${formatDuration(Duration(milliseconds: _sliderValue.toInt()))} / ${formatDuration((_controller?.value.duration ?? const Duration()))}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        PopupMenuButton<double>(
+                                          initialValue:
+                                              _controller?.value.playbackSpeed,
+                                          tooltip: 'Playback speed',
+                                          onSelected: (double speed) {
+                                            _controller
+                                                ?.setPlaybackSpeed(speed);
+                                          },
+                                          itemBuilder: (BuildContext context) {
+                                            return <PopupMenuItem<double>>[
+                                              for (final double speed
+                                                  in _examplePlaybackRates)
+                                                PopupMenuItem<double>(
+                                                  value: speed,
+                                                  child: Text('${speed}x'),
+                                                )
+                                            ];
+                                          },
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 8),
+                                            child: Text(
+                                              '${_controller?.value.playbackSpeed}x',
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 12,
+                                        ),
+                                        VolumeControl(
+                                          onValue: (value) {
+                                            if (!value) {
+                                              _controller?.setVolume(1.0);
+                                            } else {
+                                              _controller?.setVolume(0.0);
+                                            }
+                                          },
+                                        )
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),
@@ -446,88 +589,87 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
                     ),
                   ),
                 );
-              }
-          ),
+              }),
+
           ///User defined overlay
-          if(widget.overlay != null)StreamBuilder<String>(
-            stream: _uiRefreshController.stream,
-            builder: (context,snapshot){
-              return AnimatedOpacity(
-                duration: const Duration(milliseconds: 300),
-                opacity: _controlVisible || (_controller?.value.isBuffering ?? false) ? 1:0.0,
-                child: widget.overlay!,
-              );
-            },
-          ),
+          if (widget.overlay != null)
+            StreamBuilder<String>(
+              stream: _uiRefreshController.stream,
+              builder: (context, snapshot) {
+                return AnimatedOpacity(
+                  duration: const Duration(milliseconds: 300),
+                  opacity: _controlVisible ||
+                          (_controller?.value.isBuffering ?? false)
+                      ? 1
+                      : 0.0,
+                  child: widget.overlay!,
+                );
+              },
+            ),
         ],
       ),
     );
   }
 }
 
-
-
-
 class OrientationDetectorWidget extends StatefulWidget {
   final double aspectRatio;
   final Widget child;
-  const OrientationDetectorWidget({super.key, required this.child, this.aspectRatio = 16/ 9});
+  const OrientationDetectorWidget(
+      {super.key, required this.child, this.aspectRatio = 16 / 9});
 
   @override
-  _OrientationDetectorWidgetState createState() => _OrientationDetectorWidgetState();
+  _OrientationDetectorWidgetState createState() =>
+      _OrientationDetectorWidgetState();
 }
+
 class _OrientationDetectorWidgetState extends State<OrientationDetectorWidget> {
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-        builder: (context, orientation){
-          MediaQueryData _mediaQuery = MediaQuery.of(context);
-          if(_mediaQuery.orientation == Orientation.portrait){
-            SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-          }
-          else{
-            SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-          }
+    return OrientationBuilder(builder: (context, orientation) {
+      MediaQueryData _mediaQuery = MediaQuery.of(context);
+      if (_mediaQuery.orientation == Orientation.portrait) {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      } else {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+      }
 
-
-          if(_mediaQuery.orientation == Orientation.portrait) {
-            return AspectRatio(
-              aspectRatio: widget.aspectRatio,
-              child: widget.child,
-            );
-          }
-          else {
-            return SizedBox(
-              height: _mediaQuery.size.height,
-              width: _mediaQuery.size.width,
-              child: widget.child,
-            );
-          }
-        }
-    );
+      if (_mediaQuery.orientation == Orientation.portrait) {
+        return AspectRatio(
+          // aspectRatio: widget.aspectRatio,
+          aspectRatio: 1,
+          child: widget.child,
+        );
+      } else {
+        return SizedBox(
+          height: _mediaQuery.size.height,
+          width: _mediaQuery.size.width,
+          child: widget.child,
+        );
+      }
+    });
   }
 }
 
-
-
-class PreviewCustomTrackShape extends SliderTrackShape with BaseSliderTrackShape {
+class PreviewCustomTrackShape extends SliderTrackShape
+    with BaseSliderTrackShape {
   /// Create a slider track that draws two rectangles with rounded outer edges.
   const PreviewCustomTrackShape();
 
   @override
   void paint(
-      PaintingContext context,
-      Offset offset, {
-        required RenderBox parentBox,
-        required SliderThemeData sliderTheme,
-        required Animation<double> enableAnimation,
-        required TextDirection textDirection,
-        required Offset thumbCenter,
-        bool isDiscrete = false,
-        bool isEnabled = false,
-        double additionalActiveTrackHeight = 2,
-        Offset? secondaryOffset,
-      }) {
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalActiveTrackHeight = 2,
+    Offset? secondaryOffset,
+  }) {
     // If the slider [SliderThemeData.trackHeight] is less than or equal to 0,
     // then it makes no difference whether the track is painted or not,
     // therefore the painting  can be a no-op.
@@ -537,10 +679,16 @@ class PreviewCustomTrackShape extends SliderTrackShape with BaseSliderTrackShape
 
     // Assign the track segment paints, which are leading: active and
     // trailing: inactive.
-    final ColorTween activeTrackColorTween = ColorTween(begin: sliderTheme.disabledActiveTrackColor, end: sliderTheme.activeTrackColor);
-    final ColorTween inactiveTrackColorTween = ColorTween(begin: sliderTheme.disabledInactiveTrackColor, end: sliderTheme.inactiveTrackColor);
-    final Paint activePaint = Paint()..color = activeTrackColorTween.evaluate(enableAnimation)!;
-    final Paint inactivePaint = Paint()..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
+    final ColorTween activeTrackColorTween = ColorTween(
+        begin: sliderTheme.disabledActiveTrackColor,
+        end: sliderTheme.activeTrackColor);
+    final ColorTween inactiveTrackColorTween = ColorTween(
+        begin: sliderTheme.disabledInactiveTrackColor,
+        end: sliderTheme.inactiveTrackColor);
+    final Paint activePaint = Paint()
+      ..color = activeTrackColorTween.evaluate(enableAnimation)!;
+    final Paint inactivePaint = Paint()
+      ..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
     final Paint leftTrackPaint;
     final Paint rightTrackPaint;
     switch (textDirection) {
@@ -562,16 +710,23 @@ class PreviewCustomTrackShape extends SliderTrackShape with BaseSliderTrackShape
       isDiscrete: isDiscrete,
     );
     final Radius trackRadius = Radius.circular(trackRect.height / 2);
-    final Radius activeTrackRadius = Radius.circular((trackRect.height + additionalActiveTrackHeight) / 2);
+    final Radius activeTrackRadius =
+        Radius.circular((trackRect.height + additionalActiveTrackHeight) / 2);
 
     context.canvas.drawRRect(
       RRect.fromLTRBAndCorners(
         trackRect.left,
         (textDirection == TextDirection.ltr) ? trackRect.top : trackRect.top,
         thumbCenter.dx,
-        (textDirection == TextDirection.ltr) ? trackRect.bottom : trackRect.bottom,
-        topLeft: (textDirection == TextDirection.ltr) ? activeTrackRadius : trackRadius,
-        bottomLeft: (textDirection == TextDirection.ltr) ? activeTrackRadius: trackRadius,
+        (textDirection == TextDirection.ltr)
+            ? trackRect.bottom
+            : trackRect.bottom,
+        topLeft: (textDirection == TextDirection.ltr)
+            ? activeTrackRadius
+            : trackRadius,
+        bottomLeft: (textDirection == TextDirection.ltr)
+            ? activeTrackRadius
+            : trackRadius,
       ),
       leftTrackPaint,
     );
@@ -580,11 +735,48 @@ class PreviewCustomTrackShape extends SliderTrackShape with BaseSliderTrackShape
         thumbCenter.dx,
         (textDirection == TextDirection.rtl) ? trackRect.top : trackRect.top,
         trackRect.right,
-        (textDirection == TextDirection.rtl) ? trackRect.bottom : trackRect.bottom,
-        topRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
-        bottomRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+        (textDirection == TextDirection.rtl)
+            ? trackRect.bottom
+            : trackRect.bottom,
+        topRight: (textDirection == TextDirection.rtl)
+            ? activeTrackRadius
+            : trackRadius,
+        bottomRight: (textDirection == TextDirection.rtl)
+            ? activeTrackRadius
+            : trackRadius,
       ),
       rightTrackPaint,
+    );
+  }
+}
+
+class VolumeControl extends StatefulWidget {
+  final ValueChanged<bool> onValue;
+  const VolumeControl({super.key, required this.onValue});
+
+  @override
+  State<VolumeControl> createState() => _VolumeControlState();
+}
+
+class _VolumeControlState extends State<VolumeControl> {
+  bool isVolumeMute = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        if (mounted) {
+          setState(() {
+            isVolumeMute = !isVolumeMute;
+          });
+          widget.onValue.call(isVolumeMute);
+        }
+      },
+      child: Icon(
+        !isVolumeMute ? Icons.volume_up : Icons.volume_off,
+        color: Colors.white,
+        size: 24,
+      ),
     );
   }
 }

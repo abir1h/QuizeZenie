@@ -143,7 +143,9 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme {
                   alignment: Alignment.topCenter,
                   child: Padding(
                     padding: EdgeInsets.only(
-                        top: 1.sw * .21, right: size.s16, left: size.s16),
+                        top: MediaQuery.of(context).padding.top +
+                            kToolbarHeight +
+                            size.s20, right: size.s16, left: size.s16),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -221,19 +223,9 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VideoUploadScreen(
-                                                    videoAssets: "",
-                                                  )));
-                                    },
-                                    child: IconWithTitleWidget(
-                                      svgIcon: ImageAssets.icReel,
-                                      text: "500+ Videos",
-                                    ),
+                                  IconWithTitleWidget(
+                                    svgIcon: ImageAssets.icReel,
+                                    text: "500+ Videos",
                                   ),
                                   IconWithTitleWidget(
                                     svgIcon: ImageAssets.icBook,
