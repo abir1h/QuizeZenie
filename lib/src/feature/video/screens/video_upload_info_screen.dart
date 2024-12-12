@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
+import 'package:co_learning_mobile_app/src/common/constants/app_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/routes/app_route.dart';
 import '../../../common/widgets/custom_toasty.dart';
@@ -7,6 +11,7 @@ import '../../../common/utility/app_label.dart';
 import '../../../common/widgets/app_scaffold.dart';
 import '../../../common/widgets/app_scroll_view.dart';
 import '../../../common/widgets/custom_button.dart';
+import '../../../common/widgets/text_field_widget.dart';
 import '../services/video_upload_info_screen_service.dart';
 
 class VideoUploadInfoScreen extends StatefulWidget {
@@ -20,107 +25,262 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
     with AppTheme, Language, VideoUploadInfoScreenService {
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      title: label(e: "Upload video", b: "បង្ហោះវីដេអូ"),
-      bgColor: clr.whiteColor,
-      hasAppBar: true,
-      child: ConstrainedBox(
+    return Scaffold(
+      backgroundColor: clr.backgroundColor,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          label(e: "Upload videos", b: "បង្ហោះវីដេអូ"),
+          style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: size.textSmall,
+              color: clr.textGrayColor),
+        ),
+      ),
+      body: ConstrainedBox(
         constraints: BoxConstraints(
             minWidth: MediaQuery.of(context).size.width,
             minHeight: MediaQuery.of(context).size.height),
         child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: clr.textFieldStrokeColor,
-                width: 1.0,
-              ),
-            ),
-          ),
-          child: AppScrollView(
-            padding: EdgeInsets.symmetric(horizontal: size.s20),
+          margin: EdgeInsets.only(top: size.s8),
+          padding:
+              EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s20),
+          decoration: BoxDecoration(color: clr.whiteColor),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                size.s32.kHeight,
-                Center(child: Image.asset(ImageAssets.imgVideoObject)),
-                size.s28.kHeight,
-                Center(
-                  child: Text(
-                    label(e: "Upload video", b: "បង្ហោះវីដេអូ"),
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: size.textSmall,
-                        color: clr.textColorBlack),
-                  ),
-                ),
-                size.s12.kHeight,
-                Center(
-                  child: Text(
+                Text(
                     label(
-                        e: "You can record the video and upload or you can also upload the pre recorded video from your device gallery.",
-                        b: "អ្នក​អាច​ថត​វីដេអូ​និង​ផ្ទុក​ឡើង​ឬអ្នកក៏អាចបង្ហោះវីដេអូដែលបានថតទុកមុនពីវិចិត្រសាលឧបករណ៍របស់អ្នកផងដែរ។"),
-                    textAlign: TextAlign.center,
+                        e: "Upload video from gallery",
+                        b: "បង្ហោះវីដេអូពីវិចិត្រសាល"),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: size.textSmall,
+                        color: clr.blackColor)),
+                size.s8.kHeight,
+                Text(
+                    label(
+                        e:
+                            "Please select  video from Gallery” to select pre recorded video.",
+                        b:
+                            "សូមជ្រើសរើសវីដេអូពីវិចិត្រសាល ដើម្បីជ្រើសរើសវីដេអូដែលបានថតទុកមុន។"),
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: size.textXSmall,
-                        color: clr.textGray),
-                  ),
-                ),
-                size.s16.kHeight,
-                Center(
-                  child: Text(
-                    label(
-                        e: "Supported file type: mp4, avi or others",
-                        b: "ប្រភេទឯកសារដែលគាំទ្រ៖ mp4, avi ឬផ្សេងទៀត។"),
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
                         fontSize: size.textXXSmall,
-                        color: clr.textGray),
+                        color: clr.textLightGrey)),
+                size.s24.kHeight,
+                files!.isEmpty
+                    ? GestureDetector(
+                        onTap: () {
+                          pickVideoFile();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: size.s20 + 2),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(size.s8),
+                              color: clr.whiteColor,
+                              border: Border.all(
+                                  color: clr.appPrimaryColor, width: size.s1)),
+                          child: Column(
+                            children: [
+                              Center(
+                                child: SvgPicture.asset(ImageAssets.myVideos),
+                              ),
+                              size.s12.kHeight,
+                              RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  text: label(e: "Tap here", b: "ចុចទីនេះ"),
+                                  style: TextStyle(
+                                      color: clr.blueText,
+                                      fontSize: size.textXSmall,
+                                      fontWeight: FontWeight.w500),
+                                  children: [
+                                    TextSpan(
+                                      text: label(
+                                          e: " to Select a video",
+                                          b: " ដើម្បីជ្រើសរើសវីដេអូ"),
+                                      style: TextStyle(
+                                          color: clr.lightGray,
+                                          fontSize: size.textXSmall,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              size.s4.kHeight,
+                              Text(
+                                  label(
+                                      e:
+                                          "Supported video file type: mp4, mkv, flv",
+                                      b:
+                                          "ប្រភេទឯកសារវីដេអូដែលគាំទ្រ៖ mp4, mkv, flv"),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: size.textXXSmall,
+                                      color: clr.textLightGrey)),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(
+                        padding: EdgeInsets.all(size.s12),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(size.s8),
+                            color: clr.whiteColor,
+                            border: Border.all(
+                                color: clr.greyBorder, width: size.s1)),
+                        child: isLoading
+                            ? Padding(
+                                padding: EdgeInsets.all(size.s12),
+                                child: CircularProgressIndicator(),
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (thumbnailResult != null) ...[
+                                    AspectRatio(
+                                      aspectRatio: 319 / 128,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(size.s8),
+                                        child: Image.memory(
+                                          thumbnailResult!
+                                              .bytes, // Use the image bytes here
+                                          fit: BoxFit
+                                              .cover, // Adjust the fit as needed
+                                        ),
+                                      ),
+                                    ),
+                                    size.s4.kHeight,
+                                    Text(
+                                      thumbnailResult!.videoName,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: size.textXSmall,
+                                          color: clr.greyVideoTitle),
+                                    ),
+                                    /* Row(
+                                      children: [
+                                        Text(
+                                          "Duration: ${convertMillisecondsToHMS(thumbnailResult!.videoDuration)}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: size.textXXSmall,
+                                              color: clr.greyVideoTitle),
+                                        ),
+                                      ],
+                                    ),*/
+                                    size.s8.kHeight,
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: GestureDetector(
+                                            onTap: () => pickVideoFile(),
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: size.s4),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        size.s4 + 2),
+                                                color: clr.inactiveToggleColor,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  label(
+                                                      e: "Change",
+                                                      b: "ផ្លាស់ប្តូរ"),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize:
+                                                          size.textXXSmall,
+                                                      color:
+                                                          clr.greyVideoTitle),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        size.s20.kWidth,
+                                        Expanded(
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                files!.clear();
+                                              });
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: size.s4),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        size.s4 + 2),
+                                                color: clr.removeBgCardColor,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  label(
+                                                      e: "Remove", b: "ដកចេញ"),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize:
+                                                          size.textXXSmall,
+                                                      color: clr
+                                                          .removeBgCardColorText),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ]
+                                ],
+                              ),
+                      ),
+                size.s24.kHeight,
+                Text(
+                  label(e: "Name of the recording", b: "ឈ្មោះនៃការថត"),
+                  style: TextStyle(
+                      color: clr.blackColor,
+                      fontSize: size.textXSmall,
+                      fontWeight: FontWeight.w500),
+                ),
+                size.s8.kHeight,
+
+                TextField(
+
+                  controller: videoNameController,
+                  cursorRadius: const Radius.circular(100),
+                  decoration: InputDecoration(
+                    hintText:
+                    label(e: "Name of the recording", b: "ឈ្មោះនៃការថត"),hintStyle: TextStyle(
+                    color: clr.placeHolderTextColorGray,
+                    fontSize: size.textXSmall,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: StringData.fontFamilyPoppins,
+                  ),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: clr.inactiveGray)),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: clr.inactiveGray)),
+                    disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: clr.inactiveGray)),
+
+
+                    contentPadding: EdgeInsets.symmetric(
+                        vertical: size.s10, horizontal: size.s20),
                   ),
                 ),
+                size.s8.kHeight,
                 size.s24.kHeight,
-                CustomButton(
-                  onTap: () => pickVideoFile(),
-                  title: label(
-                      e: " Upload From Gallery", b: " ផ្ទុកឡើងពីវិចិត្រសាល"),
-                  textSize: size.textXSmall,
-                  radius: size.s8,
-                  icon: Icons.add_photo_alternate,
-                ),
-                size.s16.kHeight,
-                Row(
-                  children: [
-                    Expanded(
-                        child: Divider(
-                      height: size.s1,
-                      color: clr.dividerColor,
-                    )),
-                    size.s10.kWidth,
-                    Text(label(e: "Or", b: "ឬ")),
-                    size.s10.kWidth,
-                    Expanded(
-                        child: Divider(
-                      height: size.s1,
-                      color: clr.dividerColor,
-                    )),
-                  ],
-                ),
-                size.s16.kHeight,
-                CustomButton(
-                  onTap: () =>
-                      Navigator.pushNamed(context, AppRoute.videoRecordScreen),
-                  title:
-                      label(e: " Open Camera & Record", b: " បើកកាមេរ៉ា និងថត"),
-                  textSize: size.textXSmall,
-                  radius: size.s8,
-                  textColor: clr.appPrimaryColor,
-                  borderColor: clr.appPrimaryColor,
-                  bgColor: clr.whiteColor,
-                  icon: Icons.add_a_photo,
-                  iconColor: clr.appPrimaryColor,
-                ),
-                size.s64.kHeight,
+                CustomButton(onTap: (){}, title: "Continue",radius: size.s8,verticalPadding: size.s10,textSize: size.textXSmall,bgColor: files!.isEmpty?clr.disableButtonGray:clr.appPrimaryColor)
+
               ],
             ),
           ),

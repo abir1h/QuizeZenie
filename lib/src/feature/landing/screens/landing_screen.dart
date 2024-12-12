@@ -7,6 +7,7 @@ import '../../../common/routes/app_route.dart';
 import '../../../common/service/notifier/app_events_notifier.dart';
 import '../../../common/utility/app_label.dart';
 import '../../home/screens/home_screen.dart';
+import '../../video/screens/video_upload_info_screen.dart';
 import '../services/landing_screen_services.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class _LandingScreenState extends State<LandingScreen>
   List<Widget> pages = [
     const HomeScreen(),
     Container(),
-    Container(),
+    VideoUploadInfoScreen(),
     ProfileScreen(),
   ];
 
