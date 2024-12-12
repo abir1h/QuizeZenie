@@ -1,17 +1,10 @@
-import 'dart:typed_data';
-
-import 'package:co_learning_mobile_app/src/common/constants/app_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../common/routes/app_route.dart';
 import '../../../common/widgets/custom_toasty.dart';
 import '../../../common/constants/common_imports.dart';
 import '../../../common/utility/app_label.dart';
-import '../../../common/widgets/app_scaffold.dart';
-import '../../../common/widgets/app_scroll_view.dart';
 import '../../../common/widgets/custom_button.dart';
-import '../../../common/widgets/text_field_widget.dart';
 import '../services/video_upload_info_screen_service.dart';
 
 class VideoUploadInfoScreen extends StatefulWidget {
@@ -29,6 +22,7 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
       backgroundColor: clr.backgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: false,
         title: Text(
           label(e: "Upload videos", b: "បង្ហោះវីដេអូ"),
           style: TextStyle(

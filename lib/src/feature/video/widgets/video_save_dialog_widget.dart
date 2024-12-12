@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:co_learning_mobile_app/src/common/widgets/custom_toasty.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -163,8 +164,16 @@ mixin VideoSaveDialogWidget<T extends StatefulWidget> on State<T> {
                           SizedBox(width: 12.w),
                           Expanded(
                             child: GestureDetector(
-                              onTap: () => Navigator.of(context)
-                                  .pop(recordingTextEditingController.text),
+                              onTap: () {
+                                if (recordingTextEditingController
+                                    .text.isNotEmpty) {
+                                  Navigator.of(context)
+                                      .pop(recordingTextEditingController.text);
+                                } else {
+                                  Toasty.of(context).showWarning(
+                                      "Please enter recording name!");
+                                }
+                              },
                               child: Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.symmetric(
