@@ -9,8 +9,9 @@ import '../../../common/constants/common_imports.dart';
 import '../../../common/widgets/text_field.dart';
 
 mixin VideoSaveDialogWidget {
-  static Future<bool> show({required BuildContext context}) {
-    Completer<bool> completer = Completer();
+  static TextEditingController recordingTextEditingController = TextEditingController();
+  static Future<String> show({required BuildContext context}) {
+    Completer<String> completer = Completer();
     showCupertinoModalPopup(
       context: context,
       builder: (context) {
@@ -59,7 +60,7 @@ mixin VideoSaveDialogWidget {
                       SizedBox(height: ThemeSize.instance.s8),
                       TextFieldWidget(
                           hintText: "Recording Name",
-                          controller: TextEditingController()),
+                          controller: recordingTextEditingController),
                       SizedBox(height: ThemeSize.instance.s16),
                       const HeaderTextWidget(title: "Recorded by:"),
                       SizedBox(height: ThemeSize.instance.s8),
@@ -118,7 +119,7 @@ mixin VideoSaveDialogWidget {
                         children: [
                           Expanded(
                             child: GestureDetector(
-                              onTap: () => Navigator.of(context).pop(false),
+                              onTap: () => Navigator.of(context).pop(""),
                               child: Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.symmetric(
@@ -149,7 +150,7 @@ mixin VideoSaveDialogWidget {
                           SizedBox(width: 12.w),
                           Expanded(
                             child: GestureDetector(
-                              onTap: () => Navigator.of(context).pop(true),
+                              onTap: () => Navigator.of(context).pop(recordingTextEditingController.text),
                               child: Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.symmetric(
@@ -188,10 +189,10 @@ mixin VideoSaveDialogWidget {
         );
       },
     ).then((x) {
-      if (x != null && x) {
-        completer.complete(true);
+      if (x != null && x.isNotEmpty) {
+        completer.complete(recordingTextEditingController.text);
       } else {
-        completer.complete(false);
+        completer.complete("");
       }
     });
     return completer.future;
