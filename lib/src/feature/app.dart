@@ -28,7 +28,7 @@ class Application extends StatelessWidget with AppTheme {
         splitScreenMode: true,
         builder: (context, child) {
           return MaterialApp(
-            title: 'EduPack',
+            title: 'Co Learning',
             debugShowCheckedModeBanner: false,
             useInheritedMediaQuery: true,
             theme: ThemeData(

@@ -585,17 +585,19 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> with AppTheme {
           itemBuilder: (BuildContext context, int index, int realIndex) {
             return ClipRRect(
               borderRadius:
-                  BorderRadius.circular(8.0), // You can customize this size
-              child: CachedNetworkImage(
-                height: double.infinity,
-                width: double.infinity,
-                fit: BoxFit.fill,
-                imageUrl: widget.imgList[index],
-                placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.error_outline),
-              ),
+                  BorderRadius.circular(8.0),
+              child: Container(color: Colors.cyan,),
+              // You can customize this size
+              // child: CachedNetworkImage(
+              //   height: double.infinity,
+              //   width: double.infinity,
+              //   fit: BoxFit.fill,
+              //   imageUrl: widget.imgList[index],
+              //   placeholder: (context, url) =>
+              //       const Center(child: CircularProgressIndicator()),
+              //   errorWidget: (context, url, error) =>
+              //       const Icon(Icons.error_outline),
+              // ),
             );
           },
           options: CarouselOptions(

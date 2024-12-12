@@ -5,6 +5,7 @@ import 'package:co_learning_mobile_app/src/common/widgets/custom_button.dart';
 import 'package:co_learning_mobile_app/src/feature/video_upload/video_player_widget.dart';
 import 'package:co_learning_mobile_app/src/feature/video_upload/video_upload_screen_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../common/constants/common_imports.dart';
@@ -26,6 +27,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       loadInitialData(widget.videoAssets.path);
     });
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.initState();
   }
 
@@ -33,6 +35,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
+      bottom: true,
       child: AppScaffold(
           title: "Video Upload",
           child: Stack(

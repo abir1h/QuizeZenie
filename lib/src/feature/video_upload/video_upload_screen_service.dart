@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../common/widgets/app_stream.dart';
 
@@ -31,6 +32,8 @@ implements _ViewModel {
     // bookmarkStreamController.dispose();
     playerStreamController.dispose();
     playbackPausePlayStreamController.dispose();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+
     super.dispose();
   }
 
