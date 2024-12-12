@@ -321,34 +321,6 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
                         ? clr.disableButtonGray
                         : clr.appPrimaryColor),
                 size.s64.kHeight,
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: size.s16, vertical: size.s10),
-                  decoration: BoxDecoration(
-                    color: clr.whiteColor,
-                    boxShadow: [
-                      BoxShadow(
-                          offset: Offset(0, -2),
-                          blurRadius: size.s4,
-                          spreadRadius: 0,
-                          color: clr.blackColor.withOpacity(.1))
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          FeedBackWidget(
-                            title: "Good", image: ImageAssets.chat,bgColor: clr.bgGood,textColor: clr.blueText,),
-                          size.s16.kWidth,
-                          FeedBackWidget(
-                            title: "Improve", image: ImageAssets.chat,bgColor: clr.bgImprove,textColor: clr.improveText,),
-                        ],
-                      )
-                    ],
-                  ),
-                )
               ],
             ),
           ),

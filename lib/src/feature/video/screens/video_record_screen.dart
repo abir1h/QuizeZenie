@@ -351,7 +351,7 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
         File videoFile = renameVideoFile(value.trim(), file);
 
         ///Navigate to upload page
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) => VideoUploadScreen(videoAssets: videoFile)),

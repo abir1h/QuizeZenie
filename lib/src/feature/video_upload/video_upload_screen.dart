@@ -133,7 +133,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
                       color: clr.whiteColor,
                       boxShadow: [
                         BoxShadow(
-                            offset: Offset(0, -2),
+                            offset:const Offset(0, -2),
                             blurRadius: size.s4,
                             spreadRadius: 0,
                             color: clr.blackColor.withOpacity(.1))
