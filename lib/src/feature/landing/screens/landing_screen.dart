@@ -97,10 +97,8 @@ class _LandingScreenState extends State<LandingScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 NavBarItemWidget(
-                  svgIcon: _selectedIndex == 2
-                      ? ImageAssets.icRecordFilled
-                      : ImageAssets.icRecord,
-                  title: label(e: en.recordText, b: bn.recordText),
+                  svgIcon: ImageAssets.icRecord,
+                  title: label(e: "Upload", b: "Upload"),
                   color:
                       _selectedIndex == 2 ? clr.appPrimaryColor : clr.grayColor,
                   onTap: () => _onNavItemTapped(2),
@@ -188,6 +186,7 @@ class NavBarItemWidget extends StatelessWidget with AppTheme {
           SvgPicture.asset(
             svgIcon,
             width: size.s20,
+            color: color,
           ),
           Text(
             title,

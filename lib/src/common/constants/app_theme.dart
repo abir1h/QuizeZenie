@@ -26,6 +26,7 @@ class ThemeColor {
   Color get iconColorGrey => HexColor("929292");
   Color get textColorGrey => HexColor("B0B0B0");
   Color get textColorGrey2 => HexColor("5F5F5F");
+  Color get textColorHomeBlack => HexColor("494949");
   Color get imgBorderColor => HexColor("9CABC2");
   Color get dotColor => HexColor("D5D7DA");
 

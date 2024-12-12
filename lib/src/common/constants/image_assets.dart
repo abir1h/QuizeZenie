@@ -20,7 +20,8 @@ class ImageAssets {
   static String get icHomeFilled => 'Home-1'.svg;
   static String get icBookmark => 'bookmark-1'.svg;
   static String get icBookmarkFilled => 'bookmark'.svg;
-  static String get icRecord => 'screen_record'.svg;
+  static String get icRecord => 'upload'.svg;
+  // static String get icRecord => 'screen_record'.svg;
   static String get icRecordFilled => 'screen_record-1'.svg;
   static String get icProfile => 'profile-1'.svg;
   static String get icProfileFilled => 'profile'.svg;
