@@ -65,17 +65,15 @@ class _AppScaffoldState extends State<AppScaffold> with AppTheme{
                   Expanded(
                     child: Container(
                      alignment: Alignment.center,
-                      child: Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: size.s8),
-                          child: Text(
-                            widget.title,
-                            style: TextStyle(
-                              color: clr.blackColor,
-                              fontSize: size.textLarge,overflow: TextOverflow.ellipsis
-                            ),
-                            maxLines: widget.maxLine,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: size.s8),
+                        child: Text(
+                          widget.title,
+                          style: TextStyle(
+                            color: clr.blackColor,
+                            fontSize: size.textLarge,overflow: TextOverflow.ellipsis
                           ),
+                          maxLines: widget.maxLine,
                         ),
                       ),
                     ),

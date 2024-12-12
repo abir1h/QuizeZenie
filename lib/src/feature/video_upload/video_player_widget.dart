@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:co_learning_mobile_app/src/feature/video_upload/player_widget.dart';
+import 'package:co_learning_mobile_app/src/feature/video_upload/video_upload_screen_service.dart';
 import 'package:flutter/material.dart';
 import '../../common/widgets/app_stream.dart';
 
@@ -54,12 +55,12 @@ class _PreviewPlayerWidgetState extends State<PreviewPlayerWidget> {
     if (!mounted) return;
     _currentContent = (event as DataLoadedState<VideoContentViewModel>).data;
     _playerController.play(
-      _currentContent.video.rawUrl,
+      _currentContent.videoPath,
       autoPlay: true,
-      playPosition:
-      _currentContent.video.lastStudyTime < _currentContent.video.duration
-          ? Duration(seconds: _currentContent.video.lastStudyTime)
-          : null,
+      // playPosition:
+      // _currentContent.video.lastStudyTime < _currentContent.video.duration
+      //     ? Duration(seconds: _currentContent.video.lastStudyTime)
+      //     : null,
     );
   }
 

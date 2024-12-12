@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-
 import '../../common/widgets/app_stream.dart';
 
 
@@ -52,16 +50,17 @@ implements _ViewModel {
     _screenArgs = args;
 
     ///Loading state
-    pageDataStreamController.add(LoadingState<ContentDetailsEntity>());
-    CourseDetailsGateway.getContentDetailsData(_screenArgs.contentId)
-        .then((value) {
+    // pageDataStreamController.add(LoadingState<ContentDetailsEntity>());
+    // CourseDetailsGateway.getContentDetailsData(_screenArgs.contentId)
+    //     .then((value) {
       ///Data loaded state
-      if (value.status == Status.success) {
-        pageDataStreamController
-            .add(DataLoadedState<ContentDetailsEntity>(value.data!));
-        onContentSelect(value.data!.allContents[0]);
-      }
-    });
+      // if (value.status == Status.success) {
+    //     pageDataStreamController
+    //         .add(DataLoadedState<ContentDetailsEntity>(value.data!));
+    //     onContentSelect(value.data!.allContents[0]);
+    //   // }
+    // });
+    _onPlayVideo(ContentDetailsEntity(videoPath: 'jshdgfhjsdg'));
   }
 
   // ///Change video playback orientation
@@ -100,23 +99,22 @@ implements _ViewModel {
     //   return;
     // }
 
-    ///Activate player widget
-    playerActivationStreamController
-        .add(DataLoadedState<ActivePlayerType>(content.video.rawUrl.isNotEmpty
-        ? ActivePlayerType.solidVidePlayer
-        : content.video.s3Url.isNotEmpty
-        ? ActivePlayerType.hlsPlayer
-        : content.video.youtubeUrl.isNotEmpty
-        ? ActivePlayerType.youtubePlayer
-        : ActivePlayerType.none));
+    // ///Activate player widget
+    // playerActivationStreamController
+    //     .add(DataLoadedState<ActivePlayerType>(content.video.rawUrl.isNotEmpty
+    //     ? ActivePlayerType.solidVidePlayer
+    //     : content.video.s3Url.isNotEmpty
+    //     ? ActivePlayerType.hlsPlayer
+    //     : content.video.youtubeUrl.isNotEmpty
+    //     ? ActivePlayerType.youtubePlayer
+    //     : ActivePlayerType.none));
     WakelockPlus.enable();
 
     ///Play the video
-    _isPlaybackComplete = false;
+    // _isPlaybackComplete = false;
     var videoContent = VideoContentViewModel.fromJson(content.toJson());
     playerStreamController
         .add(DataLoadedState<VideoContentViewModel>(videoContent));
-    CourseDetailsGateway.videoRead(content.id);
   }
 
   void onPlaybackProgressChanged(VideoContentViewModel currentContent,
@@ -181,3 +179,26 @@ class VideoContentViewModel extends ContentDetailsEntity {
 }
 
 enum CourseContentType { video, script, mockTest, none }
+
+
+
+class ContentDetailsEntity {
+  late String videoPath;
+
+  ContentDetailsEntity({
+    required this.videoPath,
+  });
+
+  ContentDetailsEntity.empty() {
+    videoPath = "";
+
+  }
+
+  ContentDetailsEntity.fromJson(Map<String, dynamic> json) {
+    videoPath = json["videoPath"] ?? "";
+  }
+
+  Map<String, dynamic> toJson() => {
+    "videoPath": videoPath,
+  };
+}
