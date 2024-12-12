@@ -29,7 +29,7 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
   // Keep track of the current camera index
   int _currentCameraIndex = 0;
   bool isFrontCamera = false;
-  String qualityDropDownValue = 'Average image quality/ smooth (about 90MB/ 30 minutes)';
+  String qualityDropDownValue = "";
   List<String> itemList = [
     'Mobile-friendly images quality (about 65MB/ 30 minutes)',
     'Average image quality/ smooth (about 90MB/ 30 minutes)',
@@ -103,6 +103,7 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
       isRecording = false;
       isPaused = false;
       _timer?.cancel();
+      qualityDropDownValue = "";
     });
     debugPrint('Inside Recording stopped: ${video.path}');
     debugPrint('Recording saved to: ${newFile.path}');

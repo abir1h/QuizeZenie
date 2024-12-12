@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constants/common_imports.dart';
+import '../../../common/routes/app_route.dart';
 import '../services/video_record_service.dart';
 import '../../../common/widgets/custom_toasty.dart';
 import '../widgets/video_save_dialog_widget.dart';
@@ -119,66 +120,71 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
                   right: 0,
                   child: Column(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: size.s4),
-                        decoration: BoxDecoration(color: clr.whiteColor),
-                        width: double.infinity,
-                        child: DropdownButtonFormField<String>(
-                          value: itemList[1],
-                          dropdownColor: clr.whiteColor,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: size.s8,
-                              vertical: size.s8,
-                            ),
-                            isDense: false,
-                            filled: true,
-                            fillColor: clr.whiteColor,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.r),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          icon: SvgPicture.asset(ImageAssets.icDropdown),
-                          isExpanded: true,
-                          style: TextStyle(
-                              color: clr.blackColor,
-                              fontSize: size.textSmall,
-                              overflow: TextOverflow.ellipsis),
-                          items: itemList.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: SizedBox(
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.done,
-                                      color: qualityDropDownValue == value
-                                          ? clr.iconColorGray
-                                          : Colors.transparent,
-                                      size: 20.r,
-                                    ),
-                                    size.s4.kWidth,
-                                    Expanded(
-                                        child: Text(
-                                      value,
-                                      style: TextStyle(
-                                          color: clr.iconColorGray,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: size.textXSmall),
-                                    ))
-                                  ],
-                                ),
+                      if (!isRecording)
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: size.s4),
+                          decoration: BoxDecoration(color: clr.whiteColor),
+                          width: double.infinity,
+                          child: DropdownButtonFormField<String>(
+                            hint: Text("Tap to select video quality",
+                                style: TextStyle(
+                                    color: clr.iconColorGray,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: size.textXSmall)),
+                            dropdownColor: clr.whiteColor,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: size.s8,
+                                vertical: size.s8,
                               ),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              qualityDropDownValue = newValue!;
-                            });
-                          },
+                              isDense: false,
+                              filled: true,
+                              fillColor: clr.whiteColor,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.r),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            icon: SvgPicture.asset(ImageAssets.icDropdown),
+                            isExpanded: true,
+                            style: TextStyle(
+                                color: clr.blackColor,
+                                fontSize: size.textSmall,
+                                overflow: TextOverflow.ellipsis),
+                            items: itemList.map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: SizedBox(
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.done,
+                                        color: qualityDropDownValue == value
+                                            ? clr.iconColorGray
+                                            : Colors.transparent,
+                                        size: 20.r,
+                                      ),
+                                      size.s4.kWidth,
+                                      Expanded(
+                                          child: Text(
+                                        value,
+                                        style: TextStyle(
+                                            color: clr.iconColorGray,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: size.textXSmall),
+                                      ))
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                qualityDropDownValue = newValue!;
+                              });
+                            },
+                          ),
                         ),
-                      ),
                       Container(
                         padding: EdgeInsets.symmetric(
                             vertical: size.s12, horizontal: size.s32),
@@ -330,9 +336,6 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
         //   context,
         //   MaterialPageRoute(builder: (context) => VideoApp(file: file)),
         // );
-      } else {
-        //refresh
-        forceClose();
       }
     });
   }

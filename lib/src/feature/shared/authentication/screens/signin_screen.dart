@@ -126,7 +126,7 @@ class _SignInScreenState extends State<SignInScreen> with AppTheme, Language,Use
                   )),
                   size.s16.kWidth,
                   Expanded(child: GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, AppRoute.videoUploadInfoScreen),
+                    onTap: () {},
                     child: Container(
                       padding: EdgeInsets.all(size.s16),
 
