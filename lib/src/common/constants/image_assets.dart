@@ -13,6 +13,7 @@ class ImageAssets {
   static String get icFlipCamera => 'flip_camera'.svg;
   static String get forgotPasswordIcon => 'forgotPasswordIcon'.png;
   static String get resetPasswordIcon => 'restePasswordIcon'.png;
+  static String get groupImage => 'group'.svg;
 
   static String get imgHomeBG => 'home_bg'.png;
 
@@ -38,6 +39,11 @@ class ImageAssets {
   static String get changeLanguage => 'changeLanguage'.svg;
   static String get icDropdown => 'dropdown'.svg;
   static String get icPersons => 'persons'.svg;
+  static String get assignment_turned_in => 'assignment_turned_in'.svg;
+  static String get folder => 'folder'.svg;
+  static String get upload => 'upload'.svg;
+  static String get upload_filled => 'upload_filled'.svg;
+  static String get chat => 'chat'.svg;
 
 /* static String get emptyProfile => 'img'.png;
   static String get animEmpty => 'Animation - 1706009676891'.json;
