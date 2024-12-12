@@ -15,7 +15,8 @@ mixin VideoUploadInfoScreenService<T extends StatefulWidget> on State<T>
     implements _ViewModel {
   late _ViewModel _view;
   List<File>? files = [];
-  TextEditingController videoNameController=TextEditingController();
+
+  TextEditingController videoNameController = TextEditingController();
   bool isLoading = true;
   var thumbnail;
   ThumbnailRequest? thumbnailRequest;
@@ -26,6 +27,29 @@ mixin VideoUploadInfoScreenService<T extends StatefulWidget> on State<T>
   void initState() {
     _view = this;
     super.initState();
+  }
+
+  Future<List<FeedBack?>> loadFeedBack() async {
+    return [
+      FeedBack(id: 1, title: 'Test 1'),
+      FeedBack(id: 2, title: 'Test 2'),
+      FeedBack(id: 3, title: 'Test 3'),
+      FeedBack(id: 4, title: 'Test 4'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+    ];
   }
 
   void pickVideoFile() async {
@@ -60,8 +84,7 @@ mixin VideoUploadInfoScreenService<T extends StatefulWidget> on State<T>
           imageFormat: ImageFormat.JPEG,
           maxHeight: 200,
           maxWidth: 200,
-          timeMs:
-              5000,
+          timeMs: 5000,
           quality: 75,
           attachHeaders: false,
         );
@@ -69,8 +92,7 @@ mixin VideoUploadInfoScreenService<T extends StatefulWidget> on State<T>
         thumbnailResult = await genThumbnail(thumbnailRequest!);
 
         setState(() {
-          isLoading =
-              false;
+          isLoading = false;
         });
       }
     } else {
@@ -173,4 +195,10 @@ class ThumbnailResult {
   final int width;
   final String videoName;
   final int videoDuration;
+}
+
+class FeedBack {
+  int id;
+  String title;
+  FeedBack({required this.id, required this.title});
 }

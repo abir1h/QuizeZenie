@@ -12,7 +12,7 @@ class LanguageEn {
   String homeText = "Home";
   String bookmarkText = "Bookmark";
   String captureText = "Capture";
-  String recordText = "Record";
+  String recordText = "Upload";
   String profileText = "Profile";
   String onboardingTitleText1 = "Improve Learning at your own pace";
   String onboardingTitleText2 = "Evaluate Your Teaching Skills";
@@ -61,7 +61,7 @@ class LanguageBn {
   String homeText = "ទំព័រដើម";
   String bookmarkText = "បញ្ជីសញ្ញាសម្គាល់";
   String captureText = "ចាប់រូបភាព";
-  String recordText = "កំណត់ត្រា";
+  String recordText = "ផ្ទុកឡើង";
   String profileText = "ប្រវត្តិរូប";
   String onboardingTitleText1 = "កែលម្អការរៀនសូត្រតាមល្បឿនផ្ទាល់ខ្លួនរបស់អ្នក។";
   String onboardingTitleText2 = "វាយតម្លៃជំនាញបង្រៀនរបស់អ្នក។";

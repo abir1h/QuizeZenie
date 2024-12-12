@@ -1,5 +1,7 @@
+import 'package:co_learning_mobile_app/src/common/constants/common_imports.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../constants/app_theme.dart';
 import 'popup_widget.dart';
@@ -9,11 +11,13 @@ class CustomDropDown<T> extends StatefulWidget {
   final String Function(T item) onGenerateTitle;
   final void Function(T item) onSelected;
   final String hintText;
+  final String? prefix;
   const CustomDropDown({
     super.key,
     required this.onLoadData,
     required this.onSelected,
     this.hintText = "Select",
+    this.prefix,
     required this.onGenerateTitle,
   });
 
@@ -46,23 +50,29 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>>
         child: Row(
           children: [
             Expanded(
-              child: Text(
-                _selectedItem != null
-                    ? widget.onGenerateTitle(_selectedItem as T)
-                    : widget.hintText,
-                style: TextStyle(
-                  color: _selectedItem != null
-                      ? clr.textColorBlack
-                      : clr.dividerColorGrey,
-                  fontSize: size.textXXSmall,
-                  fontWeight: FontWeight.w500
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              child: Row(
+                children: [
+                  if(widget.prefix!=null)
+                    SvgPicture.asset(widget.prefix!,height: size.s24,width: size.s24,),size.s4.kWidth,
+                  Text(
+                    _selectedItem != null
+                        ? widget.onGenerateTitle(_selectedItem as T)
+                        : widget.hintText,
+                    style: TextStyle(
+                      color: _selectedItem != null
+                          ? clr.textColorBlack
+                          : clr.dividerColorGrey,
+                      fontSize: size.textXXSmall,
+                      fontWeight: FontWeight.w500
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
             Icon(
-              Icons.filter_list_outlined,
+              Icons.keyboard_arrow_down_outlined,
               color: clr.dividerColorGrey,
               size: 22.sp,
             ),
@@ -104,49 +114,53 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>>
                         return SingleChildScrollView(
                           physics: const BouncingScrollPhysics(),
                           child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: snapshot.data!
-                                .map(
-                                  (m) => Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).pop();
-                                          if (mounted) {
-                                            setState(() {
-                                              _selectedItem = m;
-                                            });
-                                          }
-                                          widget.onSelected.call(m);
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: size.s16,
-                                              vertical: size.s8),
-                                          width: double.infinity,
-                                          color: Colors.white,
-                                          child: Text(
-                                            widget.onGenerateTitle(m),
-                                            style: TextStyle(
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: clr.textColorBlack,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: snapshot.data!
+                                    .map(
+                                      (m) => Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                              if (mounted) {
+                                                setState(() {
+                                                  _selectedItem = m;
+                                                });
+                                              }
+                                              widget.onSelected.call(m);
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: size.s16,
+                                                  vertical: size.s8),
+                                              width: double.infinity,
+                                              color: Colors.white,
+                                              child: Text(
+                                                widget.onGenerateTitle(m),
+                                                style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: clr.textColorBlack,
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
+                                          Container(
+                                            height: 1.2.w,
+                                            width: double.infinity,
+                                            color: Colors.grey.withOpacity(.08),
+                                          )
+                                        ],
                                       ),
-                                      Container(
-                                        height: 1.2.w,
-                                        width: double.infinity,
-                                        color: Colors.grey.withOpacity(.08),
-                                      )
-                                    ],
-                                  ),
-                                )
-                                .toList(),
+                                    )
+                                    .toList(),
+                              ),size.s32.kHeight
+                            ],
                           ),
                         );
                       }

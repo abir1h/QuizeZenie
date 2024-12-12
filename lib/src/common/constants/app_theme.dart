@@ -86,6 +86,9 @@ class ThemeColor {
   Color get amberColor => HexColor("FFAD3A");
   Color get darkGreyHeaderTextColor => HexColor("717680");
   Color get blueText => HexColor("026AA2");
+  Color get bgGood => HexColor("F5FBFF");
+  Color get bgImprove => HexColor("FFFCF5");
+  Color get improveText => HexColor("FFB901");
 
 }
 

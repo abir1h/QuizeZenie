@@ -85,22 +85,22 @@ class _LandingScreenState extends State<LandingScreen>
                 ),
               ],
             ),
-            // Text(
-            //   label(e: en.captureText, b: bn.captureText),
-            //   style: TextStyle(
-            //       color: clr.grayColor,
-            //       fontWeight: FontWeight.w500,
-            //       fontFamily: StringData.fontFamilyRoboto,
-            //       fontSize: size.textXXSmall),
-            // ),
+        /*    Text(
+              label(e: en.captureText, b: bn.captureText),
+              style: TextStyle(
+                  color: clr.grayColor,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: StringData.fontFamilyRoboto,
+                  fontSize: size.textXXSmall),
+            ),*/
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 NavBarItemWidget(
                   svgIcon: _selectedIndex == 2
-                      ? ImageAssets.icRecordFilled
-                      : ImageAssets.icRecord,
+                      ? ImageAssets.upload_filled
+                      : ImageAssets.upload,
                   title: label(e: en.recordText, b: bn.recordText),
                   color:
                       _selectedIndex == 2 ? clr.appPrimaryColor : clr.grayColor,

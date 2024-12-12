@@ -1,10 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:co_learning_mobile_app/src/common/constants/app_constant.dart';
+import 'package:co_learning_mobile_app/src/feature/video/widgets/feed_back_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/routes/app_route.dart';
+import '../../../common/widgets/custom_dropdown_widget.dart';
 import '../../../common/widgets/custom_toasty.dart';
 import '../../../common/constants/common_imports.dart';
 import '../../../common/utility/app_label.dart';
@@ -28,6 +30,8 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
     return Scaffold(
       backgroundColor: clr.backgroundColor,
       appBar: AppBar(
+        backgroundColor: clr.whiteColor,
+        elevation: 0,
         automaticallyImplyLeading: false,
         title: Text(
           label(e: "Upload videos", b: "បង្ហោះវីដេអូ"),
@@ -47,6 +51,7 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
               EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s20),
           decoration: BoxDecoration(color: clr.whiteColor),
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -252,35 +257,104 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
                       fontWeight: FontWeight.w500),
                 ),
                 size.s8.kHeight,
-
                 TextField(
-
                   controller: videoNameController,
                   cursorRadius: const Radius.circular(100),
                   decoration: InputDecoration(
                     hintText:
-                    label(e: "Name of the recording", b: "ឈ្មោះនៃការថត"),hintStyle: TextStyle(
-                    color: clr.placeHolderTextColorGray,
-                    fontSize: size.textXSmall,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: StringData.fontFamilyPoppins,
-                  ),
+                        label(e: "Name of the recording", b: "ឈ្មោះនៃការថត"),
+                    hintStyle: TextStyle(
+                      color: clr.placeHolderTextColorGray,
+                      fontSize: size.textXSmall,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: StringData.fontFamilyPoppins,
+                    ),
                     border: OutlineInputBorder(
-                        borderSide: BorderSide(color: clr.inactiveGray)),
+                        borderSide:
+                            BorderSide(color: clr.inactiveGray, width: 1)),
                     enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: clr.inactiveGray)),
+                        borderSide:
+                            BorderSide(color: clr.inactiveGray, width: 1)),
                     disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: clr.inactiveGray)),
-
-
+                        borderSide:
+                            BorderSide(color: clr.inactiveGray, width: 1)),
                     contentPadding: EdgeInsets.symmetric(
                         vertical: size.s10, horizontal: size.s20),
                   ),
                 ),
                 size.s8.kHeight,
+                Text(
+                  label(e: "Feedback Criteria", b: "លក្ខណៈវិនិច្ឆ័យមតិ"),
+                  style: TextStyle(
+                      color: clr.blackColor,
+                      fontSize: size.textXSmall,
+                      fontWeight: FontWeight.w500),
+                ),
+                size.s8.kHeight,
+                CustomDropDown(
+                    prefix: ImageAssets.assignment_turned_in,
+                    onLoadData: loadFeedBack,
+                    onSelected: (status) {},
+                    hintText: label(
+                        e: "Name of Feedback Criteria...",
+                        b: "ជ្ឈ្មោះ​នៃ​លក្ខណៈ​វិនិច្ឆ័យ​នៃ​ការ​ផ្ដល់​យោបល់..."),
+                    onGenerateTitle: (x) => x!.title),
+                size.s8.kHeight,
+                Text(
+                  label(e: "Folder or Category", b: "ថតឬប្រភេទ"),
+                  style: TextStyle(
+                      color: clr.blackColor,
+                      fontSize: size.textXSmall,
+                      fontWeight: FontWeight.w500),
+                ),
+                size.s8.kHeight,
+                CustomDropDown(
+                    prefix: ImageAssets.folder,
+                    onLoadData: loadFeedBack,
+                    onSelected: (status) {},
+                    hintText: label(
+                        e: "Select Folder or Category",
+                        b: "ជ្រើសរើស Folder ឬ Category"),
+                    onGenerateTitle: (x) => x!.title),
                 size.s24.kHeight,
-                CustomButton(onTap: (){}, title: "Continue",radius: size.s8,verticalPadding: size.s10,textSize: size.textXSmall,bgColor: files!.isEmpty?clr.disableButtonGray:clr.appPrimaryColor)
-
+                CustomButton(
+                    onTap: () {},
+                    title: "Continue",
+                    radius: size.s8,
+                    verticalPadding: size.s10,
+                    textSize: size.textXSmall,
+                    bgColor: files!.isEmpty
+                        ? clr.disableButtonGray
+                        : clr.appPrimaryColor),
+                size.s64.kHeight,
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.s16, vertical: size.s10),
+                  decoration: BoxDecoration(
+                    color: clr.whiteColor,
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, -2),
+                          blurRadius: size.s4,
+                          spreadRadius: 0,
+                          color: clr.blackColor.withOpacity(.1))
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          FeedBackWidget(
+                            title: "Good", image: ImageAssets.chat,bgColor: clr.bgGood,textColor: clr.blueText,),
+                          size.s16.kWidth,
+                          FeedBackWidget(
+                            title: "Improve", image: ImageAssets.chat,bgColor: clr.bgImprove,textColor: clr.improveText,),
+                        ],
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
           ),
