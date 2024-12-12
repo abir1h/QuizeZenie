@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get_thumbnail_video/index.dart';
+import 'package:get_thumbnail_video/video_thumbnail.dart';
+import 'dart:typed_data';
 
 abstract class _ViewModel {
   void showWarning(String message);
@@ -13,11 +16,40 @@ mixin VideoUploadInfoScreenService<T extends StatefulWidget> on State<T>
   late _ViewModel _view;
   List<File>? files = [];
 
-  ///Service configurations
+  TextEditingController videoNameController = TextEditingController();
+  bool isLoading = true;
+  var thumbnail;
+  ThumbnailRequest? thumbnailRequest;
+  ThumbnailResult? thumbnailResult;
+
+  /// Service configurations
   @override
   void initState() {
     _view = this;
     super.initState();
+  }
+
+  Future<List<FeedBack?>> loadFeedBack() async {
+    return [
+      FeedBack(id: 1, title: 'Test 1'),
+      FeedBack(id: 2, title: 'Test 2'),
+      FeedBack(id: 3, title: 'Test 3'),
+      FeedBack(id: 4, title: 'Test 4'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+      FeedBack(id: 5, title: 'Test 5'),
+    ];
   }
 
   void pickVideoFile() async {
@@ -37,13 +69,136 @@ mixin VideoUploadInfoScreenService<T extends StatefulWidget> on State<T>
         'wmv'
       ],
     );
+
     if (result != null) {
       setState(() {
         files = result.paths.map((path) => File(path!)).toList();
+        isLoading = true;
       });
+
+      if (files != null && files!.isNotEmpty) {
+        final videoFilePath = files![0].path;
+        thumbnailRequest = ThumbnailRequest(
+          video: videoFilePath,
+          thumbnailPath: null,
+          imageFormat: ImageFormat.JPEG,
+          maxHeight: 200,
+          maxWidth: 200,
+          timeMs: 5000,
+          quality: 75,
+          attachHeaders: false,
+        );
+
+        thumbnailResult = await genThumbnail(thumbnailRequest!);
+
+        setState(() {
+          isLoading = false;
+        });
+      }
     } else {
       debugPrint("No file selected");
       _view.showWarning("No file selected");
     }
   }
+
+  Future<ThumbnailResult> genThumbnail(ThumbnailRequest r) async {
+    Uint8List bytes;
+    final completer = Completer<ThumbnailResult>();
+
+    final videoFileName = r.video.split('/').last;
+
+    if (r.thumbnailPath != null) {
+      final thumbnailFile = await VideoThumbnail.thumbnailFile(
+        video: r.video,
+        thumbnailPath: r.thumbnailPath,
+        imageFormat: r.imageFormat,
+        maxHeight: r.maxHeight,
+        maxWidth: r.maxWidth,
+        timeMs: r.timeMs,
+        quality: r.quality,
+      );
+
+      debugPrint('thumbnail file is located: $thumbnailFile');
+
+      bytes = await thumbnailFile.readAsBytes();
+    } else {
+      bytes = await VideoThumbnail.thumbnailData(
+        video: r.video,
+        imageFormat: r.imageFormat,
+        maxHeight: r.maxHeight,
+        maxWidth: r.maxWidth,
+        timeMs: r.timeMs,
+        quality: r.quality,
+      );
+    }
+
+    final imageDataSize = bytes.length;
+    debugPrint('image size: $imageDataSize');
+
+    final image = Image.memory(bytes);
+    image.image.resolve(ImageConfiguration.empty).addListener(
+          ImageStreamListener(
+            (ImageInfo info, bool _) {
+              completer.complete(
+                ThumbnailResult(
+                  bytes: bytes,
+                  dataSize: imageDataSize,
+                  height: info.image.height,
+                  width: info.image.width,
+                  videoDuration: r.timeMs,
+                  videoName: videoFileName,
+                ),
+              );
+            },
+            onError: completer.completeError,
+          ),
+        );
+    return completer.future;
+  }
+}
+
+class ThumbnailRequest {
+  const ThumbnailRequest({
+    required this.video,
+    required this.thumbnailPath,
+    required this.imageFormat,
+    required this.maxHeight,
+    required this.maxWidth,
+    required this.timeMs,
+    required this.quality,
+    required this.attachHeaders,
+  });
+
+  final String video;
+  final String? thumbnailPath;
+  final ImageFormat imageFormat;
+  final int maxHeight;
+  final int maxWidth;
+  final int timeMs;
+  final int quality;
+  final bool attachHeaders;
+}
+
+class ThumbnailResult {
+  const ThumbnailResult({
+    required this.bytes,
+    required this.dataSize,
+    required this.height,
+    required this.width,
+    required this.videoName,
+    required this.videoDuration,
+  });
+
+  final Uint8List bytes;
+  final int dataSize;
+  final int height;
+  final int width;
+  final String videoName;
+  final int videoDuration;
+}
+
+class FeedBack {
+  int id;
+  String title;
+  FeedBack({required this.id, required this.title});
 }

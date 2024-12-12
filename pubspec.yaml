@@ -52,6 +52,7 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   video_player: ^2.9.2
   wakelock_plus: ^1.2.8
+  get_thumbnail_video: ^0.7.3
 
 dev_dependencies:
   flutter_test:

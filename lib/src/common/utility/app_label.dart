@@ -56,7 +56,20 @@ class App {
     return completer.future;
   }
 }
+String convertMillisecondsToHMS(int milliseconds) {
+  Duration duration = Duration(milliseconds: milliseconds);
 
+  int hours = duration.inHours;
+  int minutes = duration.inMinutes % 60;
+  int seconds = duration.inSeconds % 60;
+
+  return '${_twoDigits(hours)}:${_twoDigits(minutes)}:${_twoDigits(seconds)}';
+}
+
+String _twoDigits(int n) {
+  if (n >= 10) return '$n';
+  return '0$n';
+}
 String replaceEnglishNumberWithBengali(String inputString) {
   Map<String, String> numberMap = {
     '0': '০',

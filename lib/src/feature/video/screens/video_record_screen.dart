@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constants/common_imports.dart';
-import '../../../common/routes/app_route.dart';
 import '../../video_upload/video_upload_screen.dart';
 import '../services/video_record_service.dart';
 import '../../../common/widgets/custom_toasty.dart';
@@ -154,7 +153,7 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
                                   color: clr.blackColor,
                                   fontSize: size.textSmall,
                                   overflow: TextOverflow.ellipsis),
-                              items: itemList.map((String value) {
+                              items: itemList.values.map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: SizedBox(
@@ -184,6 +183,16 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
                               onChanged: (String? newValue) {
                                 setState(() {
                                   qualityDropDownValue = newValue!;
+                                  // Find the key for the value
+                                  resolutionPreset = itemList.entries
+                                      .firstWhere(
+                                        (entry) =>
+                                            entry.value == qualityDropDownValue,
+                                        orElse: () => MapEntry(
+                                            ResolutionPreset.high,
+                                            qualityDropDownValue),
+                                      )
+                                      .key;
                                 });
                               },
                             ),
@@ -228,8 +237,9 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
                               50.w.kWidth,
                               // Record button
                               GestureDetector(
-                                onTap:
-                                    isRecording ? stopRecording : startRecording,
+                                onTap: isRecording
+                                    ? stopRecording
+                                    : startRecording,
                                 child: isRecording
                                     ? Container(
                                         constraints: BoxConstraints(
@@ -239,7 +249,8 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           border: Border.all(
-                                              color: clr.amberColor, width: 3.w),
+                                              color: clr.amberColor,
+                                              width: 3.w),
                                           color: clr.amberColor,
                                         ),
                                         child: Container(
@@ -259,7 +270,8 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           border: Border.all(
-                                              color: clr.amberColor, width: 3.w),
+                                              color: clr.amberColor,
+                                              width: 3.w),
                                           color: clr.whiteColor,
                                         ),
                                         child: Container(
@@ -280,8 +292,9 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
                                 children: [
                                   size.s4.kHeight,
                                   GestureDetector(
-                                    onTap:
-                                        isRecording ? pauseResumeRecording : null,
+                                    onTap: isRecording
+                                        ? pauseResumeRecording
+                                        : null,
                                     child: Icon(
                                       isPaused
                                           ? Icons.play_circle
@@ -334,11 +347,12 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
     VideoSaveDialogWidget.show(
       context: context,
     ).then((value) {
-      if (value) {
+      if (value.isNotEmpty) {
+        File videoFile = renameVideoFile(value.trim(), file);
         ///Navigate to upload page
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => VideoUploadScreen(videoAssets: file)),
+          MaterialPageRoute(builder: (context) => VideoUploadScreen(videoAssets: videoFile)),
         );
       }
     });

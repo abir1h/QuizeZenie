@@ -14,7 +14,7 @@ class ThemeColor {
   static ThemeColor get instance => _instance ?? (_instance = ThemeColor._());
 
   Color get appPrimaryColor => HexColor("175CD3");
-  Color get backgroundColor => HexColor("FCFCFD");
+  Color get backgroundColor => HexColor("EEF3F6");
 
   Color get grayColor => HexColor("9DA0A7");
   Color get iconGrey => HexColor("D9D9D9");
@@ -26,8 +26,10 @@ class ThemeColor {
   Color get iconColorGrey => HexColor("929292");
   Color get textColorGrey => HexColor("B0B0B0");
   Color get textColorGrey2 => HexColor("5F5F5F");
+  Color get textGrayColor => HexColor("757575");
   Color get imgBorderColor => HexColor("9CABC2");
   Color get dotColor => HexColor("D5D7DA");
+  Color get disableButtonGray => HexColor("8B919A");
 
   Color get scaffoldBackgroundColor2 => HexColor("ECFBF7");
   Color get onBoardBgColor1 => HexColor("EA8F6E");
@@ -35,6 +37,9 @@ class ThemeColor {
   Color get onBoardBgColor3 => HexColor("435FE5");
   Color get textGray => HexColor("61677D");
   Color get greyBorder => HexColor("E9EAEB");
+  Color get greyVideoTitle => HexColor("535862");
+  Color get removeBgCardColor => HexColor("FEE4E2");
+  Color get removeBgCardColorText => HexColor("B42318");
 
   Color get backgroundColor1 => HexColor("EEF3F6");
   Color get secondaryBackgroundColor => HexColor("FFFEFE");
@@ -68,6 +73,7 @@ class ThemeColor {
   Color get placeHolderTextColorGray => HexColor("9F9F9F");
   Color get blackText => HexColor("222222");
   Color get textDarkGrey => HexColor("3B4054");
+  Color get textLightGrey => HexColor("7A7E87");
   Color get textBlackLight => const Color(0xFF545454);
 
   Color get textFieldFilllor => HexColor("F5F9FE");
@@ -79,6 +85,10 @@ class ThemeColor {
   Color get iconColorGray => HexColor("717680");
   Color get amberColor => HexColor("FFAD3A");
   Color get darkGreyHeaderTextColor => HexColor("717680");
+  Color get blueText => HexColor("026AA2");
+  Color get bgGood => HexColor("F5FBFF");
+  Color get bgImprove => HexColor("FFFCF5");
+  Color get improveText => HexColor("FFB901");
 
 }
 
