@@ -8,9 +8,22 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../common/constants/common_imports.dart';
 import '../../../common/widgets/text_field.dart';
 
-mixin VideoSaveDialogWidget {
-  static TextEditingController recordingTextEditingController = TextEditingController();
-  static Future<String> show({required BuildContext context}) {
+mixin VideoSaveDialogWidget<T extends StatefulWidget> on State<T> {
+  late TextEditingController recordingTextEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    recordingTextEditingController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    recordingTextEditingController.dispose();
+  }
+
+  Future<String> showVideoSaveDialogWidget({required BuildContext context}) {
     Completer<String> completer = Completer();
     showCupertinoModalPopup(
       context: context,
@@ -150,7 +163,8 @@ mixin VideoSaveDialogWidget {
                           SizedBox(width: 12.w),
                           Expanded(
                             child: GestureDetector(
-                              onTap: () => Navigator.of(context).pop(recordingTextEditingController.text),
+                              onTap: () => Navigator.of(context)
+                                  .pop(recordingTextEditingController.text),
                               child: Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.symmetric(

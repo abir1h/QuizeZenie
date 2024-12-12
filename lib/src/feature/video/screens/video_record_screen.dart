@@ -19,7 +19,7 @@ class VideoRecordScreen extends StatefulWidget {
 }
 
 class _VideoRecordScreenState extends State<VideoRecordScreen>
-    with AppTheme, VideoRecordService {
+    with AppTheme, VideoRecordService, VideoSaveDialogWidget {
   @override
   void initState() {
     super.initState();
@@ -344,15 +344,17 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
 
   @override
   void showVideoSaveDialog(File file) {
-    VideoSaveDialogWidget.show(
+    showVideoSaveDialogWidget(
       context: context,
     ).then((value) {
       if (value.isNotEmpty) {
         File videoFile = renameVideoFile(value.trim(), file);
+
         ///Navigate to upload page
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => VideoUploadScreen(videoAssets: videoFile)),
+          MaterialPageRoute(
+              builder: (context) => VideoUploadScreen(videoAssets: videoFile)),
         );
       }
     });
