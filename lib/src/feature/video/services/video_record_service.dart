@@ -30,13 +30,17 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
   int _currentCameraIndex = 0;
   bool isFrontCamera = false;
   String qualityDropDownValue = "";
-  List<String> itemList = [
-    'Mobile-friendly images quality (about 65MB/ 30 minutes)',
-    'Average image quality/ smooth (about 90MB/ 30 minutes)',
-    'Medium high image quality (about 180MB/ 30 minutes)',
-    'Medium image quality (about 150MB/ 30 minutes)',
-    'High quality (about 300MB/ 30 minutes)'
-  ];
+  ResolutionPreset resolutionPreset = ResolutionPreset.high;
+  Map<ResolutionPreset, String> itemList = {
+    ResolutionPreset.low:
+        'Mobile-friendly images quality (about 65MB/ 30 minutes)',
+    ResolutionPreset.medium:
+        'Average image quality/ smooth (about 90MB/ 30 minutes)',
+    ResolutionPreset.high: 'Medium image quality (about 150MB/ 30 minutes)',
+    ResolutionPreset.veryHigh:
+        'Medium high image quality (about 180MB/ 30 minutes)',
+    ResolutionPreset.ultraHigh: 'High quality (about 300MB/ 30 minutes)'
+  };
 
   ///Service configurations
   @override
@@ -57,10 +61,6 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
   Future<bool> onGoBack() {
     _view.forceClose();
     return Future.value(false);
-  }
-
-  Future<List<String>> getItems() async {
-    return itemList;
   }
 
   Future<void> initializeCamera() async {
@@ -111,6 +111,18 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
     _view.showVideoSaveDialog(newFile);
   }
 
+  File renameVideoFile(String newName, File tempFile) {
+    try {
+      final directory = tempFile.parent;
+      final extension = tempFile.path.split('.').last;
+      final newPath = '${directory.path}/$newName.$extension';
+      final renamedFile = tempFile.renameSync(newPath);
+      return renamedFile;
+    } catch (e) {
+      throw Exception('Failed to rename file: $e');
+    }
+  }
+
   Future<void> pauseResumeRecording() async {
     if (isPaused) {
       await cameraController!.resumeVideoRecording();
@@ -143,7 +155,7 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
     isFrontCamera = _cameras[_currentCameraIndex].lensDirection ==
         CameraLensDirection.front;
     cameraController = CameraController(
-        _cameras[_currentCameraIndex], ResolutionPreset.high,
+        _cameras[_currentCameraIndex], resolutionPreset,
         enableAudio: true);
     await cameraController?.initialize();
     setState(() {});
