@@ -28,7 +28,7 @@ implements _ViewModel {
   void dispose() {
     WakelockPlus.disable();
     ///Dispose all variables
-    bookmarkStreamController.dispose();
+    // bookmarkStreamController.dispose();
     playerStreamController.dispose();
     playbackPausePlayStreamController.dispose();
     super.dispose();
@@ -37,8 +37,8 @@ implements _ViewModel {
   ///private fields
   late String _screenArgs;
 
-  final AppStreamController<bool> bookmarkStreamController =
-  AppStreamController();
+  // final AppStreamController<bool> bookmarkStreamController =
+  // AppStreamController();
   final AppStreamController<String> playerStreamController =
   AppStreamController();
   final AppStreamController<bool> playbackPausePlayStreamController =

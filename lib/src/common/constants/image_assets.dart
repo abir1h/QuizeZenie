@@ -13,6 +13,7 @@ class ImageAssets {
   static String get icFlipCamera => 'flip_camera'.svg;
   static String get forgotPasswordIcon => 'forgotPasswordIcon'.png;
   static String get resetPasswordIcon => 'restePasswordIcon'.png;
+  static String get groupImage => 'group'.svg;
 
   static String get imgHomeBG => 'home_bg'.png;
 
