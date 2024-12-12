@@ -50,6 +50,7 @@ dependencies:
   cached_network_image: ^3.4.1
   carousel_slider: ^5.0.0
   smooth_page_indicator: ^1.2.0+3
+  video_player: ^2.9.2
   wakelock_plus: ^1.2.8
 
 dev_dependencies:

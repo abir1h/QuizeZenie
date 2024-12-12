@@ -7,6 +7,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../common/constants/common_imports.dart';
 import '../../../common/utility/app_label.dart';
+import '../../video_upload/video_upload_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -220,9 +221,19 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  IconWithTitleWidget(
-                                    svgIcon: ImageAssets.icReel,
-                                    text: "500+ Videos",
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  VideoUploadScreen(
+                                                    videoAssets: "",
+                                                  )));
+                                    },
+                                    child: IconWithTitleWidget(
+                                      svgIcon: ImageAssets.icReel,
+                                      text: "500+ Videos",
+                                    ),
                                   ),
                                   IconWithTitleWidget(
                                     svgIcon: ImageAssets.icBook,
