@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import '../../../../common/config/app.dart';
 import '../../../../common/models/user_entity.dart';
 import '../../../../common/routes/app_route.dart';
 import '../../../../common/routes/app_route_args.dart';
@@ -140,8 +141,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                   otpController.text.trim(),
                 ),
                 onSuccess: (success) {
-                  Navigator.of(context)
-                      .pushReplacementNamed(AppRoute.signInScreen);
+                  App.setCurrentSession(success).then((value) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRoute.landingScreen, (x) => false);
+                  });
+                  // Navigator.of(context)
+                  //     .pushReplacementNamed(AppRoute.signInScreen);
                 },
               ),
 
