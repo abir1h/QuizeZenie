@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../common/constants/common_imports.dart';
+import '../../../common/routes/app_route.dart';
 import '../../../common/service/notifier/app_events_notifier.dart';
 import '../../../common/utility/app_label.dart';
 import '../../home/screens/home_screen.dart';
@@ -39,7 +40,7 @@ class _LandingScreenState extends State<LandingScreen>
 
       body: pages[_selectedIndex],
       floatingActionButton: FloatingActionButton(
-        onPressed: () => () {},
+        onPressed: onTapVideoRecordButton,
         backgroundColor: clr.appPrimaryColor,
         shape: const CircleBorder(),
         child: Icon(
@@ -154,6 +155,11 @@ class _LandingScreenState extends State<LandingScreen>
         setState(() {});
       }
     }
+  }
+
+  @override
+  void navigateToRecordScreen() {
+    Navigator.pushNamed(context, AppRoute.videoRecordScreen);
   }
 }
 

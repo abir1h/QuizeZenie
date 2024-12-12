@@ -77,7 +77,9 @@ class ThemeColor {
   Color get profileCardTextColor => HexColor("252B37");
   Color get lightGray => HexColor("A4A7AE");
   Color get iconColorGray => HexColor("717680");
-  Color get amber => HexColor("FFAD3A");
+  Color get amberColor => HexColor("FFAD3A");
+  Color get darkGreyHeaderTextColor => HexColor("717680");
+
 }
 
 // final localStorage = Get.find<LocalStorageServiceWithGetX>();
@@ -118,6 +120,7 @@ class ThemeSize {
   double get s28 => 28.w;
   double get s32 => 32.w;
   double get s42 => 42.w;
+  double get s48 => 48.w;
   double get s56 => 56.w;
   double get s64 => 64.w;
 }

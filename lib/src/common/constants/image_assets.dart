@@ -9,6 +9,8 @@ class ImageAssets {
   static String get icFacebook => '_Facebook'.svg;
   static String get icGoogle => '_Google'.svg;
   static String get signUpIcon => 'signUpIcon'.png;
+  static String get imgVideoObject => 'video-object'.png;
+  static String get icFlipCamera => 'flip_camera'.svg;
   static String get forgotPasswordIcon => 'forgotPasswordIcon'.png;
   static String get resetPasswordIcon => 'restePasswordIcon'.png;
 
@@ -33,6 +35,8 @@ class ImageAssets {
   static String get organistaion => 'organistaion'.svg;
   static String get shield => 'shield'.svg;
   static String get changeLanguage => 'changeLanguage'.svg;
+  static String get icDropdown => 'dropdown'.svg;
+  static String get icPersons => 'persons'.svg;
 
 /* static String get emptyProfile => 'img'.png;
   static String get animEmpty => 'Animation - 1706009676891'.json;

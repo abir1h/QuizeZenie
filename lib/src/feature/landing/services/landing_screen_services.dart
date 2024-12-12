@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 abstract class _ViewModel {
@@ -7,6 +7,7 @@ abstract class _ViewModel {
   void navigateToProfileScreen();
   void navigateToCategoryScreen();
   void navigateBookMarkScreen();
+  void navigateToRecordScreen();
 }
 
 mixin LandingScreenService<T extends StatefulWidget> on State<T>
@@ -53,5 +54,8 @@ mixin LandingScreenService<T extends StatefulWidget> on State<T>
     setState(() {
       currentPageIndex = newIndex;
     });
+  }
+  void onTapVideoRecordButton(){
+    _view.navigateToRecordScreen();
   }
 }
