@@ -51,7 +51,7 @@ mixin RouteGenerator {
           case AppRoute.videoUploadInfoScreen:
             return const VideoUploadInfoScreen();
           case AppRoute.videoRecordScreen:
-            return VideoRecordScreen();
+            return const VideoRecordScreen();
           case AppRoute.forgotPasswordScreen:
             return const ForgotPasswordScreen();
           case AppRoute.verifyOtpScreen:

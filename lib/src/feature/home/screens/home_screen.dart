@@ -7,6 +7,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../common/constants/common_imports.dart';
 import '../../../common/utility/app_label.dart';
+import '../../video_upload/video_upload_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -142,7 +143,9 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme {
                   alignment: Alignment.topCenter,
                   child: Padding(
                     padding: EdgeInsets.only(
-                        top: 1.sw * .21, right: size.s16, left: size.s16),
+                        top: MediaQuery.of(context).padding.top +
+                            kToolbarHeight +
+                            size.s20, right: size.s16, left: size.s16),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
