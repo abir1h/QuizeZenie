@@ -28,6 +28,7 @@ class _SignInScreenState extends State<SignInScreen>
       title: "",
       bgColor: clr.whiteColor,
       hasAppBar: false,
+      resizeToAvoidBottomInset: true,
       child: AppScrollView(
           padding: EdgeInsets.symmetric(horizontal: size.s20),
           child: Column(

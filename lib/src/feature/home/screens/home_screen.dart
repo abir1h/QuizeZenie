@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
             slivers: [
               SliverAppBar(
                 automaticallyImplyLeading: false,
-                expandedHeight: MediaQuery.of(context).size.height * .51,
+                expandedHeight: MediaQuery.of(context).size.height * .52,
                 collapsedHeight: MediaQuery.of(context).size.height * .15,
                 floating: false,
                 pinned: true,

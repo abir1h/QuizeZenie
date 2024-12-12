@@ -45,6 +45,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
     return AppScaffold(
       title: "",
       bgColor: clr.whiteColor,
+      resizeToAvoidBottomInset: true,
       child: AppScrollView(
           padding: EdgeInsets.symmetric(horizontal: size.s20),
           child: Column(

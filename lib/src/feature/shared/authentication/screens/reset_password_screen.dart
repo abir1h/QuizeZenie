@@ -20,12 +20,12 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen>
     with AppTheme, Language, UserAuthenticationService {
-
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
       title: "",
       bgColor: clr.whiteColor,
+      resizeToAvoidBottomInset: true,
       child: AppScrollView(
           padding: EdgeInsets.symmetric(horizontal: size.s20),
           child: Column(
@@ -60,18 +60,22 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
               ),
               size.s20.kHeight,
               AppTextField(
-                  outlined: true,obscureText: true,
+                  outlined: true,
+                  obscureText: true,
                   fillColor: clr.textFieldFilllor,
                   prefixIconHorizontalPadding: size.s8,
                   prefixIconVerticalPadding: size.s10,
                   hintText: label(e: en.passwordText, b: bn.passwordText),
-                  controller: phoneOrEmailController),  size.s20.kHeight,
+                  controller: phoneOrEmailController),
+              size.s20.kHeight,
               AppTextField(
-                  outlined: true,obscureText: true,
+                  outlined: true,
+                  obscureText: true,
                   fillColor: clr.textFieldFilllor,
                   prefixIconHorizontalPadding: size.s8,
                   prefixIconVerticalPadding: size.s10,
-                  hintText: label(e: en.confirmPasswordText, b: bn.confirmPasswordText),
+                  hintText: label(
+                      e: en.confirmPasswordText, b: bn.confirmPasswordText),
                   controller: confirmPasswordController),
               size.s16.kHeight,
               size.s16.kHeight,
@@ -86,7 +90,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                 onSuccess: (success) {},
               ),
 */
-              CustomButton(onTap: ()=>Navigator.pushNamed(context,AppRoute.verifyOtpScreen), title: "Continue")
+              CustomButton(
+                  onTap: () =>
+                      Navigator.pushNamed(context, AppRoute.verifyOtpScreen),
+                  title: "Continue")
             ],
           )),
     );
