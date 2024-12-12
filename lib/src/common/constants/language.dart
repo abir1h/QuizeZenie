@@ -28,7 +28,7 @@ class LanguageEn {
   String signInSubTitleText =
       "Please login to share your feedbacks and evaluate your teaching skills";
   String nameText = "Name";
-  String nameOrEmailText = "Email/Phone Number";
+  String nameOrEmailText = "Email";
   String passwordText = "Password";
   String confirmPasswordText = "Confirm Password";
   String forgetPasswordText = "Forget Password?";
@@ -77,7 +77,7 @@ class LanguageBn {
   String signInSubTitleText =
       "សូមចូលដើម្បីចែករំលែកមតិកែលម្អរបស់អ្នក និងវាយតម្លៃជំនាញបង្រៀនរបស់អ្នក។";
   String nameText = "ឈ្មោះ";
-  String nameOrEmailText = "អ៊ីមែល/លេខទូរស័ព្ទ";
+  String nameOrEmailText = "អ៊ីមែល";
   String passwordText = "ពាក្យសម្ងាត់";
   String forgetPasswordText = "ភ្លេចលេខសម្ងាត់?";
   String loginText = "ចូល";

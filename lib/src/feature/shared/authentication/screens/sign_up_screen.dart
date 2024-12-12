@@ -2,7 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../common/models/user_entity.dart';
 import '../../../../common/routes/app_route.dart';
+import '../../../../common/routes/app_route_args.dart';
 import '../../../../common/widgets/action_button.dart';
 import '../../../../common/widgets/text_field_widget.dart';
 import '../../../../common/constants/common_imports.dart';
@@ -210,12 +212,22 @@ class _SignUpScreenState extends State<SignUpScreen>
                 ],
               ),
               size.s20.kHeight,
-              ActionButton<dynamic>(
+              ActionButton<UserSession>(
                 title: label(e: en.signUpText, b: bn.signUpText),
                 radius: size.s8,
                 textColor: clr.whiteColor,
-                tapAction: () => throw UnimplementedError(),
-                onSuccess: (success) {},
+                onCheck: () => validateRegisterData(
+                    userNameController.text.trim(),
+                    phoneOrEmailController.text.trim(),
+                    passwordController.text.trim(),
+                    isChecked),
+                tapAction: () => registerUser(
+                    userNameController.text.trim(),
+                    phoneOrEmailController.text.trim(),
+                    passwordController.text.trim()),
+                onSuccess: (success) => Navigator.of(context).pushNamed(
+                    AppRoute.verifyOtpScreen,
+                    arguments: VerifyOtpScreenArgs(authDataModel: success)),
               ),
               size.s16.kHeight,
               Row(

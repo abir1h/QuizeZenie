@@ -41,7 +41,7 @@ mixin SplashService<T extends StatefulWidget> on State<T>
 
     ///Navigate to logical page
     App.getCurrentSession().then((session) async {
-      if (session.isEmpty) {
+      if (session.tokens.accessToken.isEmpty) {
         ///Navigate to login screens
         App.getOnboardUser().then((value) {
           if (!value) {
@@ -58,7 +58,7 @@ mixin SplashService<T extends StatefulWidget> on State<T>
   }
 
   void _onUnauthorizedRequest(String message) async {
-    if (!App.currentSession.isEmpty && mounted) {
+    if (App.currentSession.tokens.accessToken.isNotEmpty && mounted) {
       _view.showWarning(message);
       App.logOut().whenComplete(() {
         _view.navigateToAuthenticationScreen();

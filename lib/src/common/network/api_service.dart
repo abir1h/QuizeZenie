@@ -28,12 +28,12 @@ class Server {
     try {
       var body = json.encode(postData);
       var response = await _client.post(
-        Uri.parse("$host/api/mobile/$url"),
+        Uri.parse("$host/api/v1/$url"),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/json",
           "Authorization": token == null
-              ? "Bearer ${App.currentSession.token}"
+              ? "Bearer ${App.currentSession.tokens.accessToken}"
               : "Bearer $token"
         },
         body: utf8.encode(body),
@@ -69,11 +69,11 @@ class Server {
       {required String url, String? token}) async {
     try {
       var response =
-          await _client.get(Uri.parse("$host/api/mobile/$url"), headers: {
+          await _client.get(Uri.parse("$host/api/v1/$url"), headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
         "Authorization": token == null
-            ? "Bearer ${App.currentSession.token}"
+            ? "Bearer ${App.currentSession.tokens.accessToken}"
             : "Bearer $token"
       });
       debugPrint(
@@ -108,10 +108,10 @@ class Server {
       required void Function(ServerResponse response) onComplete}) async {
     try {
       var request =
-          http.MultipartRequest("POST", Uri.parse("$host/api/mobile/$url"));
+          http.MultipartRequest("POST", Uri.parse("$host/api/v1/$url"));
       request.headers.addAll({
         "Accept": "application/json",
-        "Authorization": "Bearer ${App.currentSession.token}"
+        "Authorization": "Bearer ${App.currentSession.tokens.accessToken}"
       });
       var attachedFile = await http.MultipartFile.fromPath('image', file.path);
       request.files.add(attachedFile);
@@ -155,10 +155,10 @@ class Server {
       required void Function(ServerResponse response) onComplete}) async {
     try {
       var request =
-          http.MultipartRequest("POST", Uri.parse("$host/api/mobile/$url"));
+          http.MultipartRequest("POST", Uri.parse("$host/api/v1/$url"));
       request.headers.addAll({
         "Accept": "application/json",
-        "Authorization": "Bearer ${App.currentSession.token}"
+        "Authorization": "Bearer ${App.currentSession.tokens.accessToken}"
       });
       request.fields.addAll(postData);
       for (File file in files) {
@@ -217,10 +217,10 @@ class Server {
   }) async {
     try {
       var request =
-          http.MultipartRequest("POST", Uri.parse("$host/api/mobile/$url"));
+          http.MultipartRequest("POST", Uri.parse("$host/api/v1/$url"));
       request.headers.addAll({
         "Accept": "application/json",
-        "Authorization": "Bearer ${App.currentSession.token}"
+        "Authorization": "Bearer ${App.currentSession.tokens.accessToken}"
       });
       request.fields.addAll(postData);
       request.files.add(await http.MultipartFile.fromPath(
@@ -279,7 +279,7 @@ class ServerResponse {
   ServerResponse({this.data, required this.message, required this.status});
 
   factory ServerResponse.fromJson(Map<String, dynamic> json) => ServerResponse(
-        status: json['status'] ?? false,
+        status: json['success'] ?? false,
         message: json['message'] ?? "",
         data: json['data'],
       );

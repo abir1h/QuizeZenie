@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:co_learning_mobile_app/src/common/constants/app_theme.dart';
 import 'package:co_learning_mobile_app/src/common/constants/common_imports.dart';
 import 'package:co_learning_mobile_app/src/common/utility/app_label.dart';
-import 'package:co_learning_mobile_app/src/common/widgets/custom_button.dart';
 import 'package:co_learning_mobile_app/src/feature/profile/widgets/profile_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../common/config/app.dart';
+import '../../../common/routes/app_route.dart';
 import '../widgets/toggle_button.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -256,7 +255,8 @@ class _ProfileScreenState extends State<ProfileScreen> with AppTheme, Language {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(size.s12),
                           border: Border.all(color: clr.greyBorder)),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ProfileCard(
                               onTap: () {},
@@ -266,13 +266,11 @@ class _ProfileScreenState extends State<ProfileScreen> with AppTheme, Language {
                           ProfileCard(
                               onTap: () {},
                               iconName: ImageAssets.myVideos,
-                              title: label(
-                                  e: en.myVideos, b: bn.myVideos)),
+                              title: label(e: en.myVideos, b: bn.myVideos)),
                           ProfileCard(
                               onTap: () {},
                               iconName: ImageAssets.myActivity,
-                              title: label(
-                                  e: en.myActivity, b: bn.myActivity)),
+                              title: label(e: en.myActivity, b: bn.myActivity)),
                           ProfileCard(
                               onTap: () {},
                               iconName: ImageAssets.changeLanguage,
@@ -288,27 +286,38 @@ class _ProfileScreenState extends State<ProfileScreen> with AppTheme, Language {
                       )),
                 ),
                 size.s16.kHeight,
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.s16),
+                GestureDetector(
+                  onTap: () => App.logOut().then(
+                      (value) => Navigator.of(context).pushNamedAndRemoveUntil(
+                            AppRoute.signInScreen,
+                            (Route<dynamic> route) => false,
+                          )),
                   child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: size.s16),
                     padding: EdgeInsets.symmetric(vertical: size.s10),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(size.s8),
-                      color: clr.inactiveToggleColor
-                    ),child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.login_outlined,color: clr.iconColorGray,),size.s4.kWidth,
-                      Text("Logout",style: TextStyle(fontWeight: FontWeight.w400,fontSize: size.textXSmall,color: clr.iconColorGray),)
-                    ],
-                  ),
+                        borderRadius: BorderRadius.circular(size.s8),
+                        color: clr.inactiveToggleColor),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.login_outlined,
+                          color: clr.iconColorGray,
+                        ),
+                        size.s4.kWidth,
+                        Text(
+                          "Logout",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: size.textXSmall,
+                              color: clr.iconColorGray),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 size.s64.kHeight,
-
-
-
-
               ],
             ),
           ),

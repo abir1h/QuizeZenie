@@ -20,7 +20,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     with AppTheme, Language, UserAuthenticationService {
-
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -79,7 +78,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                 onSuccess: (success) {},
               ),
 */
-            CustomButton(onTap: ()=>Navigator.pushNamed(context,AppRoute.verifyOtpScreen), title: "Continue")
+              CustomButton(
+                  onTap: () =>
+                      Navigator.pushNamed(context, AppRoute.verifyOtpScreen),
+                  title: "Continue")
             ],
           )),
     );

@@ -2,17 +2,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../../../../common/config/app.dart';
+import '../../../../common/models/action_result.dart';
+import '../../../../common/models/user_entity.dart';
+import '../../../../common/routes/app_route.dart';
+import '../../../../common/routes/app_route_args.dart';
 import '../../../../common/utility/validator.dart';
-
+import '../gateways/authentication_gateway.dart';
 
 abstract class _ViewModel {
-
   void showSuccess(String message);
   void showWarning(String message);
 }
 
 mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
-implements _ViewModel {
+    implements _ViewModel {
   late _ViewModel _view;
   bool isChecked = false;
   Timer? _timer;
@@ -28,12 +32,13 @@ implements _ViewModel {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
+  VerifyOtpScreenArgs? verifyOtpScreenArgs;
+
   ///Service configurations
   @override
   void initState() {
     _view = this;
     super.initState();
-
   }
 
   @override
@@ -47,8 +52,6 @@ implements _ViewModel {
 
     super.dispose();
   }
-
-
 
   //======================Public Methods======================
   bool validateLoginWithPhoneOrEmailData(String phoneOrEmail) {
@@ -66,6 +69,37 @@ implements _ViewModel {
       } else {
         return true;
       }
+    }
+  }
+
+  bool validateRegisterData(
+      String username, String email, String password, bool checkTermCondition) {
+    if (Validator.isEmpty(username)) {
+      _view.showWarning("Name is required!");
+      return false;
+    } else if (Validator.isEmpty(email)) {
+      _view.showWarning("Email is required!");
+      return false;
+    } else if (Validator.isEmpty(password)) {
+      _view.showWarning("Password is required!");
+      return false;
+    } else if (!checkTermCondition) {
+      _view.showWarning("Select terms & conditions, privacy policy!");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  bool validateLoginData(String email, String password) {
+    if (Validator.isEmpty(email)) {
+      _view.showWarning("Email is required!");
+      return false;
+    } else if (Validator.isEmpty(password)) {
+      _view.showWarning("Password is required!");
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -87,4 +121,52 @@ implements _ViewModel {
     });
   }
 
+  Future<ActionResult<UserSession>> registerUser(
+      String username, String email, String password) async {
+    return UserAuthenticationGateway.registerUserAction(
+            username, email, password)
+        .then((value) {
+      if (value.status != Status.success) {
+        _view.showWarning(value.message);
+      }
+      return value;
+    });
+  }
+
+  Future<ActionResult<UserSession>> loginWithPhoneOrEmail(
+      String email, String password) async {
+    return UserAuthenticationGateway.loginWithPhoneOrEmailAction(
+            email, password)
+        .then((value) {
+      if (value.status != Status.success) {
+        _view.showWarning(value.message);
+      } else {
+        _view.showSuccess(value.message);
+      }
+      return value;
+    });
+  }
+
+  void onLoginSuccess(UserSession data) {
+    if (data.user.isVerified) {
+      App.setCurrentSession(data).then((value) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(AppRoute.landingScreen, (x) => false);
+      });
+    } else {
+      Navigator.of(context).pushNamed(AppRoute.verifyOtpScreen,
+          arguments: VerifyOtpScreenArgs(authDataModel: data));
+    }
+  }
+
+  Future<ActionResult<UserSession>> verifyOTP(
+      String userId, String otpId, String otp) async {
+    return UserAuthenticationGateway.verifyOTPAction(userId, otpId, otp)
+        .then((value) {
+      if (value.status != Status.success) {
+        _view.showWarning(value.message);
+      }
+      return value;
+    });
+  }
 }

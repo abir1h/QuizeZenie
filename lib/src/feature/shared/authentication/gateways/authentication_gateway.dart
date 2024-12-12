@@ -2,36 +2,60 @@ import '../../../../common/constants/common_imports.dart';
 import '../../../../common/models/action_result.dart';
 import '../../../../common/models/user_entity.dart';
 import '../../../../common/network/api_service.dart';
-import '../models/auth_entity.dart';
 
 mixin UserAuthenticationGateway {
-  static Future<ActionResult<AuthDataModel>> loginWithPhoneOrEmailAction(
-      String phoneOrEmail) async {
+  ///Login
+  static Future<ActionResult<UserSession>> loginWithPhoneOrEmailAction(
+      String phoneOrEmail, String password) async {
     return Server.instance.postRequest(
       url: ApiCredential.loginWithMobile,
-      postData: {"organization_id": 1, "phone_or_email": phoneOrEmail},
+      postData: {"email": phoneOrEmail, "password": password},
     ).then((value) {
-      return ActionResult<AuthDataModel>.fromServerResponse(
+      return ActionResult<UserSession>.fromServerResponse(
         response: value,
-        generateData: (x) => AuthDataModel.fromJson(x),
+        generateData: (x) => UserSession.fromJson(x),
       );
     }).catchError((e) {
-      return ActionResult<AuthDataModel>.error();
+      return ActionResult<UserSession>.error();
     });
   }
 
-  static Future<ActionResult<AuthDataModel>> verifyOTPAction(
-      String otpId, String otp) async {
+  ///Registration
+  static Future<ActionResult<UserSession>> registerUserAction(
+      String username, String email, String password) async {
     return Server.instance.postRequest(
-      url: ApiCredential.verifyOTP,
-      postData: {"otp_id": otpId, "otp": otp},
+      url: ApiCredential.registerUser,
+      postData: {
+        "user_name": username,
+        "email": email,
+
+        ///Todo
+        "phone_number": "null",
+        "password": password,
+      },
     ).then((value) {
-      return ActionResult<AuthDataModel>.fromServerResponse(
+      return ActionResult<UserSession>.fromServerResponse(
         response: value,
-        generateData: (x) => AuthDataModel.fromJson(x),
+        generateData: (x) => UserSession.fromJson(x),
       );
     }).catchError((e) {
-      return ActionResult<AuthDataModel>.error();
+      return ActionResult<UserSession>.error();
+    });
+  }
+
+  ///OTP Verification
+  static Future<ActionResult<UserSession>> verifyOTPAction(
+      String userId, String otpId, String otp) async {
+    return Server.instance.postRequest(
+      url: ApiCredential.verifyOTP,
+      postData: {"user_id": userId, "otp_id": otpId, "otp_code": otp},
+    ).then((value) {
+      return ActionResult<UserSession>.fromServerResponse(
+        response: value,
+        generateData: (x) => UserSession.fromJson(x),
+      );
+    }).catchError((e) {
+      return ActionResult<UserSession>.error();
     });
   }
 
@@ -55,23 +79,11 @@ mixin UserAuthenticationGateway {
     });
   }
 
-  static Future<ActionResult<UserSession>> registerUserAction(
-      String otpId,
-      String name,
-      String userType,
-      String password,
-      String device,
-      String phoneName) async {
+  static Future<ActionResult<UserSession>> forgotPasswordAction(
+      String phoneOrEmail) async {
     return Server.instance.postRequest(
-      url: ApiCredential.registerUser,
-      postData: {
-        "otp_id": otpId,
-        "name": name,
-        "user_type": userType,
-        "password": password,
-        "device": device,
-        "phone_name": phoneName
-      },
+      url: ApiCredential.forgotPassword,
+      postData: {"organization_id": 1, "phone_or_email": phoneOrEmail},
     ).then((value) {
       return ActionResult<UserSession>.fromServerResponse(
         response: value,
@@ -79,21 +91,6 @@ mixin UserAuthenticationGateway {
       );
     }).catchError((e) {
       return ActionResult<UserSession>.error();
-    });
-  }
-
-  static Future<ActionResult<AuthDataModel>> forgotPasswordAction(
-      String phoneOrEmail) async {
-    return Server.instance.postRequest(
-      url: ApiCredential.forgotPassword,
-      postData: {"organization_id": 1, "phone_or_email": phoneOrEmail},
-    ).then((value) {
-      return ActionResult<AuthDataModel>.fromServerResponse(
-        response: value,
-        generateData: (x) => AuthDataModel.fromJson(x),
-      );
-    }).catchError((e) {
-      return ActionResult<AuthDataModel>.error();
     });
   }
 
