@@ -2,7 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import '../../../../common/models/user_entity.dart';
 import '../../../../common/routes/app_route.dart';
+import '../../../../common/routes/app_route_args.dart';
+import '../../../../common/utility/helper.dart';
 import '../../../../common/widgets/action_button.dart';
 import '../../../../common/widgets/custom_button.dart';
 import '../../../../common/widgets/custom_toasty.dart';
@@ -13,7 +16,9 @@ import '../../../../common/widgets/app_scroll_view.dart';
 import '../services/authentication_screen_service.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
-  const VerifyOtpScreen({super.key});
+  final Object? arguments;
+  const VerifyOtpScreen({super.key, this.arguments})
+      : assert(arguments != null && arguments is VerifyOtpScreenArgs);
 
   @override
   State<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
@@ -23,8 +28,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
     with AppTheme, Language, UserAuthenticationService {
   @override
   void initState() {
+    verifyOtpScreenArgs = widget.arguments as VerifyOtpScreenArgs?;
     errorController = StreamController<ErrorAnimationType>();
-    startTimer();
+    // startTimer();///Todo later
     super.initState();
   }
 
@@ -33,6 +39,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
     errorController!.close();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -48,9 +55,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
               size.s28.kHeight,
               Center(
                 child: Text(
-                  label(
-                      e: en.otpTitleText,
-                      b: bn.forgotPasswordTitleText),
+                  label(e: en.otpTitleText, b: bn.forgotPasswordTitleText),
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: size.text32Large,
@@ -60,9 +65,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
               size.s16.kHeight,
               Center(
                 child: Text(
-                  label(
-                      e: en.otpSubTitleText,
-                      b: bn.otpSubTitleText),
+                  label(e: en.otpSubTitleText, b: bn.otpSubTitleText),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
@@ -74,8 +77,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
               Form(
                 key: formKey,
                 child: Padding(
-                  padding:
-                  EdgeInsets.symmetric(vertical: 0, horizontal: 25.w),
+                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 25.w),
                   child: PinCodeTextField(
                     appContext: context,
                     length: 4,
@@ -107,33 +109,88 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                         blurRadius: 10,
                       )
                     ],
-                    onCompleted: (v) {
-                      /*setState(() {
-                        isVerifyButtonEnabled = v.length == 4;
-                      }),
-                      onChanged: (value) => setState(() {
+                    onCompleted: (v) => setState(() {
+                      isVerifyButtonEnabled = v.length == 4;
+                    }),
+                    onChanged: (value) => setState(() {
                       isVerifyButtonEnabled = value.length == 4;
-                      })*/
-                    },
+                    }),
                     beforeTextPaste: (text) => true,
                     pastedTextStyle: TextStyle(
-                        fontSize: size.textSmall,
-                        color: clr.appPrimaryColor),
+                        fontSize: size.textSmall, color: clr.appPrimaryColor),
                   ),
                 ),
-              ),size.s16.kHeight,
+              ),
               size.s16.kHeight,
               size.s16.kHeight,
-              /*ActionButton<dynamic>(
-                title: label(e: en.continueText, b: bn.continueText),
-                onCheck: () => validateLoginWithPhoneOrEmailData(
-                    phoneOrEmailController.text.trim()),
+              size.s16.kHeight,
+              ActionButton<UserSession>(
+                title: label(e: "Verify OTP", b: bn.continueText),
+                // onCheck: () => validateLoginWithPhoneOrEmailData(
+                //     phoneOrEmailController.text.trim()),
                 radius: size.s8,
                 textColor: clr.whiteColor,
-                tapAction: () => throw UnimplementedError(),
-                onSuccess: (success) {},
-              ),*/              CustomButton(onTap: ()=>Navigator.pushNamed(context,AppRoute.resetPasswordScreen), title: "Continue")
+                buttonColor: isVerifyButtonEnabled
+                    ? clr.appPrimaryColor
+                    : clr.buttonDisabledColor,
+                tapAction: () => verifyOTP(
+                  verifyOtpScreenArgs!.authDataModel!.user.id,
+                  verifyOtpScreenArgs!.authDataModel!.user.otpId,
+                  otpController.text.trim(),
+                ),
+                onSuccess: (success) {
+                  Navigator.of(context)
+                      .pushReplacementNamed(AppRoute.signInScreen);
+                },
+              ),
 
+              ///Todo later
+              // CustomButton(
+              //     onTap: () => Navigator.pushNamed(
+              //         context, AppRoute.resetPasswordScreen),
+              //     title: "Continue")
+              // Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: 25.w),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       TextButton(
+              //         onPressed: () {},
+              //         // onPressed: () => isResendButtonDisabled
+              //         //     ? null
+              //         //     : loginWithPhoneOrEmail(
+              //         //     verifyOtpScreenArgs!.phoneOrEmailData!
+              //         //         .trim(),
+              //         //     true),
+              //         child: Text(
+              //           isResendButtonDisabled
+              //               ? "Send the Code Again"
+              //               : "Send the Code Again",
+              //           style: TextStyle(
+              //               color: isResendButtonDisabled
+              //                   ? clr.textColorGrey
+              //                   : clr.appPrimaryColor,
+              //               fontWeight: FontWeight.w600,
+              //               fontSize: size.textXXSmall,
+              //               decoration: !isResendButtonDisabled
+              //                   ? TextDecoration.underline
+              //                   : null),
+              //         ),
+              //       ),
+              //       isResendButtonDisabled
+              //           ? Text(Helper.formatDuration(remainingTime),
+              //               style: TextStyle(
+              //                   color: clr.textColorGrey,
+              //                   fontWeight: FontWeight.w600,
+              //                   fontSize: size.textXXSmall,
+              //                   decoration: !isResendButtonDisabled
+              //                       ? TextDecoration.underline
+              //                       : null))
+              //           : const SizedBox(),
+              //     ],
+              //   ),
+              // ),
+              size.s28.kHeight,
             ],
           )),
     );

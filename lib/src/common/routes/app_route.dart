@@ -38,7 +38,7 @@ mixin RouteGenerator {
           case AppRoute.onboardingScreen:
             return const OnboardingScreen();
           case AppRoute.landingScreen:
-            return  LandingScreen();
+            return LandingScreen();
           case AppRoute.homeScreen:
             return const HomeScreen();
           case AppRoute.signInScreen:
@@ -48,7 +48,7 @@ mixin RouteGenerator {
           case AppRoute.forgotPasswordScreen:
             return const ForgotPasswordScreen();
           case AppRoute.verifyOtpScreen:
-            return const VerifyOtpScreen();
+            return VerifyOtpScreen(arguments: setting.arguments);
           case AppRoute.resetPasswordScreen:
             return const ResetPasswordScreen();
           case AppRoute.profileScreen:

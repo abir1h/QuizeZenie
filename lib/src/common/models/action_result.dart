@@ -8,7 +8,7 @@ class ActionResult<T> {
 
   ActionResult.fromServerResponse(
       {required ServerResponse response,
-        required T Function(dynamic data) generateData}) {
+      required T Function(dynamic data) generateData}) {
     status = _StatusExtensionMap.state(response.status);
     message = response.message;
     data = status == Status.success ? generateData(response.data) : null;

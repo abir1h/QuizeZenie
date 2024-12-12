@@ -7,15 +7,15 @@ import 'package:url_launcher/url_launcher.dart';
 enum AppLanguage { english, bangla }
 
 String label({required String e, required String b}) {
-  return App.currentAppLanguage == AppLanguage.english
+  return AppLabel.currentAppLanguage == AppLanguage.english
       ? (e.isNotEmpty ? e : b)
       : (b.isNotEmpty ? b : e);
 }
 
-class App {
-  App._();
-  static App? _app;
-  static App get instance => _app ?? (_app = App._());
+class AppLabel {
+  AppLabel._();
+  static AppLabel? _app;
+  static AppLabel get instance => _app ?? (_app = AppLabel._());
 
   //App Language
   static AppLanguage _appLanguage = AppLanguage.english;

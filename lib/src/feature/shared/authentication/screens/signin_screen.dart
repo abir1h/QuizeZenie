@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../common/models/user_entity.dart';
 import '../../../../common/widgets/action_button.dart';
 import '../../../../common/widgets/custom_toasty.dart';
 import '../../../../common/widgets/text_field_widget.dart';
@@ -19,7 +20,8 @@ class SignInScreen extends StatefulWidget {
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> with AppTheme, Language,UserAuthenticationService   {
+class _SignInScreenState extends State<SignInScreen>
+    with AppTheme, Language, UserAuthenticationService {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -70,12 +72,13 @@ class _SignInScreenState extends State<SignInScreen> with AppTheme, Language,Use
                   prefixIconVerticalPadding: size.s10,
                   obscureText: true,
                   hintText: label(e: en.passwordText, b: bn.passwordText),
-                  controller:passwordController),
+                  controller: passwordController),
               size.s8.kHeight,
               Align(
                 alignment: Alignment.topRight,
                 child: GestureDetector(
-                  onTap: ()=>Navigator.pushNamed(context,AppRoute.forgotPasswordScreen),
+                  onTap: () => Navigator.pushNamed(
+                      context, AppRoute.forgotPasswordScreen),
                   child: Text(
                     label(e: en.forgetPasswordText, b: bn.forgetPasswordText),
                     style: TextStyle(
@@ -106,57 +109,69 @@ class _SignInScreenState extends State<SignInScreen> with AppTheme, Language,Use
               size.s16.kHeight,
               Row(
                 children: [
-                  Expanded(child: GestureDetector(
-                    onTap: ()=>Navigator.pushNamed(context,AppRoute.landingScreen),
+                  Expanded(
+                      child: GestureDetector(
+                    onTap: () =>
+                        Navigator.pushNamed(context, AppRoute.landingScreen),
                     child: Container(
                       padding: EdgeInsets.all(size.s16),
-
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(size.s12),
-                        color: clr.textFieldFilllor
-                      ),child: Row(
-                      children: [
-                        SvgPicture.asset(ImageAssets.icGoogle),
-                        size.s16.kWidth,
-                        Text("Google",style: TextStyle(fontWeight: FontWeight.w500,fontSize: size.textSmall,color: clr.textGray),)
-
-                      ],
-                    ),
+                          borderRadius: BorderRadius.circular(size.s12),
+                          color: clr.textFieldFilllor),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(ImageAssets.icGoogle),
+                          size.s16.kWidth,
+                          Text(
+                            "Google",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: size.textSmall,
+                                color: clr.textGray),
+                          )
+                        ],
+                      ),
                     ),
                   )),
                   size.s16.kWidth,
-                  Expanded(child: Container(
+                  Expanded(
+                      child: Container(
                     padding: EdgeInsets.all(size.s16),
-
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(size.s12),
-                        color: clr.textFieldFilllor
-                    ),child: Row(
-                    children: [
-                      SvgPicture.asset(ImageAssets.icFacebook),
-                      size.s16.kWidth,
-                      Text("Facebook",style: TextStyle(fontWeight: FontWeight.w500,fontSize: size.textSmall,color: clr.textGray),)
-
-                    ],
-                  ),
+                        color: clr.textFieldFilllor),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(ImageAssets.icFacebook),
+                        size.s16.kWidth,
+                        Text(
+                          "Facebook",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: size.textSmall,
+                              color: clr.textGray),
+                        )
+                      ],
+                    ),
                   )),
-
                 ],
               ),
               size.s32.kHeight,
-              ActionButton<dynamic>(
+              ActionButton<UserSession>(
                 title: label(e: en.loginText, b: bn.loginText),
-
                 radius: size.s8,
-
                 textColor: clr.whiteColor,
-                tapAction: () =>throw UnimplementedError(),
-                onSuccess: (success) {
-
-                },
+                onCheck: () => validateLoginData(
+                    phoneOrEmailController.text.trim(),
+                    passwordController.text.trim()),
+                tapAction: () => loginWithPhoneOrEmail(
+                    phoneOrEmailController.text.trim(),
+                    passwordController.text.trim()),
+                onSuccess: (success) => onLoginSuccess(success),
               ),
               size.s16.kHeight,
-              Row(mainAxisAlignment: MainAxisAlignment.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
@@ -164,25 +179,29 @@ class _SignInScreenState extends State<SignInScreen> with AppTheme, Language,Use
                       textAlign: TextAlign.center,
                       text: TextSpan(
                         text: "Don’t have an account? ",
-                        style:  TextStyle(color: clr.textDarkGrey, fontSize: size.textXSmall,fontWeight: FontWeight.w400),
+                        style: TextStyle(
+                            color: clr.textDarkGrey,
+                            fontSize: size.textXSmall,
+                            fontWeight: FontWeight.w400),
                         children: [
                           TextSpan(
                             text: "Sign Up",
-                            style:  TextStyle(color: clr.appPrimaryColor, fontSize: size.textXSmall,fontWeight: FontWeight.w400),
-
+                            style: TextStyle(
+                                color: clr.appPrimaryColor,
+                                fontSize: size.textXSmall,
+                                fontWeight: FontWeight.w400),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () =>Navigator.pushNamed(context,AppRoute.signUpScreen),
+                              ..onTap = () => Navigator.pushNamed(
+                                  context, AppRoute.signUpScreen),
                           ),
                         ],
                       ),
                     ),
                   ),
                 ],
-              ),      size.s64.kHeight,
+              ),
               size.s64.kHeight,
-
-
-
+              size.s64.kHeight,
             ],
           )),
     );
