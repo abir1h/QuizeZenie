@@ -29,6 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen>
       title: "",
       bgColor: clr.whiteColor,
       hasAppBar: false,
+      resizeToAvoidBottomInset: true,
       child: AppScrollView(
           padding: EdgeInsets.symmetric(horizontal: size.s20),
           child: Column(
