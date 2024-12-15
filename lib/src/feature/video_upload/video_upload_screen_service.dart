@@ -14,7 +14,7 @@ abstract class _ViewModel {
 
 }
 
-mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
+mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
 implements _ViewModel {
   late _ViewModel _view;
 

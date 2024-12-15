@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:co_learning_mobile_app/src/common/routes/app_route_args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../common/constants/common_imports.dart';
+import '../../../common/routes/app_route.dart';
 import '../../../common/utility/app_label.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../../../common/widgets/circular_loader.dart';
@@ -280,7 +282,8 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                           buildItem: (BuildContext context, int index, item) =>
                               FeaturedItemWidget(
                             data: item,
-                            onTap: () {},
+                            onTap: () =>
+                                onNavigateToVideoDetailsScreen(item.id),
                           ),
                         );
                       },
@@ -552,6 +555,15 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
   @override
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
+  }
+
+  @override
+  void navigateToVideoDetailsScreen(String id) {
+    Navigator.pushNamed(
+      context,
+      AppRoute.videoDetailsScreen,
+      arguments: VideoDetailsScreenArgs(videoId: id),
+    );
   }
 }
 

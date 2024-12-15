@@ -1,3 +1,4 @@
+import 'package:co_learning_mobile_app/src/feature/feature_video/screens/video_details_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../feature/profile/screens/profile_screen.dart';
@@ -28,6 +29,7 @@ class AppRoute {
   static const String verifyOtpScreen = "verifyOtpScreen";
   static const String resetPasswordScreen = "resetPasswordScreen";
   static const String profileScreen = "profileScreen";
+  static const String videoDetailsScreen = "videoDetailsScreen";
 }
 
 mixin RouteGenerator {
@@ -58,6 +60,8 @@ mixin RouteGenerator {
             return VerifyOtpScreen(arguments: setting.arguments);
           case AppRoute.resetPasswordScreen:
             return const ResetPasswordScreen();
+          case AppRoute.videoDetailsScreen:
+            return  VideoDetailsScreen(arguments: setting.arguments);
           case AppRoute.profileScreen:
             return const ProfileScreen();
 

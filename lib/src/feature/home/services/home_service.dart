@@ -9,6 +9,7 @@ abstract class _ViewModel {
   void navigateToTaskDetailsScreen(int taskId);
   void showWarning(String message);
   void showSuccess(String message);
+  void navigateToVideoDetailsScreen(String id);
 }
 
 mixin HomeService<T extends StatefulWidget> on State<T> implements _ViewModel {
@@ -49,5 +50,8 @@ mixin HomeService<T extends StatefulWidget> on State<T> implements _ViewModel {
 
   void onTap(int taskId) {
     _view.navigateToTaskDetailsScreen(taskId);
+  }
+  void onNavigateToVideoDetailsScreen(String id){
+    navigateToVideoDetailsScreen(id);
   }
 }
