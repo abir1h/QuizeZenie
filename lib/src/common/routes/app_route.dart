@@ -4,6 +4,7 @@ import '../../feature/profile/screens/profile_screen.dart';
 import '../../feature/home/screens/home_screen.dart';
 import '../../feature/landing/screens/landing_screen.dart';
 import '../../feature/onboarding/screens/onboarding_screen.dart';
+import '../../feature/video/screens/my_video_screen.dart';
 import '../../feature/video/screens/video_record_screen.dart';
 import '../../feature/video/screens/video_upload_info_screen.dart';
 import '../../feature/shared/authentication/screens/sign_up_screen.dart';
@@ -12,7 +13,8 @@ import '../../feature/shared/splash/presentation/screens/splash_screen.dart';
 import '../../feature/shared/authentication/screens/verify_otp_screen.dart';
 import '../../feature/shared/authentication/screens/forgot_password_screen.dart';
 import '../../feature/shared/authentication/screens/reset_password_screen.dart';
-
+import '../../feature/profile/screens/account_details.dart';
+import '../../feature/profile/screens/change_password_screen.dart';
 class AppRoute {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
@@ -28,6 +30,9 @@ class AppRoute {
   static const String verifyOtpScreen = "verifyOtpScreen";
   static const String resetPasswordScreen = "resetPasswordScreen";
   static const String profileScreen = "profileScreen";
+  static const String accountDetailsScreen = "accountDetailsScreen";
+  static const String changePasswordScreen = "changePasswordScreen";
+  static const String myVideoScreen = "myVideoScreen";
 }
 
 mixin RouteGenerator {
@@ -60,6 +65,11 @@ mixin RouteGenerator {
             return const ResetPasswordScreen();
           case AppRoute.profileScreen:
             return const ProfileScreen();
+          case AppRoute.accountDetailsScreen:
+            return const AccountDetailsScreen();  case AppRoute.changePasswordScreen:
+            return const ChangePasswordScreen();
+          case AppRoute.myVideoScreen:
+            return const MyVideoScreen();
 
           default:
             return const SplashScreen();
