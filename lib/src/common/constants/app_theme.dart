@@ -31,6 +31,7 @@ class ThemeColor {
   Color get imgBorderColor => HexColor("9CABC2");
   Color get dotColor => HexColor("D5D7DA");
   Color get disableButtonGray => HexColor("8B919A");
+  Color get subTitleColor => HexColor("494949CC");
 
   Color get scaffoldBackgroundColor2 => HexColor("ECFBF7");
   Color get onBoardBgColor1 => HexColor("EA8F6E");

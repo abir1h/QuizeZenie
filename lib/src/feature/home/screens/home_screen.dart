@@ -584,9 +584,10 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> with AppTheme {
           itemCount: widget.imgList.length,
           itemBuilder: (BuildContext context, int index, int realIndex) {
             return ClipRRect(
-              borderRadius:
-                  BorderRadius.circular(8.0),
-              child: Container(color: Colors.cyan,),
+              borderRadius: BorderRadius.circular(8.0),
+              child: Container(
+                color: Colors.cyan,
+              ),
               // You can customize this size
               // child: CachedNetworkImage(
               //   height: double.infinity,
@@ -670,7 +671,7 @@ class ItemSectionWidget<T> extends StatelessWidget with AppTheme {
     this.subTitle = "",
     required this.items,
     required this.buildItem,
-    this.aspectRatio = 2.9,
+    this.aspectRatio = 2.5,
   });
 
   @override
@@ -736,7 +737,7 @@ class FeaturedItemWidget extends StatelessWidget with AppTheme {
   const FeaturedItemWidget({
     super.key,
     required this.data,
-    this.aspectRatio = 1.23,
+    this.aspectRatio = 1.05,
     required this.onTap,
   });
 
@@ -783,16 +784,37 @@ class FeaturedItemWidget extends StatelessWidget with AppTheme {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              // Text(
-              //   "Chapter name",
-              //   style: TextStyle(
-              //     color: clr.textColorGrey2,
-              //     fontSize: size.textXXSmall,
-              //     fontWeight: FontWeight.w500,
-              //   ),
-              //   maxLines: 1,
-              //   overflow: TextOverflow.ellipsis,
-              // ),
+              SizedBox(height: size.s4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://www.treasury.gov.ph/wp-content/uploads/2022/01/male-placeholder-image.jpeg",
+                      fit: BoxFit.cover,
+                      height: size.s20,
+                      width: size.s20,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  ),
+                  SizedBox(width: size.s4),
+                  Text(
+                    data.uploadedBy.firstName,
+                    style: TextStyle(
+                      color: clr.subTitleColor,
+                      fontSize: size.textXXSmall,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ],
           )
           // child: Container(
