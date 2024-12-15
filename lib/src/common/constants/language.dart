@@ -39,6 +39,7 @@ class LanguageEn {
   String forgotPasswordTitleText = "Forget Password";
   String forgotPasswordSubTitleText = "Please enter your email address or mobile number to reset your password.";
   String continueText = "Continue";
+  String updateText = "Update";
   String otpTitleText = "Enter OTP";
   String otpSubTitleText = "Enter the OTP code we just sent you on your registered Email/Phone number";
   String resetPasswordTitleText = "Reset Password";
@@ -102,5 +103,6 @@ class LanguageBn {
   String myVideos = "វីដេអូរបស់ខ្ញុំ";
   String myActivity = "សកម្មភាពរបស់ខ្ញុំ";
   String changeLanguage = "ប្ដូរភាសា";
-  String changePassword = "ប្ដូរលេខសម្ងាត់";
+  String changePassword = "ប្ដូរលេខសម្ងាត់";  String updateText = "ធ្វើបច្ចុប្បន្នភាព";
+
 }

@@ -1,3 +1,5 @@
+import 'package:co_learning_mobile_app/src/feature/profile/screens/account_details.dart';
+import 'package:co_learning_mobile_app/src/feature/profile/screens/change_password_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../feature/profile/screens/profile_screen.dart';
@@ -28,6 +30,8 @@ class AppRoute {
   static const String verifyOtpScreen = "verifyOtpScreen";
   static const String resetPasswordScreen = "resetPasswordScreen";
   static const String profileScreen = "profileScreen";
+  static const String accountDetailsScreen = "accountDetailsScreen";
+  static const String changePasswordScreen = "changePasswordScreen";
 }
 
 mixin RouteGenerator {
@@ -60,6 +64,9 @@ mixin RouteGenerator {
             return const ResetPasswordScreen();
           case AppRoute.profileScreen:
             return const ProfileScreen();
+          case AppRoute.accountDetailsScreen:
+            return const AccountDetailsScreen();  case AppRoute.changePasswordScreen:
+            return const ChangePasswordScreen();
 
           default:
             return const SplashScreen();
