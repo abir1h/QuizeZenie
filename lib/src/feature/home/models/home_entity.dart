@@ -65,28 +65,31 @@ class Video {
   String title;
   String videoUrl;
   String thumbnailUrl;
-  List<Chapter> chapters;
+  UploadedBy uploadedBy;
 
   Video({
     required this.id,
     required this.title,
     required this.videoUrl,
     required this.thumbnailUrl,
-    required this.chapters,
+    required this.uploadedBy,
   });
 
-  factory Video.empty() =>
-      Video(id: "", title: "", videoUrl: "", thumbnailUrl: "", chapters: []);
+  factory Video.empty() => Video(
+      id: "",
+      title: "",
+      videoUrl: "",
+      thumbnailUrl: "",
+      uploadedBy: UploadedBy.empty());
 
   factory Video.fromJson(Map<String, dynamic> json) => Video(
         id: json["id"] ?? "",
         title: json["title"] ?? "",
         videoUrl: json["video_url"] ?? "",
         thumbnailUrl: json["thumbnail_url"] ?? "",
-        chapters: json["chapters"] != null
-            ? List<Chapter>.from(
-                json["chapters"].map((x) => Chapter.fromJson(x)))
-            : [],
+        uploadedBy: json["uploaded_by"] != null
+            ? UploadedBy.fromJson(json["uploaded_by"])
+            : UploadedBy.empty(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -94,41 +97,41 @@ class Video {
         "title": title,
         "video_url": videoUrl,
         "thumbnail_url": thumbnailUrl,
-        "chapters": List<dynamic>.from(chapters.map((x) => x.toJson())),
+        "uploaded_by": uploadedBy.toJson(),
       };
 }
 
-class Chapter {
+class UploadedBy {
   String id;
-  String title;
-  String description;
-  String startTime;
-  String endTime;
+  String email;
+  String firstName;
+  String lastName;
+  bool isVerified;
 
-  Chapter({
+  UploadedBy({
     required this.id,
-    required this.title,
-    required this.description,
-    required this.startTime,
-    required this.endTime,
+    required this.email,
+    required this.firstName,
+    required this.lastName,
+    required this.isVerified,
   });
 
-  factory Chapter.empty() =>
-      Chapter(id: "", title: "", description: "", startTime: "", endTime: "");
+  factory UploadedBy.empty() => UploadedBy(
+      id: "", email: "", firstName: "", lastName: "", isVerified: false);
 
-  factory Chapter.fromJson(Map<String, dynamic> json) => Chapter(
+  factory UploadedBy.fromJson(Map<String, dynamic> json) => UploadedBy(
         id: json["id"] ?? "",
-        title: json["title"] ?? "",
-        description: json["description"] ?? "",
-        startTime: json["start_time"] ?? "",
-        endTime: json["end_time"] ?? "",
+        email: json["email"] ?? "",
+        firstName: json["first_name"] ?? "",
+        lastName: json["last_name"] ?? "",
+        isVerified: json["is_verified"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "title": title,
-        "description": description,
-        "start_time": startTime,
-        "end_time": endTime,
+        "email": email,
+        "first_name": firstName,
+        "last_name": lastName,
+        "is_verified": isVerified,
       };
 }

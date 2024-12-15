@@ -273,7 +273,8 @@ class _ProfileScreenState extends State<ProfileScreen> with AppTheme, Language {
                               title: label(
                                   e: en.accountDetails, b: bn.accountDetails)),
                           ProfileCard(
-                              onTap: () {},
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed(AppRoute.myVideoScreen),
                               iconName: ImageAssets.myVideos,
                               title: label(e: en.myVideos, b: bn.myVideos)),
                           ProfileCard(

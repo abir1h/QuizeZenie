@@ -6,6 +6,7 @@ import '../../feature/profile/screens/profile_screen.dart';
 import '../../feature/home/screens/home_screen.dart';
 import '../../feature/landing/screens/landing_screen.dart';
 import '../../feature/onboarding/screens/onboarding_screen.dart';
+import '../../feature/video/screens/my_video_screen.dart';
 import '../../feature/video/screens/video_record_screen.dart';
 import '../../feature/video/screens/video_upload_info_screen.dart';
 import '../../feature/shared/authentication/screens/sign_up_screen.dart';
@@ -32,6 +33,7 @@ class AppRoute {
   static const String profileScreen = "profileScreen";
   static const String accountDetailsScreen = "accountDetailsScreen";
   static const String changePasswordScreen = "changePasswordScreen";
+  static const String myVideoScreen = "myVideoScreen";
 }
 
 mixin RouteGenerator {
@@ -67,6 +69,8 @@ mixin RouteGenerator {
           case AppRoute.accountDetailsScreen:
             return const AccountDetailsScreen();  case AppRoute.changePasswordScreen:
             return const ChangePasswordScreen();
+          case AppRoute.myVideoScreen:
+            return const MyVideoScreen();
 
           default:
             return const SplashScreen();
