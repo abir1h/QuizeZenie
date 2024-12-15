@@ -1,5 +1,3 @@
-import 'package:co_learning_mobile_app/src/feature/profile/screens/account_details.dart';
-import 'package:co_learning_mobile_app/src/feature/profile/screens/change_password_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../feature/profile/screens/profile_screen.dart';
@@ -15,7 +13,8 @@ import '../../feature/shared/splash/presentation/screens/splash_screen.dart';
 import '../../feature/shared/authentication/screens/verify_otp_screen.dart';
 import '../../feature/shared/authentication/screens/forgot_password_screen.dart';
 import '../../feature/shared/authentication/screens/reset_password_screen.dart';
-
+import '../../feature/profile/screens/account_details.dart';
+import '../../feature/profile/screens/change_password_screen.dart';
 class AppRoute {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 

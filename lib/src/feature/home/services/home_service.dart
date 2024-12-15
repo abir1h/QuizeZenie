@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/constants/app_constant.dart';
 import '../../../common/models/action_result.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../gateways/home_gateway.dart';
@@ -42,8 +43,10 @@ mixin HomeService<T extends StatefulWidget> on State<T> implements _ViewModel {
       ///Error state
       else {
         ///Try reloading
-        loadInitialData();
-      }
+        Future.delayed(Duration(seconds: AppConstant.reloadInSeconds))
+            .then((value) {
+          if (mounted) loadInitialData();
+        });      }
     });
   }
 
