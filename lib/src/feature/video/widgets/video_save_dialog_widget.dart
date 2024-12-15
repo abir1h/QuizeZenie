@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:co_learning_mobile_app/src/common/widgets/custom_toasty.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../common/config/app.dart';
+import '../../../common/widgets/custom_toasty.dart';
 import '../../../common/constants/common_imports.dart';
 import '../../../common/widgets/text_field.dart';
 
@@ -103,7 +105,7 @@ mixin VideoSaveDialogWidget<T extends StatefulWidget> on State<T> {
                                 )),
                           ),
                           SizedBox(width: ThemeSize.instance.s12),
-                          Text("User Name",
+                          Text(App.currentSession.user.username,
                               style: TextStyle(
                                   color: ThemeColor.instance.textColorBlack,
                                   fontSize: ThemeSize.instance.textXSmall,
