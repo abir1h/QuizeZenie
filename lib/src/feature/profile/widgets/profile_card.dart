@@ -11,34 +11,40 @@ class ProfileCard extends StatelessWidget with AppTheme{
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-             vertical: 14.h
-          ),
-          child: Row(
-            children: [
-              Flexible(
-                child: Row(
-                  children: [
-                    SvgPicture.asset(iconName,height: size.s32,width: size.s28,),
-                    size.s8.kWidth,
-                    Text(title,style: TextStyle(fontWeight: FontWeight.w500,fontSize: size.textXSmall,color: clr.profileCardTextColor),)
-
-                  ],
-                ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(
+                 vertical: 14.h
               ),
-              Icon(Icons.arrow_forward_ios,color:clr.iconColorGray ,)
-            ],
-          ),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(iconName,height: size.s32,width: size.s28,),
+                        size.s8.kWidth,
+                        Text(title,style: TextStyle(fontWeight: FontWeight.w500,fontSize: size.textXSmall,color: clr.profileCardTextColor),)
+
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.arrow_forward_ios,color:clr.iconColorGray ,)
+                ],
+              ),
+            ),
+            if(!isLast!)
+            Divider(
+              height: 1,
+              color: clr.greyBorder,
+            )
+          ],
         ),
-        if(!isLast!)
-        Divider(
-          height: 1,
-          color: clr.greyBorder,
-        )
-      ],
+      ),
     );
   }
 }
