@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:co_learning_mobile_app/src/feature/video/widgets/video_tab_section_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/constants/app_theme.dart';
 import '../../../common/widgets/app_scaffold.dart';
+import '../../../common/widgets/circular_loader.dart';
 
 class MyVideoScreen extends StatefulWidget {
   const MyVideoScreen({super.key});
@@ -12,13 +15,76 @@ class MyVideoScreen extends StatefulWidget {
 }
 
 class _MyVideoScreenState extends State<MyVideoScreen> with AppTheme {
+  final GlobalKey _bodyKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
       title: "My Video List",
-      child: VideoItemSectionWidget(
-        items: const ["", "", "", ""],
-        buildItem: (BuildContext context, int index, item) => VideoItemWidget(),
+      child: LayoutBuilder(builder: (context, constraints) {
+        return VideoSectionTabWidget(
+          key: _bodyKey,
+          onTabChange: (v) {},
+          builder: (context, index) {
+            switch (index) {
+              ///Instruction
+              case 0:
+                return Expanded(
+                  child: VideoItemSectionWidget(
+                    items: const ["", "", "", ""],
+                    buildItem: (BuildContext context, int index, item) =>
+                        VideoItemWidget(),
+                  ),
+                );
+
+              ///StudentWork
+              case 1:
+                 return Expanded(
+                   child: VideoItemSectionWidget(
+                    items: const ["", "", "", ""],
+                    buildItem: (BuildContext context, int index, item) =>
+                        VideoItemWidget(),
+                                   ),
+                 );
+              case 2:
+                return Expanded(
+                  child: VideoItemSectionWidget(
+                    items: const ["", "", "", ""],
+                    buildItem: (BuildContext context, int index, item) =>
+                        VideoItemWidget(),
+                  ),
+                );
+
+              ///Loading state
+              default:
+                return SectionLoadingWidget(constraints: constraints);
+            }
+          },
+        );
+      }),
+    );
+  }
+}
+
+/*VideoItemSectionWidget(
+items: const ["", "", "", ""],
+buildItem: (BuildContext context, int index, item) => VideoItemWidget(),
+),*/
+class SectionLoadingWidget extends StatelessWidget with AppTheme {
+  final BoxConstraints constraints;
+  final double? offset;
+  const SectionLoadingWidget(
+      {super.key, required this.constraints, this.offset});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: constraints.maxHeight - (offset ?? 242.w),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: size.s20),
+        child: const Center(
+          child: CircularLoader(),
+        ),
       ),
     );
   }
@@ -35,16 +101,19 @@ class VideoItemSectionWidget<T> extends StatelessWidget with AppTheme {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: items.length,
-      physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: size.s16),
-      itemBuilder: (context, index) {
-        return buildItem(context, index, items[index]);
-      },
-      separatorBuilder: (context, index) {
-        return SizedBox(height: size.s12);
-      },
+    return Padding(
+      padding:  EdgeInsets.only(top: size.s12),
+      child: ListView.separated(
+        itemCount: items.length,
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: size.s16),
+        itemBuilder: (context, index) {
+          return buildItem(context, index, items[index]);
+        },
+        separatorBuilder: (context, index) {
+          return SizedBox(height: size.s12);
+        },
+      ),
     );
   }
 }
@@ -82,7 +151,7 @@ class VideoItemWidget extends StatelessWidget with AppTheme {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Video Name",
+                "Video Name  ",
                 style: TextStyle(
                   color: clr.videoTitleColor,
                   fontSize: size.textSmall,

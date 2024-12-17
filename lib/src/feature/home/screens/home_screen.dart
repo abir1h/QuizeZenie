@@ -21,11 +21,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
-  final CarouselSliderController carouselController =
-      CarouselSliderController();
-  // final PageController _pageController = PageController();
+  final CarouselSliderController carouselController = CarouselSliderController();
   int currentIndex = 0;
 
+  final ScrollController _scrollController = ScrollController();
   final List<String> imgList = [
     'https://via.placeholder.com/600x300.png?text=Image+1',
     'https://via.placeholder.com/600x300.png?text=Image+2',
@@ -34,11 +33,29 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
   ];
 
   double expandedHeight = 1.sw * 1.05;
-  // double collapsedHeight = 1.sw * .2;
+  double collapsedHeight = 1.sw * 0.2;
   bool isContentVisible = true;
 
-  void onScroll(double scrollPosition, double appBarHeight) {
-    if (scrollPosition != 0) {
+  bool isScrollingUp = false;
+
+  void onScroll(double scrollPosition) {
+    if (scrollPosition > 0 && !isScrollingUp) {
+      setState(() {
+        isScrollingUp = true;
+      });
+
+      // _scrollController.animateTo(
+      //   collapsedHeight,
+      //   duration: Duration(milliseconds: 200),
+      //   curve: Curves.easeOut,
+      // );
+    } else if (scrollPosition == 0 && isScrollingUp) {
+      setState(() {
+        isScrollingUp = false;
+      });
+    }
+
+    if (scrollPosition >= expandedHeight - collapsedHeight) {
       setState(() {
         isContentVisible = false;
       });
@@ -47,6 +64,22 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
         isContentVisible = true;
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      double scrollPosition = _scrollController.offset;
+      onScroll(scrollPosition);
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,17 +97,17 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
             if (scrollNotification is ScrollUpdateNotification) {
               if (scrollNotification.metrics.axis == Axis.vertical) {
                 double scrollPosition = scrollNotification.metrics.pixels;
-                double appBarHeight = expandedHeight;
-                onScroll(scrollPosition, appBarHeight);
+                onScroll(scrollPosition);
               }
             }
             return false;
           },
           child: CustomScrollView(
+            controller: _scrollController,
             slivers: [
               SliverAppBar(
                 automaticallyImplyLeading: false,
-                expandedHeight: MediaQuery.of(context).size.height * .52,
+                expandedHeight: MediaQuery.of(context).size.height * .50,
                 collapsedHeight: MediaQuery.of(context).size.height * .15,
                 floating: false,
                 pinned: true,
@@ -130,25 +163,27 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                           width: size.s32,
                           fit: BoxFit.fill,
                           imageUrl:
-                              "https://images.unsplash.com/photo-1532264523420-881a47db012d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9",
+                          "https://images.unsplash.com/photo-1532264523420-881a47db012d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9",
                           placeholder: (context, url) =>
-                              const Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                          const Icon(Icons.error),
                         )),
                   )
                 ],
                 flexibleSpace: Stack(
+                  clipBehavior: Clip.none,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(size.s20),
-                          bottomRight: Radius.circular(size.s20)),
-                      child: Image.asset(
-                        ImageAssets.imgHomeBG,
-                        height: MediaQuery.of(context).size.height * .5,
-                        width: double.infinity,
-                        fit: BoxFit.fill,
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(size.s28),
+                          bottomRight: Radius.circular(size.s28),
+                        ),
+                        image: DecorationImage(
+                          image: AssetImage(ImageAssets.imgHomeBG),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     Align(
@@ -161,6 +196,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                             right: size.s16,
                             left: size.s16),
                         child: SingleChildScrollView(
+                          physics: NeverScrollableScrollPhysics(),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -172,13 +208,13 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                                 decoration: BoxDecoration(
                                     color: clr.bgColorWhite,
                                     borderRadius:
-                                        BorderRadius.circular(size.s8),
+                                    BorderRadius.circular(size.s8),
                                     border: Border.all(
                                         color: clr.cardStrokeColor,
                                         width: size.s1)),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Icon(
@@ -206,68 +242,83 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                                 ),
                               ),
                               SizedBox(height: size.s16),
-                              AnimatedOpacity(
-                                opacity: isContentVisible ? 1.0 : 0.0,
-                                duration: const Duration(milliseconds: 250),
-                                child: ImageSliderWidget(
-                                  imgList: imgList,
-                                  initialIndex: 0,
-                                ),
-                              ),
-                              SizedBox(height: size.s16),
-                              AnimatedOpacity(
-                                opacity: isContentVisible ? 1.0 : 0.0,
-                                duration: const Duration(milliseconds: 250),
-                                child: Container(
-                                  width: double.infinity,
-                                  // height: 80,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: size.s20, vertical: size.s16),
-                                  decoration: BoxDecoration(
-                                    color: clr.whiteColor,
-                                    borderRadius:
-                                        BorderRadius.circular(size.s20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
-                                        blurRadius: 10,
-                                        spreadRadius: 5,
-                                        offset: const Offset(0, 5),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      IconWithTitleWidget(
-                                        svgIcon: ImageAssets.icReel,
-                                        text: "${data.totalVideos} Videos",
-                                      ),
-                                      IconWithTitleWidget(
-                                        svgIcon: ImageAssets.icBook,
-                                        text: "${data.totalChapters} Chapters",
-                                      ),
-                                      IconWithTitleWidget(
-                                        svgIcon: ImageAssets.icBank,
-                                        text: "${data.totalSchools} Schools",
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                         ),
                       ),
                     ),
+                    Positioned(
+                      bottom: -20,
+                      left: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).padding.top +
+                                kToolbarHeight +
+                                size.s10,
+                            right: size.s16,
+                            left: size.s16),
+                        child: Column(
+                          children: [
+                            SizedBox(height: size.s16),
+                            AnimatedOpacity(
+                              opacity: isContentVisible ? 1.0 : 0.0,
+                              duration: const Duration(milliseconds: 250),
+                              child: ImageSliderWidget(
+                                imgList: imgList,
+                                initialIndex: 0,
+                              ),
+                            ),
+                            SizedBox(height: size.s16),
+                            AnimatedOpacity(
+                              opacity: isContentVisible ? 1.0 : 0.0,
+                              duration: const Duration(milliseconds: 250),
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: size.s20, vertical: size.s16),
+                                decoration: BoxDecoration(
+                                  color: clr.whiteColor,
+                                  borderRadius: BorderRadius.circular(size.s20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 10,
+                                      spreadRadius: 5,
+                                      offset: const Offset(0, 5),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconWithTitleWidget(
+                                      svgIcon: ImageAssets.icReel,
+                                      text: "${data.totalVideos} Videos",
+                                    ),
+                                    IconWithTitleWidget(
+                                      svgIcon: ImageAssets.icBook,
+                                      text: "${data.totalChapters} Chapters",
+                                    ),
+                                    IconWithTitleWidget(
+                                      svgIcon: ImageAssets.icBank,
+                                      text: "${data.totalSchools} Schools",
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
               SliverList(
                 delegate: SliverChildListDelegate(
                   [
-                    SizedBox(height: size.s20),
+                    SizedBox(height: size.s32),
                     ListView.separated(
                       itemCount: data.categories.length,
                       shrinkWrap: true,
@@ -279,9 +330,9 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                           items: data.categories[index].videos,
                           buildItem: (BuildContext context, int index, item) =>
                               FeaturedItemWidget(
-                            data: item,
-                            onTap: () {},
-                          ),
+                                data: item,
+                                onTap: () {},
+                              ),
                         );
                       },
                       separatorBuilder: (context, index) {
@@ -299,244 +350,6 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
         return const Offstage();
       },
     );
-    // return NotificationListener<ScrollNotification>(
-    //   onNotification: (scrollNotification) {
-    //     if (scrollNotification is ScrollUpdateNotification) {
-    //       if (scrollNotification.metrics.axis == Axis.vertical) {
-    //         double scrollPosition = scrollNotification.metrics.pixels;
-    //         double appBarHeight = expandedHeight;
-    //         onScroll(scrollPosition, appBarHeight);
-    //       }
-    //     }
-    //     return false;
-    //   },
-    //   child: CustomScrollView(
-    //     slivers: [
-    //       SliverAppBar(
-    //         automaticallyImplyLeading: false,
-    //         expandedHeight: expandedHeight,
-    //         collapsedHeight: collapsedHeight,
-    //         floating: false,
-    //         pinned: true,
-    //         backgroundColor: clr.backgroundColor,
-    //         title: Padding(
-    //           padding: EdgeInsets.only(top: size.s8),
-    //           child: Column(
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: [
-    //               Text(
-    //                 label(e: "Welcome to", b: "Welcome to"),
-    //                 style: TextStyle(
-    //                     color: clr.whiteColor,
-    //                     fontWeight: FontWeight.w500,
-    //                     fontFamily: StringData.fontFamilyPoppins,
-    //                     fontSize: size.textXXSmall),
-    //               ),
-    //               Text(
-    //                 label(e: "e Learning Project", b: "e Learning Project"),
-    //                 style: TextStyle(
-    //                     color: clr.whiteColor,
-    //                     fontWeight: FontWeight.w600,
-    //                     fontFamily: StringData.fontFamilyPoppins,
-    //                     fontSize: size.textSmall),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //         actions: [
-    //           Padding(
-    //             padding: EdgeInsets.only(top: size.s8, right: size.s8),
-    //             child: InkWell(
-    //               onTap: () {},
-    //               child: Icon(
-    //                 Icons.notifications_outlined,
-    //                 size: size.s32,
-    //                 color: clr.whiteColor,
-    //               ),
-    //             ),
-    //           ),
-    //           Container(
-    //             margin: EdgeInsets.only(top: size.s8, right: size.s20),
-    //             decoration: BoxDecoration(
-    //               color: clr.iconGrey,
-    //               borderRadius: BorderRadius.circular(100),
-    //               border:
-    //                   Border.all(color: clr.iconBorderColor, width: size.s2),
-    //             ),
-    //             child: ClipRRect(
-    //                 borderRadius: BorderRadius.circular(100),
-    //                 child: CachedNetworkImage(
-    //                   height: size.s32,
-    //                   width: size.s32,
-    //                   fit: BoxFit.fill,
-    //                   imageUrl:
-    //                       "https://images.unsplash.com/photo-1532264523420-881a47db012d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9",
-    //                   placeholder: (context, url) =>
-    //                       const Center(child: CircularProgressIndicator()),
-    //                   errorWidget: (context, url, error) =>
-    //                       const Icon(Icons.error),
-    //                 )),
-    //           )
-    //         ],
-    //         flexibleSpace: Stack(
-    //           children: [
-    //             ClipRRect(
-    //               borderRadius: BorderRadius.only(
-    //                   bottomLeft: Radius.circular(size.s20),
-    //                   bottomRight: Radius.circular(size.s20)),
-    //               child: Image.asset(
-    //                 ImageAssets.imgHomeBG,
-    //                 // height: 1.sw,
-    //                 width: double.infinity,
-    //                 fit: BoxFit.fill,
-    //               ),
-    //             ),
-    //             Align(
-    //               alignment: Alignment.topCenter,
-    //               child: Padding(
-    //                 padding: EdgeInsets.only(
-    //                     top: MediaQuery.of(context).padding.top +
-    //                         kToolbarHeight,
-    //                     right: size.s16,
-    //                     left: size.s16),
-    //                 child: SingleChildScrollView(
-    //                   child: Column(
-    //                     crossAxisAlignment: CrossAxisAlignment.center,
-    //                     children: [
-    //                       Container(
-    //                         height: size.s20 * 2,
-    //                         width: double.infinity,
-    //                         padding: EdgeInsets.symmetric(
-    //                             horizontal: size.s12, vertical: size.s12),
-    //                         decoration: BoxDecoration(
-    //                             color: clr.bgColorWhite,
-    //                             borderRadius: BorderRadius.circular(size.s8),
-    //                             border: Border.all(
-    //                                 color: clr.cardStrokeColor,
-    //                                 width: size.s1)),
-    //                         child: Row(
-    //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                           mainAxisSize: MainAxisSize.max,
-    //                           children: [
-    //                             Icon(
-    //                               Icons.search,
-    //                               size: size.s16,
-    //                               color: clr.iconColorGrey,
-    //                             ),
-    //                             SizedBox(width: size.s8),
-    //                             Expanded(
-    //                               child: Text(
-    //                                 "Search Here",
-    //                                 style: TextStyle(
-    //                                   color: clr.textColorGrey,
-    //                                   fontSize: size.textXXSmall,
-    //                                   fontWeight: FontWeight.w500,
-    //                                 ),
-    //                               ),
-    //                             ),
-    //                             Icon(
-    //                               Icons.pages,
-    //                               size: size.s16,
-    //                               color: clr.iconColorGrey,
-    //                             ),
-    //                           ],
-    //                         ),
-    //                       ),
-    //                       SizedBox(height: size.s16),
-    //                       AnimatedOpacity(
-    //                         opacity: isContentVisible ? 1.0 : 0.0,
-    //                         duration: const Duration(milliseconds: 250),
-    //                         child: ImageSliderWidget(
-    //                           imgList: imgList,
-    //                           initialIndex: 0,
-    //                         ),
-    //                       ),
-    //                       SizedBox(height: size.s16),
-    //                       AnimatedOpacity(
-    //                         opacity: isContentVisible ? 1.0 : 0.0,
-    //                         duration: const Duration(milliseconds: 250),
-    //                         child: Container(
-    //                           width: double.infinity,
-    //                           // height: 80,
-    //                           padding: EdgeInsets.symmetric(
-    //                               horizontal: size.s20, vertical: size.s16),
-    //                           decoration: BoxDecoration(
-    //                             color: clr.whiteColor,
-    //                             borderRadius: BorderRadius.circular(size.s20),
-    //                             boxShadow: [
-    //                               BoxShadow(
-    //                                 color: Colors.black.withOpacity(0.1),
-    //                                 blurRadius: 10,
-    //                                 spreadRadius: 5,
-    //                                 offset: const Offset(0, 5),
-    //                               ),
-    //                             ],
-    //                           ),
-    //                           child: Row(
-    //                             mainAxisAlignment:
-    //                                 MainAxisAlignment.spaceBetween,
-    //                             children: [
-    //                               IconWithTitleWidget(
-    //                                 svgIcon: ImageAssets.icReel,
-    //                                 text: "500+ Videos",
-    //                               ),
-    //                               IconWithTitleWidget(
-    //                                 svgIcon: ImageAssets.icBook,
-    //                                 text: "200+ Chapters",
-    //                               ),
-    //                               IconWithTitleWidget(
-    //                                 svgIcon: ImageAssets.icBank,
-    //                                 text: "7 Schools",
-    //                               ),
-    //                             ],
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //       SliverList(
-    //         delegate: SliverChildListDelegate(
-    //           [
-    //             SizedBox(height: size.s8),
-    //             ItemSectionWidget(
-    //               title: "School name",
-    //               items: const ["", "", "", "", "", ""],
-    //               buildItem: (BuildContext context, int index, item) =>
-    //                   FeaturedItemWidget(
-    //                 onTap: () {},
-    //               ),
-    //             ),
-    //             SizedBox(height: size.s20),
-    //             ItemSectionWidget(
-    //               title: "School name",
-    //               items: const ["", "", "", "", "", ""],
-    //               buildItem: (BuildContext context, int index, item) =>
-    //                   FeaturedItemWidget(
-    //                 onTap: () {},
-    //               ),
-    //             ),
-    //             SizedBox(height: size.s20),
-    //             ItemSectionWidget(
-    //               title: "School name",
-    //               items: const ["", "", "", "", "", ""],
-    //               buildItem: (BuildContext context, int index, item) =>
-    //                   FeaturedItemWidget(
-    //                 onTap: () {},
-    //               ),
-    //             ),
-    //             SizedBox(height: size.s20),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
   @override
@@ -1008,3 +821,241 @@ class FeaturedItemWidget extends StatelessWidget with AppTheme {
     );
   }
 }
+// return NotificationListener<ScrollNotification>(
+//   onNotification: (scrollNotification) {
+//     if (scrollNotification is ScrollUpdateNotification) {
+//       if (scrollNotification.metrics.axis == Axis.vertical) {
+//         double scrollPosition = scrollNotification.metrics.pixels;
+//         double appBarHeight = expandedHeight;
+//         onScroll(scrollPosition, appBarHeight);
+//       }
+//     }
+//     return false;
+//   },
+//   child: CustomScrollView(
+//     slivers: [
+//       SliverAppBar(
+//         automaticallyImplyLeading: false,
+//         expandedHeight: expandedHeight,
+//         collapsedHeight: collapsedHeight,
+//         floating: false,
+//         pinned: true,
+//         backgroundColor: clr.backgroundColor,
+//         title: Padding(
+//           padding: EdgeInsets.only(top: size.s8),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Text(
+//                 label(e: "Welcome to", b: "Welcome to"),
+//                 style: TextStyle(
+//                     color: clr.whiteColor,
+//                     fontWeight: FontWeight.w500,
+//                     fontFamily: StringData.fontFamilyPoppins,
+//                     fontSize: size.textXXSmall),
+//               ),
+//               Text(
+//                 label(e: "e Learning Project", b: "e Learning Project"),
+//                 style: TextStyle(
+//                     color: clr.whiteColor,
+//                     fontWeight: FontWeight.w600,
+//                     fontFamily: StringData.fontFamilyPoppins,
+//                     fontSize: size.textSmall),
+//               ),
+//             ],
+//           ),
+//         ),
+//         actions: [
+//           Padding(
+//             padding: EdgeInsets.only(top: size.s8, right: size.s8),
+//             child: InkWell(
+//               onTap: () {},
+//               child: Icon(
+//                 Icons.notifications_outlined,
+//                 size: size.s32,
+//                 color: clr.whiteColor,
+//               ),
+//             ),
+//           ),
+//           Container(
+//             margin: EdgeInsets.only(top: size.s8, right: size.s20),
+//             decoration: BoxDecoration(
+//               color: clr.iconGrey,
+//               borderRadius: BorderRadius.circular(100),
+//               border:
+//                   Border.all(color: clr.iconBorderColor, width: size.s2),
+//             ),
+//             child: ClipRRect(
+//                 borderRadius: BorderRadius.circular(100),
+//                 child: CachedNetworkImage(
+//                   height: size.s32,
+//                   width: size.s32,
+//                   fit: BoxFit.fill,
+//                   imageUrl:
+//                       "https://images.unsplash.com/photo-1532264523420-881a47db012d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9",
+//                   placeholder: (context, url) =>
+//                       const Center(child: CircularProgressIndicator()),
+//                   errorWidget: (context, url, error) =>
+//                       const Icon(Icons.error),
+//                 )),
+//           )
+//         ],
+//         flexibleSpace: Stack(
+//           children: [
+//             ClipRRect(
+//               borderRadius: BorderRadius.only(
+//                   bottomLeft: Radius.circular(size.s20),
+//                   bottomRight: Radius.circular(size.s20)),
+//               child: Image.asset(
+//                 ImageAssets.imgHomeBG,
+//                 // height: 1.sw,
+//                 width: double.infinity,
+//                 fit: BoxFit.fill,
+//               ),
+//             ),
+//             Align(
+//               alignment: Alignment.topCenter,
+//               child: Padding(
+//                 padding: EdgeInsets.only(
+//                     top: MediaQuery.of(context).padding.top +
+//                         kToolbarHeight,
+//                     right: size.s16,
+//                     left: size.s16),
+//                 child: SingleChildScrollView(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.center,
+//                     children: [
+//                       Container(
+//                         height: size.s20 * 2,
+//                         width: double.infinity,
+//                         padding: EdgeInsets.symmetric(
+//                             horizontal: size.s12, vertical: size.s12),
+//                         decoration: BoxDecoration(
+//                             color: clr.bgColorWhite,
+//                             borderRadius: BorderRadius.circular(size.s8),
+//                             border: Border.all(
+//                                 color: clr.cardStrokeColor,
+//                                 width: size.s1)),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                           mainAxisSize: MainAxisSize.max,
+//                           children: [
+//                             Icon(
+//                               Icons.search,
+//                               size: size.s16,
+//                               color: clr.iconColorGrey,
+//                             ),
+//                             SizedBox(width: size.s8),
+//                             Expanded(
+//                               child: Text(
+//                                 "Search Here",
+//                                 style: TextStyle(
+//                                   color: clr.textColorGrey,
+//                                   fontSize: size.textXXSmall,
+//                                   fontWeight: FontWeight.w500,
+//                                 ),
+//                               ),
+//                             ),
+//                             Icon(
+//                               Icons.pages,
+//                               size: size.s16,
+//                               color: clr.iconColorGrey,
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                       SizedBox(height: size.s16),
+//                       AnimatedOpacity(
+//                         opacity: isContentVisible ? 1.0 : 0.0,
+//                         duration: const Duration(milliseconds: 250),
+//                         child: ImageSliderWidget(
+//                           imgList: imgList,
+//                           initialIndex: 0,
+//                         ),
+//                       ),
+//                       SizedBox(height: size.s16),
+//                       AnimatedOpacity(
+//                         opacity: isContentVisible ? 1.0 : 0.0,
+//                         duration: const Duration(milliseconds: 250),
+//                         child: Container(
+//                           width: double.infinity,
+//                           // height: 80,
+//                           padding: EdgeInsets.symmetric(
+//                               horizontal: size.s20, vertical: size.s16),
+//                           decoration: BoxDecoration(
+//                             color: clr.whiteColor,
+//                             borderRadius: BorderRadius.circular(size.s20),
+//                             boxShadow: [
+//                               BoxShadow(
+//                                 color: Colors.black.withOpacity(0.1),
+//                                 blurRadius: 10,
+//                                 spreadRadius: 5,
+//                                 offset: const Offset(0, 5),
+//                               ),
+//                             ],
+//                           ),
+//                           child: Row(
+//                             mainAxisAlignment:
+//                                 MainAxisAlignment.spaceBetween,
+//                             children: [
+//                               IconWithTitleWidget(
+//                                 svgIcon: ImageAssets.icReel,
+//                                 text: "500+ Videos",
+//                               ),
+//                               IconWithTitleWidget(
+//                                 svgIcon: ImageAssets.icBook,
+//                                 text: "200+ Chapters",
+//                               ),
+//                               IconWithTitleWidget(
+//                                 svgIcon: ImageAssets.icBank,
+//                                 text: "7 Schools",
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//       SliverList(
+//         delegate: SliverChildListDelegate(
+//           [
+//             SizedBox(height: size.s8),
+//             ItemSectionWidget(
+//               title: "School name",
+//               items: const ["", "", "", "", "", ""],
+//               buildItem: (BuildContext context, int index, item) =>
+//                   FeaturedItemWidget(
+//                 onTap: () {},
+//               ),
+//             ),
+//             SizedBox(height: size.s20),
+//             ItemSectionWidget(
+//               title: "School name",
+//               items: const ["", "", "", "", "", ""],
+//               buildItem: (BuildContext context, int index, item) =>
+//                   FeaturedItemWidget(
+//                 onTap: () {},
+//               ),
+//             ),
+//             SizedBox(height: size.s20),
+//             ItemSectionWidget(
+//               title: "School name",
+//               items: const ["", "", "", "", "", ""],
+//               buildItem: (BuildContext context, int index, item) =>
+//                   FeaturedItemWidget(
+//                 onTap: () {},
+//               ),
+//             ),
+//             SizedBox(height: size.s20),
+//           ],
+//         ),
+//       ),
+//     ],
+//   ),
+// );
