@@ -1,13 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:co_learning_mobile_app/src/common/constants/common_imports.dart';
-import 'package:co_learning_mobile_app/src/common/utility/app_label.dart';
-import 'package:co_learning_mobile_app/src/feature/profile/widgets/profile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import "package:cached_network_image/cached_network_image.dart";
+
 import '../../../common/config/app.dart';
 import '../../../common/routes/app_route.dart';
-import '../widgets/toggle_button.dart';
-
+import '../../../common/constants/common_imports.dart';
+import '../../../common/utility/app_label.dart';
+import '../widgets/profile_card.dart';
+import '../widgets/select_laguage_bottomshet.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -29,8 +29,8 @@ class _ProfileScreenState extends State<ProfileScreen> with AppTheme, Language {
                 fontSize: size.textXMedium,
                 color: clr.blackColor),
           ),
-          /*  actions: [
-          Padding(
+            actions: [
+        /*  Padding(
             padding: const EdgeInsets.all(10.0),  // Added padding for spacing
             child: AnimatedToggle(
               values: ['English', 'Khmer'],
@@ -39,17 +39,17 @@ class _ProfileScreenState extends State<ProfileScreen> with AppTheme, Language {
                   if (mounted) {
                     setState(() {});
                   }
-                 */ /* AppEventsNotifier.notify(EventAction.bottomNavAllScreen);
+                   AppEventsNotifier.notify(EventAction.bottomNavAllScreen);
                   AppEventsNotifier.notify(EventAction.bottomNavBar);
-                  AppEventsNotifier.notify(EventAction.graphChart);*/ /*
+                  AppEventsNotifier.notify(EventAction.graphChart);
                 });
               },
               buttonColor:clr.selectedToggleColor,
               backgroundColor: clr.inactiveToggleColor,
               textColor: const Color(0xFFFFFFFF),
             ),
-          ),
-        ],*/
+          ),*/
+        ],
         ),
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
@@ -188,12 +188,16 @@ class _ProfileScreenState extends State<ProfileScreen> with AppTheme, Language {
                           children: [
                             SvgPicture.asset(ImageAssets.shield),
                             size.s8.kWidth,
-                            Text(
-                              "Assistant Professor",
-                              style: TextStyle(
-                                  fontSize: size.textXXSmall,
-                                  fontWeight: FontWeight.w600,
-                                  color: clr.whiteColor),
+                            Flexible(
+                              child: Text(
+                                "Assistant Professor",
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                    fontSize: size.textXXSmall,
+                                    fontWeight: FontWeight.w600,
+                                    color: clr.whiteColor),
+                              ),
                             ),
                           ],
                         ),
@@ -205,12 +209,16 @@ class _ProfileScreenState extends State<ProfileScreen> with AppTheme, Language {
                           children: [
                             SvgPicture.asset(ImageAssets.organistaion),
                             size.s8.kWidth,
-                            Text(
-                              "School name/ Organization name",
-                              style: TextStyle(
-                                  fontSize: size.textXXSmall,
-                                  fontWeight: FontWeight.w600,
-                                  color: clr.whiteColor),
+                            Flexible(
+                              child: Text(
+                                "School name/ Organization name",
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                    fontSize: size.textXXSmall,
+                                    fontWeight: FontWeight.w600,
+                                    color: clr.whiteColor),
+                              ),
                             ),
                           ],
                         ),
@@ -259,12 +267,14 @@ class _ProfileScreenState extends State<ProfileScreen> with AppTheme, Language {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ProfileCard(
-                              onTap: () {},
+                              onTap: () => Navigator.pushNamed(
+                                  context, AppRoute.accountDetailsScreen),
                               iconName: ImageAssets.accountDetails,
                               title: label(
                                   e: en.accountDetails, b: bn.accountDetails)),
                           ProfileCard(
-                              onTap: () {},
+                              onTap: () => Navigator.of(context)
+                                  .pushNamed(AppRoute.myVideoScreen),
                               iconName: ImageAssets.myVideos,
                               title: label(e: en.myVideos, b: bn.myVideos)),
                           ProfileCard(
@@ -272,12 +282,21 @@ class _ProfileScreenState extends State<ProfileScreen> with AppTheme, Language {
                               iconName: ImageAssets.myActivity,
                               title: label(e: en.myActivity, b: bn.myActivity)),
                           ProfileCard(
-                              onTap: () {},
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (BuildContext context) {
+                                    return SelectLanguageBottomSheet(context: context,);
+                                  },
+                                );
+                              },
                               iconName: ImageAssets.changeLanguage,
                               title: label(
                                   e: en.changeLanguage, b: bn.changeLanguage)),
                           ProfileCard(
-                              onTap: () {},
+                              onTap: () => Navigator.pushNamed(
+                                  context, AppRoute.changePasswordScreen),
                               iconName: ImageAssets.changePassword,
                               isLast: true,
                               title: label(
