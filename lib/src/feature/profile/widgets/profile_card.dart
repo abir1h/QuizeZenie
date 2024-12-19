@@ -15,10 +15,12 @@ class ProfileCard extends StatelessWidget with AppTheme{
       children: [
         GestureDetector(onTap: onTap,
           child: Container(
+            color: clr.whiteColor,
             padding: EdgeInsets.symmetric(
                vertical: 14.h
             ),
             child: Row(
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Flexible(
                   child: Row(
