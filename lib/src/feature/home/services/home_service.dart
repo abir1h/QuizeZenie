@@ -46,6 +46,7 @@ mixin HomeService<T extends StatefulWidget> on State<T> implements _ViewModel {
 
         ///Error state
         else {
+          _view.showWarning(value.message);
           ///Try reloading
           Future.delayed(Duration(seconds: AppConstant.reloadInSeconds))
               .then((value) {

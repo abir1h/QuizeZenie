@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:co_learning_mobile_app/src/common/widgets/app_scaffold.dart';
 import 'package:co_learning_mobile_app/src/common/widgets/custom_button.dart';
+import 'package:co_learning_mobile_app/src/common/widgets/custom_toasty.dart';
 import 'package:co_learning_mobile_app/src/feature/video_upload/video_player_widget.dart';
-import 'package:co_learning_mobile_app/src/feature/video_upload/video_upload_screen_service.dart';
+import 'package:co_learning_mobile_app/src/feature/video_upload/services/video_upload_screen_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -53,6 +54,19 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
                       //   onTap: onGoBack,
                       //   child: const BackButtonWidget(),
                       // ),
+                    ),
+                    IconButton(onPressed: uploadVideoFile, icon: const Icon(Icons.upload)),
+                    Slider(
+                      value: currentUploadProgress.clamp(0.0, 1.0),
+                      onChanged: null,
+                      min: 0.0,
+                      max: 1.0,
+                      activeColor: Colors.blue,
+                      inactiveColor: Colors.grey[300],
+                    ),
+                    Text(
+                      '${(currentUploadProgress * 100).toStringAsFixed(1)}%', // Display percentage
+                      style: const TextStyle(fontSize: 16),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -194,11 +208,11 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
 
   @override
   void showSuccess(String message) {
-    // TODO: implement showSuccess
+    Toasty.of(context).showSuccess(message);
   }
 
   @override
   void showWarning(String message) {
-    // TODO: implement showWarning
+    Toasty.of(context).showWarning(message);
   }
 }

@@ -213,7 +213,7 @@ class Server {
   Future<ServerResponse> postRequestWithFile({
     required String url,
     required dynamic postData,
-    required List<File> files,
+    required String filePath,
   }) async {
     try {
       var request =
@@ -223,10 +223,82 @@ class Server {
         "Authorization": "Bearer ${App.currentSession.tokens.accessToken}"
       });
       request.fields.addAll(postData);
-      request.files.add(await http.MultipartFile.fromPath(
-        'supporting_doc',
-        files.first.path,
+      request.files.add(await http.MultipartFile.fromPath('file', filePath));
+      final response = await http.Response.fromStream(await request.send());
+      debugPrint("REQUEST => ${response.request.toString()}");
+      debugPrint("REQUEST DATA => $postData");
+      debugPrint("RESPONSE DATA => ${response.body.toString()}");
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var jsonData = json.decode(response.body);
+        return ServerResponse.fromJson(jsonData);
+      } else if (response.statusCode == 413) {
+        return ServerResponse(
+            status: false, data: "", message: "Files are too large");
+      } else if (response.statusCode == 401) {
+        if (!_sessionExpireStreamController.isClosed) {
+          _sessionExpireStreamController.sink.add("Session expired!");
+        }
+        return ServerResponse(
+            status: false,
+            data: "",
+            message: "Upload failed! Unauthorized user.");
+      } else {
+        return ServerResponse(
+            status: false,
+            data: "",
+            message: jsonDecode(response.body)["message"] ??
+                "Request failed! Unknown error occurred.");
+      }
+    } on SocketException catch (_) {
+      return ServerResponse(
+          status: false,
+          data: _,
+          message: "Request failed! Check internet connection.");
+    } on Exception catch (_) {
+      return ServerResponse(
+          status: false,
+          data: _,
+          message: "Request failed! Unknown error occurred.");
+    }
+  }
+
+  Future<ServerResponse> postRequestWithFileProgress({
+    required String url,
+    required dynamic postData,
+    required String filePath,
+    required Function(double progress) onProgress,
+  }) async {
+    try {
+      var request =
+          http.MultipartRequest("POST", Uri.parse("$host/api/v1/$url"));
+      request.headers.addAll({
+        "Accept": "application/json",
+        "Authorization": "Bearer ${App.currentSession.tokens.accessToken}",
+      });
+      request.fields.addAll(postData);
+
+      // Attach the file with progress tracking
+      var file = File(filePath);
+      var fileLength = await file.length();
+      int bytesUploaded = 0;
+      var stream = http.ByteStream(file.openRead().transform(
+        StreamTransformer.fromHandlers(
+          handleData: (chunk, sink) {
+            sink.add(chunk);
+            bytesUploaded += chunk.length;
+            onProgress(bytesUploaded / fileLength);
+          },
+        ),
       ));
+      var multipartFile = http.MultipartFile(
+        'file',
+        stream,
+        fileLength,
+        filename: filePath.split('/').last,
+      );
+      request.files.add(multipartFile);
+
+      // Send the request
       final response = await http.Response.fromStream(await request.send());
       debugPrint("REQUEST => ${response.request.toString()}");
       debugPrint("REQUEST DATA => $postData");

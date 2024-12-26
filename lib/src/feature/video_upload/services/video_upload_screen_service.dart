@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import '../../common/widgets/app_stream.dart';
 
+import '../../../common/models/action_result.dart';
+import '../../../common/widgets/app_stream.dart';
+import '../../video/gateways/video_gateway.dart';
 
 abstract class _ViewModel {
   void showWarning(String message);
@@ -11,12 +14,12 @@ abstract class _ViewModel {
   void navigateToBack();
   bool isPlayerFullscreen();
   void changeOrientationToPortrait();
-
 }
 
 mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
-implements _ViewModel {
+    implements _ViewModel {
   late _ViewModel _view;
+  double currentUploadProgress = 0.0;
 
   ///Service configurations
   @override
@@ -28,11 +31,13 @@ implements _ViewModel {
   @override
   void dispose() {
     WakelockPlus.disable();
+
     ///Dispose all variables
     // bookmarkStreamController.dispose();
     playerStreamController.dispose();
     playbackPausePlayStreamController.dispose();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
 
     super.dispose();
   }
@@ -43,9 +48,9 @@ implements _ViewModel {
   // final AppStreamController<bool> bookmarkStreamController =
   // AppStreamController();
   final AppStreamController<String> playerStreamController =
-  AppStreamController();
+      AppStreamController();
   final AppStreamController<bool> playbackPausePlayStreamController =
-  AppStreamController();
+      AppStreamController();
 
   ///Load or re-load course details
   void loadInitialData(String args) {
@@ -56,8 +61,8 @@ implements _ViewModel {
     // pageDataStreamController.add(LoadingState<ContentDetailsEntity>());
     // CourseDetailsGateway.getContentDetailsData(_screenArgs.contentId)
     //     .then((value) {
-      ///Data loaded state
-      // if (value.status == Status.success) {
+    ///Data loaded state
+    // if (value.status == Status.success) {
     //     pageDataStreamController
     //         .add(DataLoadedState<ContentDetailsEntity>(value.data!));
     //     onContentSelect(value.data!.allContents[0]);
@@ -93,7 +98,6 @@ implements _ViewModel {
   //   return Future.value(false);
   // }
 
-
   ///Video playback section
   void _onPlayVideo(String content) async {
     ///Debounce click
@@ -116,12 +120,10 @@ implements _ViewModel {
     ///Play the video
     // _isPlaybackComplete = false;
     // var videoContent = VideoContentViewModel.fromJson(content.toJson());
-    playerStreamController
-        .add(DataLoadedState<String>(content));
+    playerStreamController.add(DataLoadedState<String>(content));
   }
 
-  void onPlaybackProgressChanged(
-      double playedPosition, double totalDuration) {
+  void onPlaybackProgressChanged(double playedPosition, double totalDuration) {
     // ///Update last played position only if played position is larger
     // int playedPositionSec = (playedPosition ~/ 1000).round();
     // if(currentContent.lastStudyTimeSec < playedPositionSec) {
@@ -153,7 +155,7 @@ implements _ViewModel {
 
   ///HLS Player Service
   final StreamController<bool> _playerPausePlayStreamController =
-  StreamController.broadcast();
+      StreamController.broadcast();
   Stream<bool> get playerPausePlayStream =>
       _playerPausePlayStreamController.stream;
 
@@ -167,13 +169,30 @@ implements _ViewModel {
 
   onUpdatePlayback(
       {required int currentPosition,
-        required bool isEnded,
-        required bool isPlaying,
-        required int totalDuration}) {
+      required bool isEnded,
+      required bool isPlaying,
+      required int totalDuration}) {
     print(currentPosition);
   }
-}
 
+  Future<void> uploadVideoFile() async {
+    ///TODO: Return the result here
+    VideoGateway.uploadVideoFile(
+        "Demo", "2", "bf57237f-6f3b-4988-8aad-b748c93e1956", _screenArgs,
+        (progress) {
+      setState(() {
+        currentUploadProgress = progress;
+      });
+      log("Upload Progress: ${(progress * 100).toStringAsFixed(2)}%");
+    }).then((value) {
+      if (value.status == Status.success) {
+        _view.showSuccess(value.message);
+      } else {
+        _view.showWarning(value.message);
+      }
+    });
+  }
+}
 
 // class VideoContentViewModel extends ContentDetailsEntity {
 //   VideoContentViewModel.fromJson(Map<String, dynamic> json)
