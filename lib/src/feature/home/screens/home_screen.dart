@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
             slivers: [
               SliverAppBar(
                 automaticallyImplyLeading: false,
-                expandedHeight: MediaQuery.of(context).size.height * .50,
+                expandedHeight: MediaQuery.of(context).size.height * .54,
                 collapsedHeight: MediaQuery.of(context).size.height * .15,
                 floating: false,
                 pinned: true,
@@ -325,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                       padding: EdgeInsets.zero,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        return ItemSectionWidget(
+                        return data.categories[index].videos.isNotEmpty?ItemSectionWidget(
                           title: data.categories[index].name,
                           items: data.categories[index].videos,
                           buildItem: (BuildContext context, int index, item) =>
@@ -333,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                                 data: item,
                                 onTap: () {},
                               ),
-                        );
+                        ):Offstage();
                       },
                       separatorBuilder: (context, index) {
                         return size.s20.kHeight;

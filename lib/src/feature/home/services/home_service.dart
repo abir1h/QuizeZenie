@@ -17,7 +17,8 @@ mixin HomeService<T extends StatefulWidget> on State<T> implements _ViewModel {
 
   @override
   void initState() {
-    _view = this;loadInitialData();
+    _view = this;
+    loadInitialData();
     super.initState();
   }
 
