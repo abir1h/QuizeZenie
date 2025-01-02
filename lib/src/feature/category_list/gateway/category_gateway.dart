@@ -5,9 +5,6 @@ import '../../../common/models/pagination_entity.dart';
 import '../../../common/network/api_service.dart';
 
 mixin CategoryGateway{
-
-
-
   static Future<ActionResult<PaginationEntity<CategoryEntity>>> getCategoryWiseVideoListWithPagination(String paginatedUrlSegment,String categoryId) async{
     return Server.instance.getRequest(
       url: "${ApiCredential.categoryWiseVideo}$categoryId/?$paginatedUrlSegment",
