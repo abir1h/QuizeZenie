@@ -44,6 +44,7 @@ class ImageAssets {
   static String get upload => 'upload'.svg;
   static String get upload_filled => 'upload_filled'.svg;
   static String get chat => 'chat'.svg;
+  static String get bookmarkAnim => 'bookmark'.json;
 
 /* static String get emptyProfile => 'img'.png;
   static String get animEmpty => 'Animation - 1706009676891'.json;

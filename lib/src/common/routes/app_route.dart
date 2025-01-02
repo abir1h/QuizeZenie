@@ -1,3 +1,4 @@
+import 'package:co_learning_mobile_app/src/feature/category_list/screens/category_wise_video_list.dart';
 import 'package:flutter/material.dart';
 
 import '../../feature/profile/screens/profile_screen.dart';
@@ -33,6 +34,7 @@ class AppRoute {
   static const String accountDetailsScreen = "accountDetailsScreen";
   static const String changePasswordScreen = "changePasswordScreen";
   static const String myVideoScreen = "myVideoScreen";
+  static const String categoryWiseVideoListScreen = "categoryWiseVideoListScreen";
 }
 
 mixin RouteGenerator {
@@ -68,6 +70,8 @@ mixin RouteGenerator {
           case AppRoute.accountDetailsScreen:
             return const AccountDetailsScreen();  case AppRoute.changePasswordScreen:
             return const ChangePasswordScreen();
+          case AppRoute.categoryWiseVideoListScreen:
+            return  CategoryWiseVideoListScreen(arguments: setting.arguments);
           case AppRoute.myVideoScreen:
             return const MyVideoScreen();
 
