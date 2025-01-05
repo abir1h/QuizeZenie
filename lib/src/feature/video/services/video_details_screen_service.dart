@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import '../../common/widgets/app_stream.dart';
 
+import '../../../common/widgets/app_stream.dart';
 
 abstract class _ViewModel {
   void showWarning(String message);
@@ -11,11 +11,10 @@ abstract class _ViewModel {
   void navigateToBack();
   bool isPlayerFullscreen();
   void changeOrientationToPortrait();
-
 }
 
-mixin VideoUploadScreenService<T extends StatefulWidget> on State<T>
-implements _ViewModel {
+mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
+    implements _ViewModel {
   late _ViewModel _view;
 
   ///Service configurations
@@ -28,11 +27,13 @@ implements _ViewModel {
   @override
   void dispose() {
     WakelockPlus.disable();
+
     ///Dispose all variables
     // bookmarkStreamController.dispose();
     playerStreamController.dispose();
     playbackPausePlayStreamController.dispose();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
 
     super.dispose();
   }
@@ -43,9 +44,9 @@ implements _ViewModel {
   // final AppStreamController<bool> bookmarkStreamController =
   // AppStreamController();
   final AppStreamController<String> playerStreamController =
-  AppStreamController();
+      AppStreamController();
   final AppStreamController<bool> playbackPausePlayStreamController =
-  AppStreamController();
+      AppStreamController();
 
   ///Load or re-load course details
   void loadInitialData(String args) {
@@ -56,8 +57,8 @@ implements _ViewModel {
     // pageDataStreamController.add(LoadingState<ContentDetailsEntity>());
     // CourseDetailsGateway.getContentDetailsData(_screenArgs.contentId)
     //     .then((value) {
-      ///Data loaded state
-      // if (value.status == Status.success) {
+    ///Data loaded state
+    // if (value.status == Status.success) {
     //     pageDataStreamController
     //         .add(DataLoadedState<ContentDetailsEntity>(value.data!));
     //     onContentSelect(value.data!.allContents[0]);
@@ -93,7 +94,6 @@ implements _ViewModel {
   //   return Future.value(false);
   // }
 
-
   ///Video playback section
   void _onPlayVideo(String content) async {
     ///Debounce click
@@ -116,12 +116,10 @@ implements _ViewModel {
     ///Play the video
     // _isPlaybackComplete = false;
     // var videoContent = VideoContentViewModel.fromJson(content.toJson());
-    playerStreamController
-        .add(DataLoadedState<String>(content));
+    playerStreamController.add(DataLoadedState<String>(content));
   }
 
-  void onPlaybackProgressChanged(
-      double playedPosition, double totalDuration) {
+  void onPlaybackProgressChanged(double playedPosition, double totalDuration) {
     // ///Update last played position only if played position is larger
     // int playedPositionSec = (playedPosition ~/ 1000).round();
     // if(currentContent.lastStudyTimeSec < playedPositionSec) {
@@ -153,7 +151,7 @@ implements _ViewModel {
 
   ///HLS Player Service
   final StreamController<bool> _playerPausePlayStreamController =
-  StreamController.broadcast();
+      StreamController.broadcast();
   Stream<bool> get playerPausePlayStream =>
       _playerPausePlayStreamController.stream;
 
@@ -167,41 +165,9 @@ implements _ViewModel {
 
   onUpdatePlayback(
       {required int currentPosition,
-        required bool isEnded,
-        required bool isPlaying,
-        required int totalDuration}) {
+      required bool isEnded,
+      required bool isPlaying,
+      required int totalDuration}) {
     print(currentPosition);
   }
 }
-
-
-// class VideoContentViewModel extends ContentDetailsEntity {
-//   VideoContentViewModel.fromJson(Map<String, dynamic> json)
-//       : super.fromJson(json);
-//   VideoContentViewModel.empty() : super.empty();
-// }
-//
-// enum CourseContentType { video, script, mockTest, none }
-//
-//
-//
-// class ContentDetailsEntity {
-//   late String videoPath;
-//
-//   ContentDetailsEntity({
-//     required this.videoPath,
-//   });
-//
-//   ContentDetailsEntity.empty() {
-//     videoPath = "";
-//
-//   }
-//
-//   ContentDetailsEntity.fromJson(Map<String, dynamic> json) {
-//     videoPath = videoPath;
-//   }
-//
-//   Map<String, dynamic> toJson() => {
-//     "videoPath": videoPath,
-//   };
-// }

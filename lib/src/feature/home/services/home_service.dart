@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../common/constants/app_constant.dart';
 import '../../../common/models/action_result.dart';
+import '../../../common/models/page_service.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../gateways/home_gateway.dart';
 import '../models/home_entity.dart';
@@ -14,6 +15,8 @@ abstract class _ViewModel {
 
 mixin HomeService<T extends StatefulWidget> on State<T> implements _ViewModel {
   late _ViewModel _view;
+
+  late ServiceState serviceState = ServiceState();
 
   @override
   void initState() {

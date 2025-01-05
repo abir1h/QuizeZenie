@@ -6,6 +6,7 @@ import '../../feature/home/screens/home_screen.dart';
 import '../../feature/landing/screens/landing_screen.dart';
 import '../../feature/onboarding/screens/onboarding_screen.dart';
 import '../../feature/video/screens/my_video_screen.dart';
+import '../../feature/video/screens/video_details_screen.dart';
 import '../../feature/video/screens/video_record_screen.dart';
 import '../../feature/video/screens/video_upload_info_screen.dart';
 import '../../feature/shared/authentication/screens/sign_up_screen.dart';
@@ -16,6 +17,7 @@ import '../../feature/shared/authentication/screens/forgot_password_screen.dart'
 import '../../feature/shared/authentication/screens/reset_password_screen.dart';
 import '../../feature/profile/screens/account_details.dart';
 import '../../feature/profile/screens/change_password_screen.dart';
+
 class AppRoute {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
@@ -34,6 +36,7 @@ class AppRoute {
   static const String accountDetailsScreen = "accountDetailsScreen";
   static const String changePasswordScreen = "changePasswordScreen";
   static const String myVideoScreen = "myVideoScreen";
+  static const String videoDetailsScreen = "videoDetailsScreen";
   static const String categoryWiseVideoListScreen = "categoryWiseVideoListScreen";
 }
 
@@ -68,12 +71,15 @@ mixin RouteGenerator {
           case AppRoute.profileScreen:
             return const ProfileScreen();
           case AppRoute.accountDetailsScreen:
-            return const AccountDetailsScreen();  case AppRoute.changePasswordScreen:
+            return const AccountDetailsScreen();
+          case AppRoute.changePasswordScreen:
             return const ChangePasswordScreen();
           case AppRoute.categoryWiseVideoListScreen:
             return  CategoryWiseVideoListScreen(arguments: setting.arguments);
           case AppRoute.myVideoScreen:
             return const MyVideoScreen();
+          case AppRoute.videoDetailsScreen:
+            return const VideoDetailsScreen();
 
           default:
             return const SplashScreen();
