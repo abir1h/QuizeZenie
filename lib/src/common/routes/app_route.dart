@@ -1,4 +1,3 @@
-import 'package:co_learning_mobile_app/src/feature/category_list/screens/category_wise_video_list.dart';
 import 'package:flutter/material.dart';
 
 import '../../feature/profile/screens/profile_screen.dart';
@@ -17,6 +16,7 @@ import '../../feature/shared/authentication/screens/forgot_password_screen.dart'
 import '../../feature/shared/authentication/screens/reset_password_screen.dart';
 import '../../feature/profile/screens/account_details.dart';
 import '../../feature/profile/screens/change_password_screen.dart';
+import '../../feature/category_list/screens/category_wise_video_list.dart';
 
 class AppRoute {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -37,7 +37,8 @@ class AppRoute {
   static const String changePasswordScreen = "changePasswordScreen";
   static const String myVideoScreen = "myVideoScreen";
   static const String videoDetailsScreen = "videoDetailsScreen";
-  static const String categoryWiseVideoListScreen = "categoryWiseVideoListScreen";
+  static const String categoryWiseVideoListScreen =
+      "categoryWiseVideoListScreen";
 }
 
 mixin RouteGenerator {
@@ -71,11 +72,11 @@ mixin RouteGenerator {
           case AppRoute.profileScreen:
             return const ProfileScreen();
           case AppRoute.accountDetailsScreen:
-            return const AccountDetailsScreen();
+            return AccountDetailsScreen(arguments: setting.arguments);
           case AppRoute.changePasswordScreen:
             return const ChangePasswordScreen();
           case AppRoute.categoryWiseVideoListScreen:
-            return  CategoryWiseVideoListScreen(arguments: setting.arguments);
+            return CategoryWiseVideoListScreen(arguments: setting.arguments);
           case AppRoute.myVideoScreen:
             return const MyVideoScreen();
           case AppRoute.videoDetailsScreen:

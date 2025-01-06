@@ -14,6 +14,8 @@ class ApiCredential {
   static String changePassword = "change-password";
   static String bookmarkList = "user-bookmarks/user/bookmarks/";
   static String categoryWiseVideo = "file/folder/";
+  static String userProfile = "user-profile/current/";
+  static String updateProfile = "user-profile/";
 
   static String homeContent = "analytics/dashboard/";
 }

@@ -65,6 +65,48 @@ class Server {
     }
   }
 
+  Future<ServerResponse> patchRequest(
+      {required String url, required dynamic patchData, String? token}) async {
+    try {
+      var body = json.encode(patchData);
+      var response = await _client.patch(
+        Uri.parse("$host/api/v1/$url"),
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": token == null
+              ? "Bearer ${App.currentSession.tokens.accessToken}"
+              : "Bearer $token"
+        },
+        body: utf8.encode(body),
+      );
+      debugPrint("REQUEST => ${response.request.toString()}");
+      debugPrint("REQUEST DATA => $body");
+      debugPrint("RESPONSE DATA => ${response.body.toString()}");
+
+      var jsonData = jsonDecode(response.body);
+      if (response.statusCode != 401) {
+        return ServerResponse.fromJson(jsonData);
+      } else {
+        if (!_sessionExpireStreamController.isClosed) {
+          _sessionExpireStreamController.sink.add(jsonData["message"]);
+        }
+        return ServerResponse(
+            status: false, data: jsonData, message: jsonData["message"]);
+      }
+    } on SocketException catch (_) {
+      return ServerResponse(
+          status: false,
+          data: _,
+          message: "Request failed! Check internet connection.");
+    } on Exception catch (_) {
+      return ServerResponse(
+          status: false,
+          data: _,
+          message: "Request failed! Unknown error occurred.");
+    }
+  }
+
   Future<ServerResponse> getRequest(
       {required String url, String? token}) async {
     try {
