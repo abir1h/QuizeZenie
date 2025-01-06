@@ -1,3 +1,5 @@
+
+import 'package:co_learning_mobile_app/src/common/service/notifier/app_events_notifier.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/constants/common_imports.dart';
@@ -7,18 +9,24 @@ import '../../../common/widgets/app_scaffold.dart';
 import '../../../common/widgets/custom_dropdown_widget.dart';
 import '../../../common/widgets/custom_toasty.dart';
 import '../services/profile_screen_service.dart';
+import '../../../common/routes/app_route_args.dart';
 
 class AccountDetailsScreen extends StatefulWidget {
-  const AccountDetailsScreen({super.key});
-
+  final Object? arguments;
+  const AccountDetailsScreen({super.key, this.arguments})
+      : assert(arguments != null && arguments is AccountDetailsScreenArgs);
   @override
   State<AccountDetailsScreen> createState() => _AccountDetailsScreenState();
 }
 
 class _AccountDetailsScreenState extends State<AccountDetailsScreen>
-    with Language, AppTheme, ProfileScreenService {
+    with Language, AppTheme, ProfileScreenService, AppEventsNotifier {
   @override
   void initState() {
+    screenArgs = widget.arguments as AccountDetailsScreenArgs;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      loadTextField(widget.arguments as AccountDetailsScreenArgs);
+    });
     super.initState();
   }
 
@@ -130,8 +138,11 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen>
                     title: label(e: en.updateText, b: bn.updateText),
                     radius: size.s8,
                     textColor: clr.whiteColor,
-                    tapAction: () => throw UnimplementedError(),
-                    onSuccess: (success) {},
+                    tapAction: () => updateProfile(),
+                    onSuccess: (success) {
+                      screenArgs!.onAddLiveClass.call();
+                      Navigator.pop(context);
+                    },
                   ),
                 ))
           ],
@@ -146,6 +157,15 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen>
   @override
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
+  }
+
+  @override
+  void onEventReceived(EventAction action) {
+    if (action == EventAction.profileScreen) {
+      if (mounted) {
+        setState(() {});
+      }
+    }
   }
 }
 
@@ -189,7 +209,8 @@ class _ProfileTextFieldState extends State<ProfileTextField>
       padding: EdgeInsets.only(bottom: size.s20),
       child: TextField(
         controller: widget.controller,
-        maxLines: widget.maxLines,obscureText: _obscureText,
+        maxLines: widget.maxLines,
+        obscureText: _obscureText,
         style: TextStyle(
             fontWeight: FontWeight.w400,
             fontSize: size.textXSmall,
@@ -203,13 +224,14 @@ class _ProfileTextFieldState extends State<ProfileTextField>
             hintText: widget.label,
             suffixIcon: widget.obscureText == true
                 ? IconButton(
-              icon: Icon(
-                _obscureText ? Icons.visibility : Icons.visibility_off,
-                color: clr.placeHolderTextColorGray,
-              ),
-              onPressed: _toggleObscureText,
-            )
-                : null,            hintStyle: TextStyle(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                      color: clr.placeHolderTextColorGray,
+                    ),
+                    onPressed: _toggleObscureText,
+                  )
+                : null,
+            hintStyle: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: size.textXSmall,
                 color: clr.blackColor),

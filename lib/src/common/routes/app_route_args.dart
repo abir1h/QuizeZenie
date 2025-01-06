@@ -1,3 +1,5 @@
+import 'package:co_learning_mobile_app/src/feature/profile/models/profile_entity.dart';
+
 import '../models/user_entity.dart';
 
 class VerifyOtpScreenArgs {
@@ -14,4 +16,11 @@ class CategoryWiseVideoListScreenArgs {
 class VideoDetailsScreenArgs {
   String videoId;
   VideoDetailsScreenArgs({required this.videoId});
+}
+
+class AccountDetailsScreenArgs {
+  ProfileEntity profileData;
+  final void Function() onAddLiveClass;
+
+  AccountDetailsScreenArgs({required this.profileData ,required this.onAddLiveClass});
 }
