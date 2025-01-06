@@ -5,8 +5,20 @@ class VerifyOtpScreenArgs {
   VerifyOtpScreenArgs({this.authDataModel});
 }
 
+class CategoryWiseVideoListScreenArgs {
+  String categoryId, categoryName;
+  CategoryWiseVideoListScreenArgs(
+      {required this.categoryId, required this.categoryName});
+}
 
 class VideoDetailsScreenArgs {
   String videoId;
   VideoDetailsScreenArgs({required this.videoId});
+}
+
+class AccountDetailsScreenArgs {
+  ProfileEntity profileData;
+  final void Function() onAddLiveClass;
+
+  AccountDetailsScreenArgs({required this.profileData ,required this.onAddLiveClass});
 }

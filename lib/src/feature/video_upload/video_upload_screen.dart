@@ -21,7 +21,7 @@ class VideoUploadScreen extends StatefulWidget {
 }
 
 class _VideoUploadScreenState extends State<VideoUploadScreen>
-    with VideoUploadScreenServices, AppTheme {
+    with VideoUploadScreenService, AppTheme {
   @override
   void initState() {
     ///Initially load course details

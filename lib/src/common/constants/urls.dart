@@ -12,7 +12,13 @@ class ApiCredential {
   static String forgotPassword = "forgot-password-by-mobile";
   static String resetPassword = "reset-password";
   static String changePassword = "change-password";
+  static String bookmarkList = "user-bookmarks/user/bookmarks/";
+  static String categoryWiseVideo = "file/folder/";
+  static String userProfile = "user-profile/current/";
+  static String updateProfile = "user-profile/";
 
   static String homeContent = "analytics/dashboard/";
+  static String videoDetails = "file/";
+  static String videoComments = "comments/video-comments/";
   static String fileUpload = "file/";
 }

@@ -92,6 +92,14 @@ class ThemeColor {
   Color get bgGood => HexColor("F5FBFF");
   Color get bgImprove => HexColor("FFFCF5");
   Color get improveText => HexColor("FFB901");
+  Color get iconsColorBlue => HexColor("3E4784");
+  Color get iconsBgColorBlue => HexColor("EEF4FF");
+  Color get textColorBlack1 => HexColor("414651");
+  Color get ratioBGColor => HexColor("FAFCFF");
+  Color get ratioStrokeColor => HexColor("D1D8E2");
+  Color get ratioSpeakerColor => HexColor("9EA5D1");
+  Color get circleDotColor => HexColor("ACB7C5");
+  Color get commentBgColor => HexColor("DDDFEC");
 
 }
 

@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:co_learning_mobile_app/src/common/routes/app_route_args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../common/constants/common_imports.dart';
+import '../../../common/routes/app_route.dart';
 import '../../../common/utility/app_label.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../../../common/widgets/circular_loader.dart';
@@ -21,7 +23,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
-  final CarouselSliderController carouselController = CarouselSliderController();
+  final CarouselSliderController carouselController =
+      CarouselSliderController();
   int currentIndex = 0;
 
   final ScrollController _scrollController = ScrollController();
@@ -107,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
             slivers: [
               SliverAppBar(
                 automaticallyImplyLeading: false,
-                expandedHeight: MediaQuery.of(context).size.height * .50,
+                expandedHeight: MediaQuery.of(context).size.height * .54,
                 collapsedHeight: MediaQuery.of(context).size.height * .15,
                 floating: false,
                 pinned: true,
@@ -163,11 +166,11 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                           width: size.s32,
                           fit: BoxFit.fill,
                           imageUrl:
-                          "https://images.unsplash.com/photo-1532264523420-881a47db012d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9",
+                              "https://images.unsplash.com/photo-1532264523420-881a47db012d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9",
                           placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
+                              const Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                              const Icon(Icons.error),
                         )),
                   )
                 ],
@@ -208,13 +211,13 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                                 decoration: BoxDecoration(
                                     color: clr.bgColorWhite,
                                     borderRadius:
-                                    BorderRadius.circular(size.s8),
+                                        BorderRadius.circular(size.s8),
                                     border: Border.all(
                                         color: clr.cardStrokeColor,
                                         width: size.s1)),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Icon(
@@ -290,7 +293,8 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                                   ],
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     IconWithTitleWidget(
                                       svgIcon: ImageAssets.icReel,
@@ -325,15 +329,19 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                       padding: EdgeInsets.zero,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        return ItemSectionWidget(
-                          title: data.categories[index].name,
-                          items: data.categories[index].videos,
-                          buildItem: (BuildContext context, int index, item) =>
-                              FeaturedItemWidget(
-                                data: item,
-                                onTap: () {},
-                              ),
-                        );
+                        return data.categories[index].videos.isNotEmpty
+                            ? ItemSectionWidget(
+                                title: data.categories[index].name,
+                                items: data.categories[index].videos,
+                                categoryId: data.categories[index].id,
+                                buildItem:
+                                    (BuildContext context, int index, item) =>
+                                        FeaturedItemWidget(
+                                  data: item,
+                                  onTap: () => onTap(item.id),
+                                ),
+                              )
+                            : Offstage();
                       },
                       separatorBuilder: (context, index) {
                         return size.s20.kHeight;
@@ -353,8 +361,9 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
   }
 
   @override
-  void navigateToTaskDetailsScreen(int taskId) {
-    // TODO: implement navigateToTaskDetailsScreen
+  void navigateToVideoDetailsScreen(String videoId) {
+    Navigator.of(context).pushNamed(AppRoute.videoDetailsScreen,
+        arguments: VideoDetailsScreenArgs(videoId: videoId));
   }
 
   @override
@@ -479,6 +488,7 @@ class IconWithTitleWidget extends StatelessWidget with AppTheme {
 
 class ItemSectionWidget<T> extends StatelessWidget with AppTheme {
   final String title;
+  final String categoryId;
   final String subTitle;
   final List<T> items;
   final Widget Function(BuildContext context, int index, T item) buildItem;
@@ -490,6 +500,7 @@ class ItemSectionWidget<T> extends StatelessWidget with AppTheme {
     required this.items,
     required this.buildItem,
     this.aspectRatio = 2.5,
+    required this.categoryId,
   });
 
   @override
@@ -512,12 +523,18 @@ class ItemSectionWidget<T> extends StatelessWidget with AppTheme {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              Text(
-                "View All",
-                style: TextStyle(
-                  color: clr.textColorGrey2,
-                  fontSize: size.textXXSmall,
-                  fontWeight: FontWeight.w500,
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(
+                    context, AppRoute.categoryWiseVideoListScreen,
+                    arguments: CategoryWiseVideoListScreenArgs(
+                        categoryId: categoryId, categoryName: title)),
+                child: Text(
+                  "View All",
+                  style: TextStyle(
+                    color: clr.textColorGrey2,
+                    fontSize: size.textXXSmall,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
