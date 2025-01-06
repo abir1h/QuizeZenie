@@ -14,4 +14,5 @@ class ApiCredential {
   static String changePassword = "change-password";
 
   static String homeContent = "analytics/dashboard/";
+  static String fileUpload = "file/";
 }

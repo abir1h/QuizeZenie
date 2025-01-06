@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'package:co_learning_mobile_app/src/feature/video_upload/player_widget.dart';
-import 'package:co_learning_mobile_app/src/feature/video_upload/video_upload_screen_service.dart';
+import 'player_widget.dart';
 import 'package:flutter/material.dart';
 import '../../common/widgets/app_stream.dart';
 
