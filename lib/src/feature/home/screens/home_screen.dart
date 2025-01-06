@@ -376,10 +376,6 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
     Toasty.of(context).showWarning(message);
   }
 
-  @override
-  void navigateToVideoDetailsScreen(String id) {
-    // TODO: implement navigateToVideoDetailsScreen
-  }
 }
 
 class ImageSliderWidget extends StatefulWidget {

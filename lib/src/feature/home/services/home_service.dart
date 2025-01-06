@@ -11,7 +11,6 @@ abstract class _ViewModel {
   void navigateToVideoDetailsScreen(String videoId);
   void showWarning(String message);
   void showSuccess(String message);
-  void navigateToVideoDetailsScreen(String id);
 }
 
 mixin HomeService<T extends StatefulWidget> on State<T> implements _ViewModel {

@@ -1,3 +1,4 @@
+import '../../feature/profile/models/profile_entity.dart';
 import '../models/user_entity.dart';
 
 class VerifyOtpScreenArgs {
