@@ -26,6 +26,7 @@ class ImageAssets {
   static String get icRecordFilled => 'screen_record-1'.svg;
   static String get icProfile => 'profile-1'.svg;
   static String get icProfileFilled => 'profile'.svg;
+  static String get icShare=> 'share'.svg;
 
   static String get icReel => 'FilmReel'.svg;
   static String get icBook => 'BookOpenUser'.svg;

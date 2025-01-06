@@ -338,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                                     (BuildContext context, int index, item) =>
                                         FeaturedItemWidget(
                                   data: item,
-                                  onTap: () {},
+                                  onTap: () => onTap(item.id),
                                 ),
                               )
                             : Offstage();
@@ -361,8 +361,9 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
   }
 
   @override
-  void navigateToTaskDetailsScreen(int taskId) {
-    // TODO: implement navigateToTaskDetailsScreen
+  void navigateToVideoDetailsScreen(String videoId) {
+    Navigator.of(context).pushNamed(AppRoute.videoDetailsScreen,
+        arguments: VideoDetailsScreenArgs(videoId: videoId));
   }
 
   @override

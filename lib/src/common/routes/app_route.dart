@@ -79,7 +79,7 @@ mixin RouteGenerator {
           case AppRoute.myVideoScreen:
             return const MyVideoScreen();
           case AppRoute.videoDetailsScreen:
-            return const VideoDetailsScreen();
+            return  VideoDetailsScreen(arguments: setting.arguments);
 
           default:
             return const SplashScreen();

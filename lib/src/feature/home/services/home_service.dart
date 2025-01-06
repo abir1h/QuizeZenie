@@ -8,7 +8,7 @@ import '../gateways/home_gateway.dart';
 import '../models/home_entity.dart';
 
 abstract class _ViewModel {
-  void navigateToTaskDetailsScreen(int taskId);
+  void navigateToVideoDetailsScreen(String videoId);
   void showWarning(String message);
   void showSuccess(String message);
 }
@@ -61,7 +61,7 @@ mixin HomeService<T extends StatefulWidget> on State<T> implements _ViewModel {
     }
   }
 
-  void onTap(int taskId) {
-    _view.navigateToTaskDetailsScreen(taskId);
+  void onTap(String videoId) {
+    _view.navigateToVideoDetailsScreen(videoId);
   }
 }

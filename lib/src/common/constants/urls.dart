@@ -16,4 +16,6 @@ class ApiCredential {
   static String categoryWiseVideo = "file/folder/";
 
   static String homeContent = "analytics/dashboard/";
+  static String videoDetails = "file/";
+  static String videoComments = "comments/video-comments/";
 }

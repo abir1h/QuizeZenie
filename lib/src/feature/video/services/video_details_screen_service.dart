@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../../common/constants/app_constant.dart';
+import '../../../common/models/action_result.dart';
+import '../../../common/routes/app_route_args.dart';
 import '../../../common/widgets/app_stream.dart';
+import '../gateways/video_gateway.dart';
+import '../models/comment_entity.dart';
+import '../models/video_entity.dart';
 
 abstract class _ViewModel {
   void showWarning(String message);
@@ -16,6 +22,8 @@ abstract class _ViewModel {
 mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     implements _ViewModel {
   late _ViewModel _view;
+
+  late VideoDetailsScreenArgs screenArgs;
 
   ///Service configurations
   @override
@@ -34,7 +42,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     playbackPausePlayStreamController.dispose();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
-
+    videoDetailsStreamController.dispose();
     super.dispose();
   }
 
@@ -48,8 +56,69 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
   final AppStreamController<bool> playbackPausePlayStreamController =
       AppStreamController();
 
+  final AppStreamController<VideoEntity> videoDetailsStreamController =
+      AppStreamController();
+  final AppStreamController<List<CommentEntity>> commentStreamController =
+      AppStreamController();
+
+  void loadInitialData(String videoId) {
+    ///Loading state
+    if (!mounted) return;
+
+    videoDetailsStreamController.add(LoadingState());
+
+    try {
+      VideoGateway.getVideoDetails(videoId).then((value) {
+        ///Data loaded state
+        if (value.status == Status.success) {
+          videoDetailsStreamController
+              .add(DataLoadedState<VideoEntity>(value.data!));
+        }
+
+        ///Error state
+        else {
+          ///Try reloading
+          Future.delayed(Duration(seconds: AppConstant.reloadInSeconds))
+              .then((value) {
+            if (mounted) loadInitialData(videoId);
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void loadCommentData(String videoId) {
+    ///Loading state
+    if (!mounted) return;
+
+    commentStreamController.add(LoadingState());
+
+    try {
+      VideoGateway.getVideoComments(videoId).then((value) {
+        ///Data loaded state
+        if (value.status == Status.success) {
+          commentStreamController
+              .add(DataLoadedState<List<CommentEntity>>(value.data!));
+        }
+
+        ///Error state
+        else {
+          ///Try reloading
+          Future.delayed(Duration(seconds: AppConstant.reloadInSeconds))
+              .then((value) {
+            if (mounted) loadCommentData(videoId);
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   ///Load or re-load course details
-  void loadInitialData(String args) {
+  /*void loadInitialData(String args) {
     if (!mounted) return;
     _screenArgs = args;
 
@@ -65,7 +134,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     //   // }
     // });
     _onPlayVideo(args);
-  }
+  }*/
 
   // ///Change video playback orientation
   // Future<bool> onGoBack() async {
