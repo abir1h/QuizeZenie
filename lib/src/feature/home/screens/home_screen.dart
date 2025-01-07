@@ -203,45 +203,48 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
-                                height: size.s20 * 2,
-                                width: double.infinity,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: size.s12, vertical: size.s12),
-                                decoration: BoxDecoration(
-                                    color: clr.bgColorWhite,
-                                    borderRadius:
-                                        BorderRadius.circular(size.s8),
-                                    border: Border.all(
-                                        color: clr.cardStrokeColor,
-                                        width: size.s1)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Icon(
-                                      Icons.search,
-                                      size: size.s16,
-                                      color: clr.iconColorGrey,
-                                    ),
-                                    SizedBox(width: size.s8),
-                                    Expanded(
-                                      child: Text(
-                                        "Search Here",
-                                        style: TextStyle(
-                                          color: clr.textColorGrey,
-                                          fontSize: size.textXXSmall,
-                                          fontWeight: FontWeight.w500,
+                              GestureDetector(
+                                onTap: ()=>Navigator.pushNamed(context, AppRoute.searchScreen),
+                                child: Container(
+                                  height: size.s20 * 2,
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: size.s12, vertical: size.s12),
+                                  decoration: BoxDecoration(
+                                      color: clr.bgColorWhite,
+                                      borderRadius:
+                                          BorderRadius.circular(size.s8),
+                                      border: Border.all(
+                                          color: clr.cardStrokeColor,
+                                          width: size.s1)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Icon(
+                                        Icons.search,
+                                        size: size.s16,
+                                        color: clr.iconColorGrey,
+                                      ),
+                                      SizedBox(width: size.s8),
+                                      Expanded(
+                                        child: Text(
+                                          "Search Here",
+                                          style: TextStyle(
+                                            color: clr.textColorGrey,
+                                            fontSize: size.textXXSmall,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Icon(
-                                      Icons.pages,
-                                      size: size.s16,
-                                      color: clr.iconColorGrey,
-                                    ),
-                                  ],
+                                      Icon(
+                                        Icons.pages,
+                                        size: size.s16,
+                                        color: clr.iconColorGrey,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(height: size.s16),

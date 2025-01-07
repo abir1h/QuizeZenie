@@ -49,21 +49,6 @@ implements _ViewModel {
     return [
       FeedBack(id: 1, title: 'Test 1'),
       FeedBack(id: 2, title: 'Test 2'),
-      FeedBack(id: 3, title: 'Test 3'),
-      FeedBack(id: 4, title: 'Test 4'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
       FeedBack(id: 5, title: 'Test 5'),
     ];
   }

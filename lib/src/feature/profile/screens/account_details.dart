@@ -96,6 +96,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen>
                           onGenerateTitle: (x) => x!.title),
                       size.s20.kHeight,
                       CustomDropDown(
+
                           onLoadData: loadFeedBack,
                           onSelected: (status) {},
                           hintText:
