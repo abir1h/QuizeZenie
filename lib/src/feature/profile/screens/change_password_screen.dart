@@ -95,6 +95,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     onSuccess: (success) {},
                   ),
                 ))
+
+
+
           ],
         ));
   }
@@ -108,4 +111,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
   }
+
+  @override
+  void showBottomSheetForImagePicker() {
+    // TODO: implement showBottomSheetForImagePicker
+  }
+
+  @override
+  void showImageCropper(String path) {
+    // TODO: implement showImageCropper
+  }
+  @override
+  void lockUI() {
+    Toasty.of(context).lockUI(blockBackPress: true);
+  }
+
+  @override
+  void releaseUI() {
+    Toasty.of(context).releaseUI();
+  }
+
 }

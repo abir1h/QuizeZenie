@@ -5,6 +5,7 @@ import 'package:co_learning_mobile_app/src/feature/profile/services/profile_scre
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import "package:cached_network_image/cached_network_image.dart";
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../common/config/app.dart';
@@ -30,18 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     loadInitialData();
     super.initState();
   }
-  _onOptionSelected(ImageSource source) async {
-    try {
-      var image =
-      await ImagePicker().pickImage(source: source, imageQuality: 80);
 
-      if (image != null) {
-        //onUploadProfilePic(image);
-      }
-    } catch (_) {
-      Toasty.of(context).showError(message: 'Failed to pick image!');
-    }
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,21 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         right: 0,
                                         bottom: 0,
                                         child: GestureDetector(
-                                          onTap: () {
-                                            showModalBottomSheet(
-                                                context: context,
-                                                backgroundColor: Colors.transparent,
-                                                builder: (BuildContext context) {
-                                                  return BottomSheetImagePicker(
-                                                    onCamera: () =>
-                                                        _onOptionSelected(
-                                                            ImageSource.camera),
-                                                    onGallery: () =>
-                                                        _onOptionSelected(
-                                                            ImageSource.gallery),
-                                                  );
-                                                });
-                                          },
+                                          onTap:showBottomSheetForImagePicker,
                                           child: Container(
                                             padding: EdgeInsets.all(size.s4),
                                             decoration: BoxDecoration(
@@ -433,6 +409,58 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
+  }
+  @override
+  void lockUI() {
+    Toasty.of(context).lockUI(blockBackPress: true);
+  }
+
+  @override
+  void releaseUI() {
+    Toasty.of(context).releaseUI();
+  }
+
+  @override
+  void showBottomSheetForImagePicker() {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return BottomSheetImagePicker(
+          onCamera: () => onPickerOptionSelected(ImageSource.camera),
+          onGallery: () => onPickerOptionSelected(ImageSource.gallery),
+        );
+      },
+    );
+  }
+
+  @override
+  void showImageCropper(String path) {
+    ImageCropper().cropImage(
+      sourcePath: path,
+
+      maxHeight: 150,
+      maxWidth: 150,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Adjust image',
+          lockAspectRatio: true,
+          toolbarColor: clr.appPrimaryColor,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          activeControlsWidgetColor: Colors.orange,
+        ),
+        IOSUiSettings(
+          title: "Adjust image",
+          minimumAspectRatio: 1.0,
+          aspectRatioLockEnabled: true,
+        )
+      ],
+    ).then((imageFile){
+      onImageCropped(imageFile);
+    }).catchError((e){
+      showWarning("Failed to adjust image!"+e.toString());
+    });
   }
 }
 

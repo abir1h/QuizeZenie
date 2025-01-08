@@ -54,6 +54,7 @@ dependencies:
   wakelock_plus: ^1.2.8
   get_thumbnail_video: ^0.7.3
   image_picker: ^1.1.2
+  image_cropper: ^8.1.0
   lottie: ^3.3.0
 dev_dependencies:
   flutter_test:
