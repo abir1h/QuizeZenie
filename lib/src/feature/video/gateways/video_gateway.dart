@@ -26,7 +26,7 @@ mixin VideoGateway {
         .then((value) {
       return ActionResult<List<CommentEntity>>.fromServerResponse(
         response: value,
-        generateData: (x) => CommentEntity.listFromJson(x),
+        generateData: (x) => CommentEntity.listFromJson(x['results']),
       );
     }).catchError((e) {
       return ActionResult<List<CommentEntity>>.error();
