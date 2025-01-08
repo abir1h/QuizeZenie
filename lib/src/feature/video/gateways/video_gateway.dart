@@ -32,4 +32,31 @@ mixin VideoGateway {
       return ActionResult<List<CommentEntity>>.error();
     });
   }
+
+  static Future<ActionResult<CommentEntity>> doComment(
+      String formId,
+      int categoryId,
+      int typeId,
+      String videoId,
+      String startTime,
+      String endTime) async {
+    return Server.instance.postRequest(
+      url: ApiCredential.doComment,
+      postData: {
+        "feedback_form_id": formId,
+        "feedback_category_id": categoryId,
+        "feedback_type_id": typeId,
+        "video_id": videoId,
+        "start_time": startTime,
+        "end_time": endTime,
+      },
+    ).then((value) {
+      return ActionResult<CommentEntity>.fromServerResponse(
+        response: value,
+        generateData: (x) => CommentEntity.fromJson(x),
+      );
+    }).catchError((e) {
+      return ActionResult<CommentEntity>.error();
+    });
+  }
 }

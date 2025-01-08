@@ -99,7 +99,7 @@ class BottomSheetCommentItemSectionWidget<T> extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: items.length >= 2 ? 2 : items.length,
+      itemCount: items.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: size.s16),

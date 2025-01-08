@@ -100,6 +100,9 @@ class ThemeColor {
   Color get ratioSpeakerColor => HexColor("9EA5D1");
   Color get circleDotColor => HexColor("ACB7C5");
   Color get commentBgColor => HexColor("DDDFEC");
+  Color get scoreDividerColor => HexColor("EAEAEA");
+  Color get scoreColor => HexColor("475569");
+  Color get scoreBorderColor => HexColor("7DA6FF");
 
 }
 

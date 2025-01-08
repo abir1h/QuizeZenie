@@ -20,4 +20,5 @@ class ApiCredential {
   static String homeContent = "analytics/dashboard/";
   static String videoDetails = "file/";
   static String videoComments = "comments/video-comments/";
+  static String doComment = "comments/";
 }
