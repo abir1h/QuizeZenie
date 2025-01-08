@@ -147,6 +147,7 @@ class Server {
   void uploadFile(
       {required String url,
       required File file,
+       String? field='image',
       required void Function(ServerResponse response) onComplete}) async {
     try {
       var request =
@@ -155,7 +156,7 @@ class Server {
         "Accept": "application/json",
         "Authorization": "Bearer ${App.currentSession.tokens.accessToken}"
       });
-      var attachedFile = await http.MultipartFile.fromPath('image', file.path);
+      var attachedFile = await http.MultipartFile.fromPath('$field', file.path);
       request.files.add(attachedFile);
       var response = await request.send();
       if (response.statusCode == 200) {

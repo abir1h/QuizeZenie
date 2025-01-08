@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:co_learning_mobile_app/src/common/config/app.dart';
 import 'package:co_learning_mobile_app/src/common/models/user_entity.dart';
 import 'package:co_learning_mobile_app/src/common/routes/app_route_args.dart';
 import 'package:co_learning_mobile_app/src/feature/profile/gateway/profile_gateway.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../common/config/local_storage_services.dart';
 import '../../../common/constants/app_constant.dart';
@@ -17,6 +21,10 @@ import '../models/profile_entity.dart';
 abstract class _ViewModel {
   void showWarning(String message);
   void showSuccess(String message);
+  void showBottomSheetForImagePicker();
+  void showImageCropper(String path);
+  void lockUI();
+  void releaseUI();
 }
 
 mixin ProfileScreenService<T extends StatefulWidget> on State<T>
@@ -57,6 +65,7 @@ implements _ViewModel {
 //====================Stream Controller=====================
   final AppStreamController<ProfileEntity> profileStreamController =
   AppStreamController();
+  final AppStreamController<String> profilePicStreamController = AppStreamController();
 
   //======================Public Methods======================
 
@@ -132,6 +141,55 @@ implements _ViewModel {
       }
     }).catchError((e) {});
   }
+/*  onUploadProfilePic(XFile? image) {
+    ProfileGateway.uploadProfilePic(File(image!.path), (result) {
+      if (!mounted) return;
 
+      if (result.status == Status.success) {
+        loadInitialData();
+        Navigator.pop(context);
+      } else {
+        Navigator.pop(context);
+        loadInitialData();
 
+        // _view.showWarning(result.message);
+      }
+    });
+  }*/
+  void onShowBottomSheetForImagePicker(){
+    if(mounted){
+      showBottomSheetForImagePicker();
+    }
+  }
+  void onPickerOptionSelected(ImageSource imageSource) async {
+    ImagePicker().pickImage(source: imageSource).then((image){
+      if(image!=null){
+        _view.showImageCropper(image.path);
+      }
+    }).catchError((e){
+      _view.showWarning("Failed to pick image!");
+    });
+  }
+  void onImageCropped(CroppedFile? image,) {
+    if(image == null) return;
+
+    profilePicStreamController.add(LoadingState<String>());
+    ProfileGateway.uploadProfilePic(File(image.path), (result) {
+      if(!mounted) return;
+
+      _view.releaseUI();
+      if(result.status == Status.success){
+        _view.showSuccess(result.message);
+        if(profileStreamController.value is DataLoadedState){
+          App.setCurrentSession(App.currentSession..user.profileUrl = result.data!.profileUrl).then((value){
+            profilePicStreamController.add(DataLoadedState<String>(value.user.profileUrl));
+
+          });
+        }
+      }else{
+        _view.showWarning(result.message);
+
+      }
+    });
+  }
 }

@@ -168,6 +168,26 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen>
       }
     }
   }
+
+  @override
+  void showBottomSheetForImagePicker() {
+    // TODO: implement showBottomSheetForImagePicker
+  }
+
+  @override
+  void showImageCropper(String path) {
+    // TODO: implement showImageCropper
+  }
+  @override
+  void lockUI() {
+    Toasty.of(context).lockUI(blockBackPress: true);
+  }
+
+  @override
+  void releaseUI() {
+    Toasty.of(context).releaseUI();
+  }
+
 }
 
 class ProfileTextField extends StatefulWidget {

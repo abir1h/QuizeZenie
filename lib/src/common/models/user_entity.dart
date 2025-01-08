@@ -127,6 +127,7 @@ class User {
   String lastName;
   bool isVerified;
   String otpId;
+  String profileUrl;
 
   User({
     required this.id,
@@ -137,6 +138,7 @@ class User {
     required this.lastName,
     required this.isVerified,
     required this.otpId,
+    required this.profileUrl,
   });
 
   factory User.empty() => User(
@@ -146,6 +148,7 @@ class User {
       phoneNumber: "",
       firstName: "",
       lastName: "",
+      profileUrl: "",
       isVerified: false,
       otpId: "");
 
@@ -158,6 +161,7 @@ class User {
         lastName: json["last_name"] ?? "",
         isVerified: json["is_verified"] ?? false,
         otpId: json["otp_id"] ?? "",
+    profileUrl: json["profile_url"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -169,5 +173,6 @@ class User {
         "last_name": lastName,
         "is_verified": isVerified,
         "otp_id": otpId,
+        "profile_url": profileUrl,
       };
 }
