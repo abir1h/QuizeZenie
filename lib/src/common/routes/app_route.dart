@@ -16,7 +16,7 @@ import '../../feature/shared/authentication/screens/verify_otp_screen.dart';
 import '../../feature/shared/authentication/screens/forgot_password_screen.dart';
 import '../../feature/shared/authentication/screens/reset_password_screen.dart';
 import '../../feature/profile/screens/account_details.dart';
-import '../../feature/profile/screens/change_password_screen.dart';
+import '../../feature/password/screens/change_password_screen.dart';
 import '../../feature/category_list/screens/category_wise_video_list.dart';
 
 class AppRoute {

@@ -5,8 +5,9 @@ import '../../../common/utility/app_label.dart';
 import '../../../common/widgets/action_button.dart';
 import '../../../common/widgets/app_scaffold.dart';
 import '../../../common/widgets/custom_toasty.dart';
-import '../services/profile_screen_service.dart';
-import 'account_details.dart';
+import '../../profile/services/profile_screen_service.dart';
+import '../../profile/screens/account_details.dart';
+import '../services/chagne_password_screen_service.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -16,7 +17,7 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen>
-    with Language, AppTheme, ProfileScreenService {
+    with Language, AppTheme, ChangePasswordScreenService {
   @override
   void initState() {
     super.initState();
@@ -29,7 +30,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
         title: label(e: "Change Password", b: "ផ្លាស់ប្តូរពាក្យសម្ងាត់"),
         child: Stack(
           children: [
-            Container(height: double.infinity,
+            Container(
+                height: double.infinity,
                 padding: EdgeInsets.all(size.s16),
                 margin: EdgeInsets.only(top: size.s2),
                 decoration: BoxDecoration(color: clr.whiteColor),
@@ -38,7 +40,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        label(e: "Change Password:", b: "ផ្លាស់ប្តូរពាក្យសម្ងាត់៖"),
+                        label(
+                            e: "Change Password:",
+                            b: "ផ្លាស់ប្តូរពាក្យសម្ងាត់៖"),
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: size.textSmall,
@@ -48,19 +52,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                       ProfileTextField(
                         controller: currentPasswordController,
                         hint: label(
-                            e: "Current Password", b: "ពាក្យសម្ងាត់បច្ចុប្បន្ន"),
+                            e: "Current Password",
+                            b: "ពាក្យសម្ងាត់បច្ចុប្បន្ន"),
                         label: label(
-                            e: "Current Password", b: "ពាក្យសម្ងាត់បច្ចុប្បន្ន"),
+                            e: "Current Password",
+                            b: "ពាក្យសម្ងាត់បច្ចុប្បន្ន"),
                         obscureText: true,
                       ),
                       ProfileTextField(
                         controller: newPasswordController,
-                        hint: label(
-                            e: "New Password", b: "ពាក្យសម្ងាត់ថ្មី។"),
-                        label: label(
-                            e: "New Password", b: "ពាក្យសម្ងាត់ថ្មី"),
+                        hint: label(e: "New Password", b: "ពាក្យសម្ងាត់ថ្មី។"),
+                        label: label(e: "New Password", b: "ពាក្យសម្ងាត់ថ្មី"),
                         obscureText: true,
-                      ), ProfileTextField(
+                      ),
+                      ProfileTextField(
                         controller: confirmPasswordController,
                         hint: label(
                             e: "Confirm Password", b: "បញ្ជាក់ពាក្យសម្ងាត់។"),
@@ -91,13 +96,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     title: label(e: en.updateText, b: bn.updateText),
                     radius: size.s8,
                     textColor: clr.whiteColor,
+
                     tapAction: () => throw UnimplementedError(),
                     onSuccess: (success) {},
                   ),
                 ))
-
-
-
           ],
         ));
   }
@@ -111,24 +114,4 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
   }
-
-  @override
-  void showBottomSheetForImagePicker() {
-    // TODO: implement showBottomSheetForImagePicker
-  }
-
-  @override
-  void showImageCropper(String path) {
-    // TODO: implement showImageCropper
-  }
-  @override
-  void lockUI() {
-    Toasty.of(context).lockUI(blockBackPress: true);
-  }
-
-  @override
-  void releaseUI() {
-    Toasty.of(context).releaseUI();
-  }
-
 }

@@ -13,6 +13,7 @@ import '../../../common/routes/app_route.dart';
 import '../../../common/constants/common_imports.dart';
 import '../../../common/utility/app_label.dart';
 import '../../../common/widgets/app_stream.dart';
+import '../../../common/widgets/shimmer_loader.dart';
 import '../widgets/bottomsheet.dart';
 import '../widgets/profile_card.dart';
 import '../widgets/select_laguage_bottomshet.dart';
@@ -103,23 +104,42 @@ class _ProfileScreenState extends State<ProfileScreen>
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Stack(
+                                   Stack(
                                     children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: CachedNetworkImage(
-                                          imageUrl: data.profileUrl.isNotEmpty
-                                              ? data.profileUrl
-                                              : "https://www.treasury.gov.ph/wp-content/uploads/2022/01/male-placeholder-image.jpeg",
-                                          fit: BoxFit.cover,
-                                          height: size.s20 * 4,
-                                          width: size.s20 * 4,
-                                          placeholder: (context, url) =>
-                                              const CircularProgressIndicator(),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                        ),
+                                      StreamBuilder<DataState<String>>(
+                                          initialData: LoadingState<String>(),
+                                          stream: profilePicStreamController.stream,
+                                          builder: (context, snapshot) {
+                                            var state = snapshot.data!;
+                                            if(state is DataLoadedState) {
+                                              return ClipRRect(
+                                                borderRadius: BorderRadius.circular(50),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: data.profileUrl.isNotEmpty
+                                                      ? data.profileUrl
+                                                      : "https://www.treasury.gov.ph/wp-content/uploads/2022/01/male-placeholder-image.jpeg",
+                                                  fit: BoxFit.cover,
+                                                  height: size.s20 * 4,
+                                                  width: size.s20 * 4,
+                                                  placeholder: (context, url) =>
+                                                  const CircularProgressIndicator(),
+                                                  errorWidget: (context, url, error) =>
+                                                  const Icon(Icons.error),
+                                                ),
+                                              );
+                                            }
+                                            else{
+                                              return ShimmerLoader(
+                                                child: Container(
+                                                  width: size.s56,
+                                                  height: size.s56,
+                                                  color: clr.secondaryBackgroundLight,
+                                                ),
+                                              );
+                                            }
+                                          }
                                       ),
+
                                       Positioned(
                                         right: 0,
                                         bottom: 0,
