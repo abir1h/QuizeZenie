@@ -10,7 +10,7 @@ class PaginationEntity<T> {
 
   factory PaginationEntity.fromJson({required Map<String, dynamic> source,required T Function(dynamic item) generateItem}) => PaginationEntity(
     records: List<T>.from((source["results"]??[]).map((x) => generateItem(x))),
-    total: source["total_pages"],
+    total: source["count"],
   );
 
   factory PaginationEntity.empty()=> PaginationEntity(

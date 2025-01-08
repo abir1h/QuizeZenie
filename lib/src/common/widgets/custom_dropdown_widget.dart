@@ -12,22 +12,22 @@ class CustomDropDown<T> extends StatefulWidget {
   final void Function(T item) onSelected;
   final String hintText;
   final String? prefix;
+  final bool? isTop;
   const CustomDropDown({
     super.key,
     required this.onLoadData,
     required this.onSelected,
     this.hintText = "Select",
     this.prefix,
+    this.isTop = false,
     required this.onGenerateTitle,
   });
 
   @override
-  State<CustomDropDown<T>> createState() =>
-      _CustomDropDownState<T>();
+  State<CustomDropDown<T>> createState() => _CustomDropDownState<T>();
 }
 
-class _CustomDropDownState<T> extends State<CustomDropDown<T>>
-    with AppTheme {
+class _CustomDropDownState<T> extends State<CustomDropDown<T>> with AppTheme {
   T? _selectedItem;
 
   @override
@@ -52,19 +52,23 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>>
             Expanded(
               child: Row(
                 children: [
-                  if(widget.prefix!=null)
-                    SvgPicture.asset(widget.prefix!,height: size.s24,width: size.s24,),size.s4.kWidth,
+                  if (widget.prefix != null)
+                    SvgPicture.asset(
+                      widget.prefix!,
+                      height: size.s24,
+                      width: size.s24,
+                    ),
+                  size.s4.kWidth,
                   Text(
                     _selectedItem != null
                         ? widget.onGenerateTitle(_selectedItem as T)
                         : widget.hintText,
                     style: TextStyle(
-                      color: _selectedItem != null
-                          ? clr.textColorBlack
-                          : clr.dividerColorGrey,
-                      fontSize: size.textXXSmall,
-                      fontWeight: FontWeight.w500
-                    ),
+                        color: _selectedItem != null
+                            ? clr.textColorBlack
+                            : clr.dividerColorGrey,
+                        fontSize: size.textXXSmall,
+                        fontWeight: FontWeight.w500),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -85,6 +89,15 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>>
           top: position.dy,
           child: CompositedTransformFollower(
             link: link,
+            offset: widget.isTop!
+                ? Offset(
+                    0,
+                    -MediaQuery.of(context).size.height * 0.27,
+                  )
+                : Offset(
+                    0,
+                    0,
+                  ),
             child: Container(
               width: _size.width,
               margin: EdgeInsets.only(top: _size.height + 4.w),
@@ -159,7 +172,8 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>>
                                       ),
                                     )
                                     .toList(),
-                              ),size.s32.kHeight
+                              ),
+                              size.s32.kHeight
                             ],
                           ),
                         );

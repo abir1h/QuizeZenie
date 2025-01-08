@@ -96,6 +96,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen>
                           onGenerateTitle: (x) => x!.title),
                       size.s20.kHeight,
                       CustomDropDown(
+
                           onLoadData: loadFeedBack,
                           onSelected: (status) {},
                           hintText:
@@ -167,6 +168,26 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen>
       }
     }
   }
+
+  @override
+  void showBottomSheetForImagePicker() {
+    // TODO: implement showBottomSheetForImagePicker
+  }
+
+  @override
+  void showImageCropper(String path) {
+    // TODO: implement showImageCropper
+  }
+  @override
+  void lockUI() {
+    Toasty.of(context).lockUI(blockBackPress: true);
+  }
+
+  @override
+  void releaseUI() {
+    Toasty.of(context).releaseUI();
+  }
+
 }
 
 class ProfileTextField extends StatefulWidget {

@@ -1,3 +1,4 @@
+import 'package:co_learning_mobile_app/src/feature/serach/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../feature/profile/screens/profile_screen.dart';
@@ -15,7 +16,7 @@ import '../../feature/shared/authentication/screens/verify_otp_screen.dart';
 import '../../feature/shared/authentication/screens/forgot_password_screen.dart';
 import '../../feature/shared/authentication/screens/reset_password_screen.dart';
 import '../../feature/profile/screens/account_details.dart';
-import '../../feature/profile/screens/change_password_screen.dart';
+import '../../feature/password/screens/change_password_screen.dart';
 import '../../feature/category_list/screens/category_wise_video_list.dart';
 
 class AppRoute {
@@ -38,7 +39,8 @@ class AppRoute {
   static const String myVideoScreen = "myVideoScreen";
   static const String videoDetailsScreen = "videoDetailsScreen";
   static const String categoryWiseVideoListScreen =
-      "categoryWiseVideoListScreen";
+      "categoryWiseVideoListScreen";  static const String searchScreen =
+      "searchScreen";
 }
 
 mixin RouteGenerator {
@@ -81,6 +83,8 @@ mixin RouteGenerator {
             return const MyVideoScreen();
           case AppRoute.videoDetailsScreen:
             return  VideoDetailsScreen(arguments: setting.arguments);
+          case AppRoute.searchScreen:
+            return const VideoSearchScreen();
 
           default:
             return const SplashScreen();

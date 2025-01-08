@@ -2,6 +2,7 @@ class ApiCredential {
   const ApiCredential._();
 
   static String baseUrl = "http://118.179.7.90:7777"; // Development Server
+  // static String baseUrl = "http://103.209.40.89:7778"; // Development Server
   static String mediaBaseUrl =
       "https://api.edupackbd.com/uploads/"; // Development Server
 
@@ -23,4 +24,5 @@ class ApiCredential {
   static String videoDetails = "file/";
   static String videoComments = "comments/video-comments/";
   static String fileUpload = "file/";
+  static String doComment = "comments/";
 }

@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'package:co_learning_mobile_app/src/common/constants/common_imports.dart';
+import 'package:co_learning_mobile_app/src/common/utility/app_label.dart';
+import 'package:co_learning_mobile_app/src/common/widgets/filter_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rxdart/rxdart.dart';
 import '../constants/app_theme.dart';
 import '../models/page_service.dart';
@@ -40,6 +44,7 @@ class _SearchBoxWidgetState extends State<SearchBoxWidget> with AppTheme {
     _textEditingController.dispose();
     super.dispose();
   }
+  ServiceState serviceState=ServiceState();
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +130,36 @@ class _SearchBoxWidgetState extends State<SearchBoxWidget> with AppTheme {
                 color: Colors.red,
               ),
             ),
+
+          GestureDetector(
+            onTap: (){
+              showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  isDismissible: false,
+                  builder: (BuildContext context) {
+                return FilterBottomsheet(
+                  context: context,serviceState: widget.serviceState,
+                );
+              },).then((v){
+              setState(() {
+                widget.serviceState.mostRecent=v.mostRecent;
+                widget.serviceState.mostFeedbacks=v.mostFeedbacks;
+                widget.serviceState.mostViewed=v.mostViewed;
+              });
+
+
+              });
+            },
+            child: Row(
+              children: [
+                size.s10.kWidth,
+                SvgPicture.asset(ImageAssets.pageInfo,height: size.s16,),              size.s4.kWidth,
+
+                Text(label(e: "Filter", b: "តម្រង"),style: TextStyle(fontWeight: FontWeight.w400,fontSize: size.textXSmall,color: clr.textGrayColor),)
+              ],
+            ),
+          ),
         ],
       ),
     );

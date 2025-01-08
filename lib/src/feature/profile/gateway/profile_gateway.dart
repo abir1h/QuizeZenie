@@ -42,7 +42,7 @@ mixin ProfileGateway {
       File file, void Function(ActionResult<ProfileEntity>) onComplete) async {
     Server.instance.uploadFile(
         url: ApiCredential.updateProfile,
-        file: file,
+        file: file,field: "profile_url",
         onComplete: (response) {
           onComplete.call(ActionResult<ProfileEntity>.fromServerResponse(
             response: response,

@@ -25,6 +25,9 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
 
   late VideoDetailsScreenArgs screenArgs;
 
+  int selectedCategoryId = 0;
+  int selectedTypeId = 0;
+
   ///Service configurations
   @override
   void initState() {
@@ -61,6 +64,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
   final AppStreamController<List<CommentEntity>> commentStreamController =
       AppStreamController();
 
+  ///Load Video Details Data
   void loadInitialData(String videoId) {
     ///Loading state
     if (!mounted) return;
@@ -89,6 +93,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     }
   }
 
+  ///Load Comment Data
   void loadCommentData(String videoId) {
     ///Loading state
     if (!mounted) return;
@@ -115,6 +120,24 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     } catch (e) {
       print(e);
     }
+  }
+
+  ///Do Comment
+  Future<ActionResult<CommentEntity>> doComment(String formId, int categoryId,
+      int typeId, String videoId, String startTime, String endTime) async {
+    return VideoGateway.doComment(
+            formId, categoryId, typeId, videoId, startTime, endTime)
+        .then((value) {
+      if (value.status != Status.success) {
+        _view.showWarning(value.message);
+      } else {
+        _view.showSuccess(value.message);
+        setState(() {
+          loadCommentData(videoId);
+        });
+      }
+      return value;
+    });
   }
 
   ///Load or re-load course details

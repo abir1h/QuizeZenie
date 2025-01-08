@@ -1,3 +1,4 @@
+import 'package:co_learning_mobile_app/src/common/widgets/custom_toasty.dart';
 import 'package:co_learning_mobile_app/src/feature/video/models/comment_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -183,7 +184,20 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                 color: clr.iconsBgColorBlue,
                                 borderRadius: BorderRadius.circular(size.s12),
                               ),
-                              child: SvgPicture.asset(ImageAssets.icShare),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(ImageAssets.icShare),
+                                  SizedBox(width: size.s8),
+                                  Text(
+                                    "Share",
+                                    style: TextStyle(
+                                        color: clr.greyVideoTitle,
+                                        fontSize: size.textXXSmall,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: "Poppins"),
+                                  )
+                                ],
+                              ),
                             ),
                             SizedBox(width: size.s8),
                             Container(
@@ -192,10 +206,48 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                   color: clr.iconsBgColorBlue,
                                   borderRadius: BorderRadius.circular(size.s12),
                                 ),
-                                child: Icon(
-                                  Icons.bookmark_outlined,
-                                  size: size.s16,
-                                  color: clr.iconsColorBlue,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.bookmark_outlined,
+                                      size: size.s16,
+                                      color: clr.iconsColorBlue,
+                                    ),
+                                    SizedBox(width: size.s8),
+                                    Text(
+                                      "Bookmark",
+                                      style: TextStyle(
+                                          color: clr.greyVideoTitle,
+                                          fontSize: size.textXXSmall,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: "Poppins"),
+                                    )
+                                  ],
+                                )),
+                            SizedBox(width: size.s8),
+                            Container(
+                                padding: EdgeInsets.all(size.s8),
+                                decoration: BoxDecoration(
+                                  color: clr.iconsBgColorBlue,
+                                  borderRadius: BorderRadius.circular(size.s12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.beenhere,
+                                      size: size.s16,
+                                      color: clr.iconsColorBlue,
+                                    ),
+                                    SizedBox(width: size.s8),
+                                    Text(
+                                      "Give Score",
+                                      style: TextStyle(
+                                          color: clr.greyVideoTitle,
+                                          fontSize: size.textXXSmall,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: "Poppins"),
+                                    )
+                                  ],
                                 )),
                           ],
                         ),
@@ -220,6 +272,12 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                           return const Offstage();
                         },
                       ),
+                      SizedBox(height: size.s12),
+                      ScoreItemSectionWidget(
+                          onTapViewAll: () {},
+                          items: [""],
+                          buildItem: (BuildContext context, int index, item) =>
+                              ScoreItemWidget()),
                       SizedBox(height: size.s12),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: size.s16),
@@ -307,7 +365,10 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                             bgColor: clr.bgImprove,
                             textColor: clr.improveText,
                             onTap: () => onTapComment(
-                                true, data.feedback.formCategories!),
+                                true,
+                                data.id,
+                                data.feedback.id.toString(),
+                                data.feedback.formCategories!),
                           ),
                           size.s16.kWidth,
                           FeedBackWidget(
@@ -316,7 +377,10 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                             bgColor: clr.bgGood,
                             textColor: clr.blueText,
                             onTap: () => onTapComment(
-                                false, data.feedback.formCategories!),
+                                false,
+                                data.id,
+                                data.feedback.id.toString(),
+                                data.feedback.formCategories!),
                           ),
                         ],
                       ),
@@ -381,11 +445,14 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
     );
   }
 
-  void onTapComment(bool isGood, List<FormCategory> fomCategory) {
+  void onTapComment(bool isGood, String videoId, String feedbackId,
+      List<FormCategory> fomCategory) {
     showCupertinoModalPopup(
       context: context,
       builder: (context) => CommentCreateBottomSheet(
         isGood: isGood,
+        videoId: videoId,
+        feedbackId: feedbackId,
         formCategory: fomCategory,
       ),
     );
@@ -409,12 +476,12 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
 
   @override
   void showSuccess(String message) {
-    // TODO: implement showSuccess
+    Toasty.of(context).showSuccess(message);
   }
 
   @override
   void showWarning(String message) {
-    // TODO: implement showWarning
+    Toasty.of(context).showWarning(message);
   }
 }
 
@@ -606,6 +673,143 @@ class CommentItemWidget extends StatelessWidget with AppTheme {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class ScoreItemSectionWidget<T> extends StatelessWidget with AppTheme {
+  final List<T> items;
+  final Widget Function(BuildContext context, int index, T item) buildItem;
+  final VoidCallback? onTapViewAll;
+  const ScoreItemSectionWidget({
+    super.key,
+    required this.items,
+    required this.buildItem,
+    this.onTapViewAll,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: size.s16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Feedback Score",
+                style: TextStyle(
+                    color: clr.textColorBlack1,
+                    fontSize: size.textSmall,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: "Poppins"),
+              ),
+              if (items.isNotEmpty)
+                GestureDetector(
+                  onTap: onTapViewAll,
+                  child: Container(
+                    color: Colors.white,
+                    child: Text(
+                      "View all (${items.length})",
+                      style: TextStyle(
+                          color: clr.textColorGrey2,
+                          fontSize: size.textXXSmall,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Poppins"),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        SizedBox(height: size.s8),
+        ListView.separated(
+          itemCount: items.length > 1 ? 1 : items.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: size.s16),
+          itemBuilder: (context, index) {
+            return buildItem(context, index, items[index]);
+          },
+          separatorBuilder: (context, index) {
+            return SizedBox(height: size.s12);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ScoreItemWidget extends StatelessWidget with AppTheme {
+  // final CommentEntity data;
+  const ScoreItemWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s12),
+      decoration: BoxDecoration(
+          color: clr.bgGood,
+          borderRadius: BorderRadius.circular(size.s8),
+          border: Border.all(color: clr.scoreBorderColor, width: size.s1)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SvgPicture.asset(ImageAssets.icProfile),
+              SizedBox(width: size.s8),
+              Expanded(
+                child: Text(
+                  "User Name",
+                  style: TextStyle(
+                      color: clr.profileCardTextColor,
+                      fontSize: size.textXSmall,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Poppins"),
+                ),
+              ),
+              Text(
+                "View",
+                style: TextStyle(
+                    color: clr.appPrimaryColor,
+                    fontSize: size.textXXSmall,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: "Poppins"),
+              ),
+            ],
+          ),
+          SizedBox(height: size.s8),
+          Divider(color: clr.scoreDividerColor, height: size.s1),
+          SizedBox(height: size.s8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Total Score:",
+                style: TextStyle(
+                    color: clr.profileCardTextColor,
+                    fontSize: size.textXSmall,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: "Poppins"),
+              ),
+              Text(
+                "20",
+                style: TextStyle(
+                    color: clr.scoreColor,
+                    fontSize: size.textX28Large,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: "Poppins"),
+              ),
+            ],
+          )
         ],
       ),
     );
