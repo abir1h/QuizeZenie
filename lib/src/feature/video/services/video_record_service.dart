@@ -2,16 +2,22 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/feedback.dart';
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/folder_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+
+import '../../../common/models/action_result.dart';
+import '../gateways/video_recorded_screen_gateway.dart';
 
 abstract class _ViewModel {
   void showWarning(String message);
   void showSuccess(String message);
   void forceClose();
   void showVideoSaveDialog(File file);
+  void showFeedbackReviewBottomSheet(FeedbackEntity feedbackEntity);
 }
 
 mixin VideoRecordService<T extends StatefulWidget> on State<T>
@@ -25,6 +31,8 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
   // double zoomLevel = 1.0;
   int timerSeconds = 0;
   Timer? _timer;
+  FolderEntity selectedFolderEntity=FolderEntity.empty();
+  FeedbackEntity selectedFeedbackEntity=FeedbackEntity.empty();
 
   // Keep track of the current camera index
   int _currentCameraIndex = 0;
@@ -160,4 +168,31 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
     await cameraController?.initialize();
     setState(() {});
   }
+
+  Future<List<FeedbackEntity>> getFeedEntityList()async{
+    return VideoRecordedScreenGateway.getFeedbackList().then((value){
+      if(value.status == Status.success){
+        return value.data!;
+      }else{
+        _view.showWarning(value.message);
+        return [];
+      }
+    });
+  }
+
+  Future<List<FolderEntity>> getFolderListEntityList()async{
+    return VideoRecordedScreenGateway.getFolderList().then((value){
+      if(value.status == Status.success){
+        return value.data!;
+      }else{
+        _view.showWarning(value.message);
+        return [];
+      }
+    });
+  }
+
+  onShownFeedbackBottomSheet(FeedbackEntity value){
+    _view.showFeedbackReviewBottomSheet(value);
+  }
+
 }

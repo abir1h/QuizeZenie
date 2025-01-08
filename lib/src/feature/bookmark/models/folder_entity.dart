@@ -17,4 +17,9 @@ class FolderEntity {
     "id": id,
     "name": name,
   };
+
+  static List<FolderEntity> listFromJson(List<dynamic> json){
+    return json.isNotEmpty ? List.castFrom<dynamic,FolderEntity>(json.map((x)=> FolderEntity.fromJson(x)).toList()):[];
+  }
+
 }

@@ -15,6 +15,8 @@ class ThemeColor {
 
   Color get appPrimaryColor => HexColor("175CD3");
   Color get backgroundColor => HexColor("FCFCFD");
+  Color get borderGray => const Color(0XFFC1C1C1);
+  Color get dropdownColorGrey => const Color(0xff878787);
 
   Color get grayColor => HexColor("9DA0A7");
   Color get iconGrey => HexColor("D9D9D9");
@@ -100,7 +102,6 @@ class ThemeColor {
   Color get ratioSpeakerColor => HexColor("9EA5D1");
   Color get circleDotColor => HexColor("ACB7C5");
   Color get commentBgColor => HexColor("DDDFEC");
-
 }
 
 // final localStorage = Get.find<LocalStorageServiceWithGetX>();
