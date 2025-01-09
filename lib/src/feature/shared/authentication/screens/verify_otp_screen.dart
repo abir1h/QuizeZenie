@@ -142,8 +142,14 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                 ),
                 onSuccess: (success) {
                   App.setCurrentSession(success).then((value) {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        AppRoute.landingScreen, (x) => false);
+                    verifyOtpScreenArgs!.isForgotPassword != null
+                        ? Navigator.of(context).pushNamedAndRemoveUntil(
+                            AppRoute.resetPasswordScreen, (x) => false,
+                            arguments: ResetPasswordScreenArgs(
+                                authDataModel:
+                                    verifyOtpScreenArgs!.authDataModel))
+                        : Navigator.of(context).pushNamedAndRemoveUntil(
+                            AppRoute.landingScreen, (x) => false);
                   });
                   // Navigator.of(context)
                   //     .pushReplacementNamed(AppRoute.signInScreen);

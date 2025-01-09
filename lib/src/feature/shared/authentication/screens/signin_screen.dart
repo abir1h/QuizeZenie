@@ -75,20 +75,20 @@ class _SignInScreenState extends State<SignInScreen>
                   hintText: label(e: en.passwordText, b: bn.passwordText),
                   controller: passwordController),
               size.s8.kHeight,
-              // Align(
-              //   alignment: Alignment.topRight,
-              //   child: GestureDetector(
-              //     onTap: () => Navigator.pushNamed(
-              //         context, AppRoute.forgotPasswordScreen),
-              //     child: Text(
-              //       label(e: en.forgetPasswordText, b: bn.forgetPasswordText),
-              //       style: TextStyle(
-              //           fontWeight: FontWeight.w400,
-              //           fontSize: size.textXXSmall,
-              //           color: clr.forgotPasswordTextColor),
-              //     ),
-              //   ),
-              // ),
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.pushNamed(
+                      context, AppRoute.forgotPasswordScreen),
+                  child: Text(
+                    label(e: en.forgetPasswordText, b: bn.forgetPasswordText),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: size.textXXSmall,
+                        color: clr.forgotPasswordTextColor),
+                  ),
+                ),
+              ),
               size.s16.kHeight,
               Row(
                 children: [

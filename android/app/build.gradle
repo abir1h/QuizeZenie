@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.co_learning_mobile_app"
-    compileSdk = 34
+    compileSdk =  35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

@@ -3,7 +3,10 @@ import 'package:co_learning_mobile_app/src/common/models/page_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../feature/bookmark/models/folder_entity.dart';
+import '../../feature/video/gateways/video_recorded_screen_gateway.dart';
 import '../constants/app_theme.dart';
+import '../models/action_result.dart';
 import '../utility/app_label.dart';
 
 class FilterBottomsheet extends StatefulWidget {
@@ -21,6 +24,16 @@ class FilterBottomsheetState extends State<FilterBottomsheet>
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<List<FolderEntity>> getFolderListEntityList() async {
+    return VideoRecordedScreenGateway.getFolderList().then((value) {
+      if (value.status == Status.success) {
+        return value.data!;
+      } else {
+        return [];
+      }
+    });
   }
 
   @override
@@ -85,23 +98,23 @@ class FilterBottomsheetState extends State<FilterBottomsheet>
                             ),
                           ),
                         ),
-                          InkWell(
-                            onTap: (){
-                              setState(() {
-                                widget.serviceState.mostRecent = false;
-                                widget.serviceState.mostViewed = false;
-                                widget.serviceState.mostFeedbacks = false;
-                              });
-                            },
-                            child: Text(
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              widget.serviceState.mostRecent = false;
+                              widget.serviceState.mostViewed = false;
+                              widget.serviceState.mostFeedbacks = false;
+                            });
+                          },
+                          child: Text(
                             label(e: "Reset all", b: "កំណត់ឡើងវិញទាំងអស់។"),
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: size.textXXSmall,
                               color: clr.disableButtonGray,
                             ),
-                                                    ),
                           ),
+                        ),
                       ],
                     ),
                     size.s12.kHeight,

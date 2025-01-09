@@ -83,7 +83,9 @@ mixin UserAuthenticationGateway {
       String phoneOrEmail) async {
     return Server.instance.postRequest(
       url: ApiCredential.forgotPassword,
-      postData: {"organization_id": 1, "phone_or_email": phoneOrEmail},
+      postData:{
+        "email": phoneOrEmail
+      },
     ).then((value) {
       return ActionResult<UserSession>.fromServerResponse(
         response: value,
@@ -94,11 +96,16 @@ mixin UserAuthenticationGateway {
     });
   }
 
-  static Future<ActionResult<UserSession>> resetPasswordAction(
-      int otpId, String password) async {
+  static Future<ActionResult<UserSession>> resetPasswordAction(String userId,
+      String otpId, String newPassword,String confirmPassword,) async {
     return Server.instance.postRequest(
       url: ApiCredential.resetPassword,
-      postData: {"otp_id": otpId, "password": password},
+      postData: {
+        "user_id": userId,
+        "otp_id": otpId,
+        "new_password": newPassword,
+        "confirm_password": confirmPassword
+      },
     ).then((value) {
       return ActionResult<UserSession>.fromServerResponse(
         response: value,

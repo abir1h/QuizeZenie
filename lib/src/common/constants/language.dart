@@ -41,8 +41,10 @@ class LanguageEn {
   String continueText = "Continue";
   String updateText = "Update";
   String otpTitleText = "Enter OTP";
+  String verifyEmailTitleText = "Verify Email";
   String otpSubTitleText = "Enter the OTP code we just sent you on your registered Email/Phone number";
   String resetPasswordTitleText = "Reset Password";
+  String newPasswordTitleText = "Set New Password";
 
   String resetPasswordSubTitleText = "It was popularised in the 1960s with the release of Letraset sheetscontaining Lorem Ipsum.";
   String myProfileText = "My Profile";
@@ -104,5 +106,7 @@ class LanguageBn {
   String myActivity = "សកម្មភាពរបស់ខ្ញុំ";
   String changeLanguage = "ប្ដូរភាសា";
   String changePassword = "ប្ដូរលេខសម្ងាត់";  String updateText = "ធ្វើបច្ចុប្បន្នភាព";
+  String verifyEmailTitleText = "ផ្ទៀងផ្ទាត់អ៊ីម៉ែល";
+  String newPasswordTitleText = "Sកំណត់ពាក្យសម្ងាត់ថ្មី";
 
 }
