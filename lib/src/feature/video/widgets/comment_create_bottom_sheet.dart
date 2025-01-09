@@ -5,6 +5,7 @@ import '../../../common/constants/app_theme.dart';
 import '../../../common/widgets/action_button.dart';
 import '../../../common/widgets/custom_button.dart';
 import '../../../common/widgets/custom_toasty.dart';
+import '../../bookmark/models/feedback.dart';
 import '../../bookmark/models/form_category.dart';
 import '../../bookmark/models/form_category_type.dart';
 import '../models/comment_entity.dart';
@@ -388,6 +389,21 @@ class _CommentCreateBottomSheetState extends State<CommentCreateBottomSheet>
   @override
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
+  }
+
+  @override
+  void navigateToFeedbackScoreDetailsScreen(String feedbackScoreId) {
+    // TODO: implement navigateToFeedbackScoreDetailsScreen
+  }
+
+  @override
+  void navigateToFeedbackScoreListScreen(String videoId) {
+    // TODO: implement navigateToFeedbackScoreListScreen
+  }
+
+  @override
+  void navigateToGiveFeedbackScoreScreen(FeedbackEntity feedback) {
+    // TODO: implement navigateToGiveFeedbackScoreScreen
   }
 }
 

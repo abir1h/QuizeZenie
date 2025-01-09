@@ -1,6 +1,9 @@
 import 'package:co_learning_mobile_app/src/feature/serach/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../feature/feedback_score/screens/feedback_score_details_screen.dart';
+import '../../feature/feedback_score/screens/feedback_score_screen.dart';
+import '../../feature/feedback_score/screens/give_feedback_score_screen.dart';
 import '../../feature/profile/screens/profile_screen.dart';
 import '../../feature/home/screens/home_screen.dart';
 import '../../feature/landing/screens/landing_screen.dart';
@@ -39,8 +42,11 @@ class AppRoute {
   static const String myVideoScreen = "myVideoScreen";
   static const String videoDetailsScreen = "videoDetailsScreen";
   static const String categoryWiseVideoListScreen =
-      "categoryWiseVideoListScreen";  static const String searchScreen =
-      "searchScreen";
+      "categoryWiseVideoListScreen";
+  static const String searchScreen = "searchScreen";
+  static const String feedbackScoreScreen = "feedbackScoreScreen";
+  static const String feedbackScoreDetailsScreen = "feedbackScoreDetailsScreen";
+  static const String giveFeedbackScoreScreen = "giveFeedbackScoreScreen";
 }
 
 mixin RouteGenerator {
@@ -82,9 +88,15 @@ mixin RouteGenerator {
           case AppRoute.myVideoScreen:
             return const MyVideoScreen();
           case AppRoute.videoDetailsScreen:
-            return  VideoDetailsScreen(arguments: setting.arguments);
+            return VideoDetailsScreen(arguments: setting.arguments);
           case AppRoute.searchScreen:
             return const VideoSearchScreen();
+          case AppRoute.feedbackScoreScreen:
+            return FeedbackScoreScreen(arguments: setting.arguments);
+          case AppRoute.feedbackScoreDetailsScreen:
+            return FeedbackScoreDetailsScreen(arguments: setting.arguments);
+          case AppRoute.giveFeedbackScoreScreen:
+            return GiveFeedbackScoreScreen(arguments: setting.arguments);
 
           default:
             return const SplashScreen();

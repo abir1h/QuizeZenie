@@ -105,6 +105,15 @@ class ThemeColor {
   Color get scoreDividerColor => HexColor("EAEAEA");
   Color get scoreColor => HexColor("475569");
   Color get scoreBorderColor => HexColor("7DA6FF");
+  Color get scoreCardColor => HexColor("EFF3FF");
+  Color get scoreCardBorderColor => HexColor("7C9AF2");
+  Color get toggleIconColorColor => HexColor("525252");
+  Color get scoreDetailsCardColor => HexColor("E2E8F0");
+  Color get scoreExpandedCardColor => HexColor("3DB1F3");
+  Color get scoreExpandedCardItemColor => HexColor("EDF2FC");
+  Color get scoreExpandedCardTextColor => HexColor("0A0A0A");
+  Color get scoreIconColor => HexColor("3E5FBD");
+  Color get scoreCardColor2 => HexColor("F0F8FF");
 
 }
 
@@ -137,6 +146,7 @@ class ThemeSize {
   double get s1 => 1.w;
   double get s2 => 2.w;
   double get s4 => 4.w;
+  double get s6 => 6.w;
   double get s8 => 8.w;
   double get s10 => 10.w;
   double get s12 => 12.w;

@@ -7,6 +7,8 @@ import '../../../common/constants/app_constant.dart';
 import '../../../common/models/action_result.dart';
 import '../../../common/routes/app_route_args.dart';
 import '../../../common/widgets/app_stream.dart';
+import '../../bookmark/models/feedback.dart';
+import '../../bookmark/models/form_category.dart';
 import '../gateways/video_gateway.dart';
 import '../models/comment_entity.dart';
 import '../models/video_entity.dart';
@@ -17,6 +19,9 @@ abstract class _ViewModel {
   void navigateToBack();
   bool isPlayerFullscreen();
   void changeOrientationToPortrait();
+  void navigateToGiveFeedbackScoreScreen(FeedbackEntity feedback);
+  void navigateToFeedbackScoreListScreen(String videoId);
+  void navigateToFeedbackScoreDetailsScreen(String feedbackScoreId);
 }
 
 mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
@@ -261,5 +266,17 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
       required bool isPlaying,
       required int totalDuration}) {
     print(currentPosition);
+  }
+
+  void onTapGiveScore(FeedbackEntity feedback) {
+    _view.navigateToGiveFeedbackScoreScreen(feedback);
+  }
+
+  void onTapScoreViewAll(String videoId) {
+    _view.navigateToFeedbackScoreListScreen(videoId);
+  }
+
+  void onTapScoreDetailsViewAll(String feedbackScoreId) {
+    _view.navigateToFeedbackScoreDetailsScreen(feedbackScoreId);
   }
 }

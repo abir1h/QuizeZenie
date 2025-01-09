@@ -1,3 +1,5 @@
+import '../../feature/bookmark/models/feedback.dart';
+import '../../feature/bookmark/models/form_category.dart';
 import '../../feature/profile/models/profile_entity.dart';
 import '../models/user_entity.dart';
 
@@ -21,5 +23,12 @@ class AccountDetailsScreenArgs {
   ProfileEntity profileData;
   final void Function() onAddLiveClass;
 
-  AccountDetailsScreenArgs({required this.profileData ,required this.onAddLiveClass});
+  AccountDetailsScreenArgs(
+      {required this.profileData, required this.onAddLiveClass});
+}
+
+class GiveScoreScreenArgs {
+  FeedbackEntity feedback;
+
+  GiveScoreScreenArgs({required this.feedback});
 }

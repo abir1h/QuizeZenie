@@ -32,6 +32,7 @@ mixin VideoGateway {
       return ActionResult<VideoUploadEntity>.error();
     });
   }
+
   static Future<ActionResult<VideoEntity>> getVideoDetails(
       String videoId) async {
     return Server.instance
@@ -86,5 +87,4 @@ mixin VideoGateway {
       return ActionResult<CommentEntity>.error();
     });
   }
-
 }

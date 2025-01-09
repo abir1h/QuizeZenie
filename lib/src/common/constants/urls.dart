@@ -25,4 +25,5 @@ class ApiCredential {
   static String videoComments = "comments/video-comments/";
   static String fileUpload = "file/";
   static String doComment = "comments/";
+  static String feedbackScore = "feedback-scorings/";
 }

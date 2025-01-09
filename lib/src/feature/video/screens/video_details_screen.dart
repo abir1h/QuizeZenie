@@ -6,10 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../common/constants/common_imports.dart';
+import '../../../common/routes/app_route.dart';
 import '../../../common/routes/app_route_args.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../../../common/widgets/circular_loader.dart';
+import '../../bookmark/models/feedback.dart';
 import '../../bookmark/models/form_category.dart';
+import '../../feedback_score/screens/feedback_score_screen.dart';
 import '../models/video_entity.dart';
 import '../services/video_details_screen_service.dart';
 import '../widgets/comment_create_bottom_sheet.dart';
@@ -225,30 +228,34 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                   ],
                                 )),
                             SizedBox(width: size.s8),
-                            Container(
-                                padding: EdgeInsets.all(size.s8),
-                                decoration: BoxDecoration(
-                                  color: clr.iconsBgColorBlue,
-                                  borderRadius: BorderRadius.circular(size.s12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.beenhere,
-                                      size: size.s16,
-                                      color: clr.iconsColorBlue,
-                                    ),
-                                    SizedBox(width: size.s8),
-                                    Text(
-                                      "Give Score",
-                                      style: TextStyle(
-                                          color: clr.greyVideoTitle,
-                                          fontSize: size.textXXSmall,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: "Poppins"),
-                                    )
-                                  ],
-                                )),
+                            GestureDetector(
+                              onTap: () => onTapGiveScore(data.feedback),
+                              child: Container(
+                                  padding: EdgeInsets.all(size.s8),
+                                  decoration: BoxDecoration(
+                                    color: clr.iconsBgColorBlue,
+                                    borderRadius:
+                                        BorderRadius.circular(size.s12),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.beenhere,
+                                        size: size.s16,
+                                        color: clr.iconsColorBlue,
+                                      ),
+                                      SizedBox(width: size.s8),
+                                      Text(
+                                        "Give Score",
+                                        style: TextStyle(
+                                            color: clr.greyVideoTitle,
+                                            fontSize: size.textXXSmall,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: "Poppins"),
+                                      )
+                                    ],
+                                  )),
+                            ),
                           ],
                         ),
                       ),
@@ -274,10 +281,12 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                       ),
                       SizedBox(height: size.s12),
                       ScoreItemSectionWidget(
-                          onTapViewAll: () {},
+                          onTapViewAll: () => onTapScoreViewAll(data.id),
                           items: [""],
                           buildItem: (BuildContext context, int index, item) =>
-                              ScoreItemWidget()),
+                              ScoreItemWidget(
+                                onTap: () => onTapScoreDetailsViewAll(""),
+                              )),
                       SizedBox(height: size.s12),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: size.s16),
@@ -482,6 +491,24 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
   @override
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
+  }
+
+  @override
+  void navigateToFeedbackScoreDetailsScreen(String feedbackScoreId) {
+    Navigator.of(context).pushNamed(AppRoute.feedbackScoreDetailsScreen,
+        arguments: VideoDetailsScreenArgs(videoId: feedbackScoreId));
+  }
+
+  @override
+  void navigateToFeedbackScoreListScreen(String videoId) {
+    Navigator.of(context).pushNamed(AppRoute.feedbackScoreScreen,
+        arguments: VideoDetailsScreenArgs(videoId: videoId));
+  }
+
+  @override
+  void navigateToGiveFeedbackScoreScreen(FeedbackEntity feedback) {
+    Navigator.of(context).pushNamed(AppRoute.giveFeedbackScoreScreen,
+        arguments: GiveScoreScreenArgs(feedback: feedback));
   }
 }
 
@@ -740,78 +767,6 @@ class ScoreItemSectionWidget<T> extends StatelessWidget with AppTheme {
           },
         ),
       ],
-    );
-  }
-}
-
-class ScoreItemWidget extends StatelessWidget with AppTheme {
-  // final CommentEntity data;
-  const ScoreItemWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s12),
-      decoration: BoxDecoration(
-          color: clr.bgGood,
-          borderRadius: BorderRadius.circular(size.s8),
-          border: Border.all(color: clr.scoreBorderColor, width: size.s1)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SvgPicture.asset(ImageAssets.icProfile),
-              SizedBox(width: size.s8),
-              Expanded(
-                child: Text(
-                  "User Name",
-                  style: TextStyle(
-                      color: clr.profileCardTextColor,
-                      fontSize: size.textXSmall,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Poppins"),
-                ),
-              ),
-              Text(
-                "View",
-                style: TextStyle(
-                    color: clr.appPrimaryColor,
-                    fontSize: size.textXXSmall,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Poppins"),
-              ),
-            ],
-          ),
-          SizedBox(height: size.s8),
-          Divider(color: clr.scoreDividerColor, height: size.s1),
-          SizedBox(height: size.s8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Total Score:",
-                style: TextStyle(
-                    color: clr.profileCardTextColor,
-                    fontSize: size.textXSmall,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Poppins"),
-              ),
-              Text(
-                "20",
-                style: TextStyle(
-                    color: clr.scoreColor,
-                    fontSize: size.textX28Large,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: "Poppins"),
-              ),
-            ],
-          )
-        ],
-      ),
     );
   }
 }
