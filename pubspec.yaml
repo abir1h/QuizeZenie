@@ -55,6 +55,7 @@ dependencies:
   get_thumbnail_video: ^0.7.3
   image_picker: ^1.1.2
   image_cropper: ^8.1.0
+  dotted_separator: ^1.0.6
   lottie: ^3.3.0
 
 dev_dependencies:

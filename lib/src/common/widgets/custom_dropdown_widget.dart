@@ -24,15 +24,21 @@ class CustomDropDown<T> extends StatefulWidget {
   });
 
   @override
-  State<CustomDropDown<T>> createState() => _CustomDropDownState<T>();
+  State<CustomDropDown<T>> createState() => CustomDropDownState<T>();
+
 }
 
-class _CustomDropDownState<T> extends State<CustomDropDown<T>> with AppTheme {
+class CustomDropDownState<T> extends State<CustomDropDown<T>> with AppTheme {
   T? _selectedItem;
 
   @override
   void initState() {
     super.initState();
+  }
+  void resetSelection() {
+    setState(() {
+      _selectedItem = null;
+    });
   }
 
   @override

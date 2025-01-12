@@ -298,7 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             child: Row(
                               children: [
                                 CountCard(
-                                    onTap: () {}, title: "Videos", count: 10),
+                                    onTap: () {}, title: "Videos", count: data.totalVideos),
                                 Expanded(
                                     child: VerticalDivider(
                                   color: clr.greyBorder,
@@ -306,7 +306,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 CountCard(
                                     onTap: () {},
                                     title: "Bookmarks",
-                                    count: 20),
+                                    count: data.totalBookmarks),
                                 Expanded(
                                     child: VerticalDivider(
                                   color: clr.greyBorder,
@@ -314,7 +314,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 CountCard(
                                     onTap: () {},
                                     title: "Feedbacks",
-                                    count: 100),
+                                    count: data.totalComments),
                               ],
                             ),
                           ),
@@ -382,11 +382,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                       size.s16.kHeight,
                       GestureDetector(
-                        onTap: () => App.logOut().then((value) =>
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                              AppRoute.signInScreen,
-                              (Route<dynamic> route) => false,
-                            )),
+                        onTap: () => App.logOut().then((value) =>showLogoutPromptDialog()),
                         child: Container(
                           margin: EdgeInsets.symmetric(horizontal: size.s16),
                           padding: EdgeInsets.symmetric(vertical: size.s10),
@@ -452,6 +448,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         );
       },
     );
+
   }
 
   @override
