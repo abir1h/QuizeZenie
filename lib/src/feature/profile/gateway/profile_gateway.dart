@@ -22,11 +22,10 @@ mixin ProfileGateway {
   }
 
   static Future<ActionResult<ProfileEntity>> updateProfile(
-      Map<String, dynamic> data, int userId) async {
+      Map<String, dynamic> data) async {
     return Server.instance
-        .patchRequest(
-      url: "${ApiCredential.updateProfile}$userId/",
-      patchData: data,
+        .postRequest(
+      url: ApiCredential.updateProfile,postData: data
     )
         .then((value) {
       return ActionResult<ProfileEntity>.fromServerResponse(

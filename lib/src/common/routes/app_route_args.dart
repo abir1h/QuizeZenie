@@ -6,8 +6,9 @@ import '../models/user_entity.dart';
 class VerifyOtpScreenArgs {
   UserSession? authDataModel;
   bool? isForgotPassword;
-  VerifyOtpScreenArgs({this.authDataModel,this.isForgotPassword});
+  VerifyOtpScreenArgs({this.authDataModel, this.isForgotPassword});
 }
+
 class ResetPasswordScreenArgs {
   UserSession? authDataModel;
   ResetPasswordScreenArgs({this.authDataModel});
@@ -36,4 +37,10 @@ class GiveScoreScreenArgs {
   FeedbackEntity feedback;
 
   GiveScoreScreenArgs({required this.feedback});
+}
+
+class FeedbackScoreArgs {
+  String videoId;
+  String? scoreId;
+  FeedbackScoreArgs({required this.videoId, this.scoreId});
 }

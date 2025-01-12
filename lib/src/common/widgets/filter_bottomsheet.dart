@@ -1,5 +1,7 @@
 import 'package:co_learning_mobile_app/src/common/constants/common_imports.dart';
 import 'package:co_learning_mobile_app/src/common/models/page_service.dart';
+import 'package:co_learning_mobile_app/src/common/widgets/custom_button.dart';
+import 'package:co_learning_mobile_app/src/common/widgets/custom_dropdown_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -35,6 +37,10 @@ class FilterBottomsheetState extends State<FilterBottomsheet>
       }
     });
   }
+
+  final GlobalKey<CustomDropDownState> _dropdownKey = GlobalKey();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +95,8 @@ class FilterBottomsheetState extends State<FilterBottomsheet>
                         Expanded(
                           child: Text(
                             label(
-                                e: "Filter by activity:",
-                                b: "ត្រងតាមសកម្មភាព៖"),
+                                e: "Filter by folder:",
+                                b: "ត្រងតាមថត៖"),
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: size.textSmall,
@@ -104,6 +110,8 @@ class FilterBottomsheetState extends State<FilterBottomsheet>
                               widget.serviceState.mostRecent = false;
                               widget.serviceState.mostViewed = false;
                               widget.serviceState.mostFeedbacks = false;
+                              _dropdownKey.currentState!.resetSelection();
+                              widget.serviceState.selectedCategoryId=FolderEntity.empty();
                             });
                           },
                           child: Text(
@@ -112,6 +120,34 @@ class FilterBottomsheetState extends State<FilterBottomsheet>
                               fontWeight: FontWeight.w500,
                               fontSize: size.textXXSmall,
                               color: clr.disableButtonGray,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    size.s12.kHeight,
+                    CustomDropDown<FolderEntity>(
+                      key: _dropdownKey,
+                      onLoadData: getFolderListEntityList,
+                      hintText:  widget.serviceState.selectedCategoryId!.name!=""?widget.serviceState.selectedCategoryId!.name:"Select Folder",
+                      onSelected: (x) {
+                        widget.serviceState.selectedCategoryId!.id = x.id;
+                        widget.serviceState.selectedCategoryId!.name = x.name;
+                      },
+                      onGenerateTitle: (x) => x.name,
+                    ),
+                    size.s12.kHeight,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            label(
+                                e: "Filter by activity:",
+                                b: "ត្រងតាមសកម្មភាព៖"),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: size.textSmall,
+                              color: clr.textColorBlack,
                             ),
                           ),
                         ),
@@ -154,9 +190,11 @@ class FilterBottomsheetState extends State<FilterBottomsheet>
                       controlAffinity: ListTileControlAffinity
                           .leading, // Position of the checkbox
                     ),
+                    CustomButton(onTap: () =>Navigator.pop(context, widget.serviceState), title: "Continue"),
+                    size.s16.kHeight
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

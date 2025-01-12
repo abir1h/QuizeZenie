@@ -12,6 +12,7 @@ import '../../category_list/screens/category_wise_video_list.dart';
 import '../services/bookmark_screen_service.dart';
 import '../../../common/utility/app_label.dart';
 import '../models/bookmark_entity.dart';
+
 class BookmarkListScreen extends StatefulWidget {
   const BookmarkListScreen({super.key});
 
@@ -51,9 +52,9 @@ class _BookmarkListScreenState extends State<BookmarkListScreen>
               color: clr.whiteColor,
               border: Border(
                   top: BorderSide(
-                    color: clr.backgroundColor1,
-                    width: 8.w,
-                  ))),
+                color: clr.backgroundColor1,
+                width: 8.w,
+              ))),
           child: AppStreamBuilder<PaginatedListViewController<BookmarkEntity>>(
             stream: bookmarkStreamController.stream,
             loadingBuilder: (context) {
@@ -64,17 +65,18 @@ class _BookmarkListScreenState extends State<BookmarkListScreen>
             dataBuilder: (context, data) {
               return PaginatedListView<BookmarkEntity>(
                 controller: paginationController,
-                padding: EdgeInsets.symmetric(vertical: size.s8,horizontal: size.s12),
+                padding: EdgeInsets.symmetric(
+                    vertical: size.s8, horizontal: size.s12),
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, item, index) {
                   return BookmarkVideoItemWidget(
                     key: ObjectKey(item.id),
-                    onTap: (){},
+                    onTap: () {},
                     data: item,
                   );
                 },
                 separatorBuilder: (context) {
-                  return  SizedBox(height: size.s12);
+                  return SizedBox(height: size.s12);
                 },
                 loaderBuilder: (context) => Padding(
                   padding: EdgeInsets.all(size.s4),
@@ -93,8 +95,7 @@ class _BookmarkListScreenState extends State<BookmarkListScreen>
               );
             },
           ),
-        )
-    );
+        ));
   }
 
   @override
@@ -106,7 +107,8 @@ class _BookmarkListScreenState extends State<BookmarkListScreen>
 class BookmarkVideoItemWidget extends StatelessWidget with AppTheme {
   final BookmarkEntity data;
   final VoidCallback onTap;
-  const BookmarkVideoItemWidget({super.key, required this.data, required this.onTap});
+  const BookmarkVideoItemWidget(
+      {super.key, required this.data, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -124,12 +126,11 @@ class BookmarkVideoItemWidget extends StatelessWidget with AppTheme {
                   height: size.s20 * 4,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  imageUrl:
-                 data.bookmarkedContent.thumbnailUrl,
+                  imageUrl: data.bookmarkedContent.thumbnailUrl,
                   placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator()), // Placeholder widget
                   errorWidget: (context, url, error) =>
-                  const Icon(Icons.error), // Error widget
+                      const Icon(Icons.error), // Error widget
                 )),
           ),
           SizedBox(width: size.s12),
@@ -150,7 +151,9 @@ class BookmarkVideoItemWidget extends StatelessWidget with AppTheme {
                 SizedBox(height: size.s8),
                 Text(
                   data.bookmarkedContent.chapters.isNotEmpty
-                      ? data.bookmarkedContent.chapters.map((chapter) => chapter.title).join(', ')
+                      ? data.bookmarkedContent.chapters
+                          .map((chapter) => chapter.title)
+                          .join(', ')
                       : "No chapter",
                   style: TextStyle(
                     color: clr.textGrayColor,
@@ -161,7 +164,6 @@ class BookmarkVideoItemWidget extends StatelessWidget with AppTheme {
               ],
             ),
           ),
-
         ],
       ),
     );
@@ -180,9 +182,9 @@ class EmptyStateWidget extends StatelessWidget with AppTheme {
       children: [
         Center(
             child: SvgPicture.asset(
-              icon,
-              height: 200,
-            )),
+          icon,
+          height: 200,
+        )),
         size.s16.kHeight,
         Center(
           child: Text(

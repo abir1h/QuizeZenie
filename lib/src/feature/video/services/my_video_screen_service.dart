@@ -1,4 +1,6 @@
 import 'dart:async';
+import '../gateways/video_gateway.dart';
+import '../models/video_entity.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/constants/app_constant.dart';
@@ -6,15 +8,14 @@ import '../../../common/models/action_result.dart';
 import '../../../common/models/page_service.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../../../common/widgets/paginated_list_view.dart';
-import '../models/bookmark_entity.dart';
-import '../gateway/bookamark_gateway.dart';
+
 
 abstract class _ViewModel {
   void showWarning(String message);
 }
 
-mixin BookmarkListScreenService<T extends StatefulWidget> on State<T>
-    implements _ViewModel {
+mixin MyVideoListScreenService<T extends StatefulWidget> on State<T>
+implements _ViewModel {
   late _ViewModel _view;
   int categoryId = -1;
 
@@ -34,20 +35,21 @@ mixin BookmarkListScreenService<T extends StatefulWidget> on State<T>
   //====================Stream Controller=====================
 
   late ServiceState serviceState = ServiceState();
-  PaginatedListViewController<BookmarkEntity> paginationController =
-      PaginatedListViewController();
+  PaginatedListViewController<VideoEntity> paginationController =
+  PaginatedListViewController();
 
-  final AppStreamController<PaginatedListViewController<BookmarkEntity>>
-      bookmarkStreamController = AppStreamController();
+  final AppStreamController<PaginatedListViewController<VideoEntity>>
+  videoStreamController = AppStreamController();
 
   ///Load enrolled course list
 
   void loadInitialData() {
+
     ///Loading state
     if (!mounted) return;
     paginationController.clear();
-    bookmarkStreamController.add(LoadingState());
-    BookmarkGateway.getBookmarkListWithPagination(
+    videoStreamController.add(LoadingState());
+    VideoGateway.getVideoListWithPagination(
       serviceState.getPaginatedUrlSegment(paginationController.pageSize, 1),
     ).then((value) {
       if (!mounted) return;
@@ -56,13 +58,14 @@ mixin BookmarkListScreenService<T extends StatefulWidget> on State<T>
       if (value.status == Status.success && value.data!.total > 0) {
         paginationController.setTotalItemCount(value.data!.total);
         paginationController.addItems(value.data!.records);
-        bookmarkStreamController.add(DataLoadedState(paginationController));
+        videoStreamController.add(DataLoadedState(paginationController));
       }
 
       ///Empty state
       else if (value.status == Status.success && value.data!.total <= 0) {
-        bookmarkStreamController
-            .add(EmptyState(message: "No video bookmarked"));
+        videoStreamController.add(EmptyState(
+            message:
+            "No video bookmarked"));
       }
 
       ///Error state
@@ -81,7 +84,7 @@ mixin BookmarkListScreenService<T extends StatefulWidget> on State<T>
 
   Future<bool> _onLoadMoreItems(int nextPage) async {
     Completer<bool> _completer = Completer();
-    BookmarkGateway.getBookmarkListWithPagination(
+    VideoGateway.getVideoListWithPagination(
       serviceState.getPaginatedUrlSegment(
         paginationController.pageSize,
         paginationController.nextPage,

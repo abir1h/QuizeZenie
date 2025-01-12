@@ -14,9 +14,10 @@ class ApiCredential {
   static String resetPassword = "auth/mobile/forgot-password-verify/";
   static String changePassword = "user-profile/change-password/";
   static String bookmarkList = "user-bookmarks/user/bookmarks/";
+  static String myVideoList = "file/profile/";
   static String categoryWiseVideo = "file/folder/";
   static String userProfile = "user-profile/current/";
-  static String updateProfile = "user-profile/";
+  static String updateProfile = "user-profile/current/update/";
   static String getFeedBackList = "feedback-forms/mobile/list/";
   static String getFolderList = "folder/";
 

@@ -1,7 +1,6 @@
-import 'package:co_learning_mobile_app/src/feature/bookmark/models/chapter.dart';
-
 import '../../../common/constants/common_imports.dart';
 import '../../../common/models/action_result.dart';
+import '../../../common/models/pagination_entity.dart';
 import '../../../common/network/api_service.dart';
 import '../models/video_upload_entity.dart';
 import '../models/comment_entity.dart';
@@ -105,6 +104,24 @@ mixin VideoGateway {
       );
     }).catchError((e) {
       return ActionResult<List<ChapterEntity>>.error();
+    });
+  }
+
+
+
+  static Future<ActionResult<PaginationEntity<VideoEntity>>> getVideoListWithPagination(String paginatedUrlSegment) async{
+    return Server.instance.getRequest(
+      url: "${ApiCredential.myVideoList}?$paginatedUrlSegment",
+    ).then((value){
+      return ActionResult<PaginationEntity<VideoEntity>>.fromServerResponse(
+        response: value,
+        generateData:(source)=> PaginationEntity<VideoEntity>.fromJson(
+          source: source,
+          generateItem: (x)=> VideoEntity.fromJson(x),
+        ),
+      );
+    }).catchError((e){
+      return ActionResult<PaginationEntity<VideoEntity>>.error();
     });
   }
 

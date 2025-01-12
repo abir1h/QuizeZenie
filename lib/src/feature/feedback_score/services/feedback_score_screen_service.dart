@@ -1,24 +1,29 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../common/constants/app_constant.dart';
 import '../../../common/models/action_result.dart';
 import '../../../common/models/page_service.dart';
+import '../../../common/routes/app_route_args.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../../../common/widgets/paginated_list_view.dart';
-import '../models/bookmark_entity.dart';
-import '../gateway/bookamark_gateway.dart';
+import '../gateways/feedback_score_gateway.dart';
+import '../models/feedback_score_entity.dart';
 
 abstract class _ViewModel {
   void showWarning(String message);
+  void showSuccess(String message);
+  void navigateToFeedbackScoreDetailsScreen(
+      String videoId, String feedbackScoreId);
 }
 
-mixin BookmarkListScreenService<T extends StatefulWidget> on State<T>
+mixin FeedbackScoreScreenService<T extends StatefulWidget> on State<T>
     implements _ViewModel {
   late _ViewModel _view;
-  int categoryId = -1;
 
-  ///Service configurations
+  late FeedbackScoreArgs screenArgs;
+
   @override
   void initState() {
     _view = this;
@@ -31,24 +36,23 @@ mixin BookmarkListScreenService<T extends StatefulWidget> on State<T>
     super.dispose();
   }
 
-  //====================Stream Controller=====================
-
   late ServiceState serviceState = ServiceState();
-  PaginatedListViewController<BookmarkEntity> paginationController =
+  PaginatedListViewController<FeedbackScoreEntity> paginationController =
       PaginatedListViewController();
 
-  final AppStreamController<PaginatedListViewController<BookmarkEntity>>
-      bookmarkStreamController = AppStreamController();
+  final AppStreamController<PaginatedListViewController<FeedbackScoreEntity>>
+      feedbackScoreStreamController = AppStreamController();
 
   ///Load enrolled course list
 
-  void loadInitialData() {
+  void loadInitialData(String videoId) {
     ///Loading state
     if (!mounted) return;
     paginationController.clear();
-    bookmarkStreamController.add(LoadingState());
-    BookmarkGateway.getBookmarkListWithPagination(
-      serviceState.getPaginatedUrlSegment(paginationController.pageSize, 1),
+    feedbackScoreStreamController.add(LoadingState());
+    FeedbackScoreGateway.getFeedbackScoreListWithPagination(
+      serviceState.getPaginatedUrlSegmentForFeedback(
+          videoId, paginationController.pageSize, 1),
     ).then((value) {
       if (!mounted) return;
 
@@ -56,12 +60,13 @@ mixin BookmarkListScreenService<T extends StatefulWidget> on State<T>
       if (value.status == Status.success && value.data!.total > 0) {
         paginationController.setTotalItemCount(value.data!.total);
         paginationController.addItems(value.data!.records);
-        bookmarkStreamController.add(DataLoadedState(paginationController));
+        feedbackScoreStreamController
+            .add(DataLoadedState(paginationController));
       }
 
       ///Empty state
       else if (value.status == Status.success && value.data!.total <= 0) {
-        bookmarkStreamController
+        feedbackScoreStreamController
             .add(EmptyState(message: "No video bookmarked"));
       }
 
@@ -71,7 +76,7 @@ mixin BookmarkListScreenService<T extends StatefulWidget> on State<T>
         _view.showWarning(value.message);
         Future.delayed(Duration(seconds: AppConstant.reloadInSeconds))
             .then((value) {
-          if (mounted) loadInitialData();
+          if (mounted) loadInitialData(videoId);
         });
       }
     });
@@ -81,8 +86,9 @@ mixin BookmarkListScreenService<T extends StatefulWidget> on State<T>
 
   Future<bool> _onLoadMoreItems(int nextPage) async {
     Completer<bool> _completer = Completer();
-    BookmarkGateway.getBookmarkListWithPagination(
-      serviceState.getPaginatedUrlSegment(
+    FeedbackScoreGateway.getFeedbackScoreListWithPagination(
+      serviceState.getPaginatedUrlSegmentForFeedback(
+        screenArgs.videoId,
         paginationController.pageSize,
         paginationController.nextPage,
       ),
@@ -105,5 +111,9 @@ mixin BookmarkListScreenService<T extends StatefulWidget> on State<T>
     });
 
     return _completer.future;
+  }
+
+  void onTapScoreDetails(String videoId, String feedbackScoreId) {
+    _view.navigateToFeedbackScoreDetailsScreen(videoId, feedbackScoreId);
   }
 }

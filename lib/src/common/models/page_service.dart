@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/folder_entity.dart';
+
 class ServiceState {
   String searchTerm = "";
+  FolderEntity? selectedCategoryId=FolderEntity.empty() ;
   bool mostViewed =false;
   bool mostRecent =false;
   bool mostFeedbacks =false;
@@ -39,5 +42,13 @@ class ServiceState {
 
 
   String getSearchPaginatedUrlSegment(int pageSize, int pageNumber) =>
+      "?size=$pageSize&pageNumber=$pageNumber&${searchTerm.isNotEmpty ? "title=$searchTerm&" : ""}most_viewed=$mostViewed&most_recent=$mostRecent&most_feedbacks=$mostFeedbacks${selectedCategoryId!.name!=""?"&category=${selectedCategoryId!.id}":""}";
       "?size=$pageSize&pageNumber=$pageNumber&${searchTerm.isNotEmpty ? "title=$searchTerm&" : ""}most_viewed=$mostViewed&most_recent=$mostRecent&most_feedbacks=$mostFeedbacks";
+
+  String getPaginatedUrlSegmentForFeedback(
+    String videoId,
+    int pageSize,
+    int pageNumber,
+  ) =>
+      "$videoId/?page=$pageNumber&page_size=$pageSize";
 }

@@ -7,6 +7,7 @@ import '../../../common/routes/app_route_args.dart';
 import '../../../common/utility/app_label.dart';
 import '../../../common/widgets/app_scaffold.dart';
 import '../services/give_feedback_score_service.dart';
+import '../widgets/give_score_category_widget.dart';
 import '../widgets/score_category_widget.dart';
 import '../../../common/widgets/custom_toasty.dart';
 
@@ -158,7 +159,7 @@ class _GiveFeedbackScoreScreenState extends State<GiveFeedbackScoreScreen>
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   final item = screenArgs.feedback.formCategories[index];
-                  return ScoreCategoryWidget(
+                  return GiveScoreCategoryWidget(
                     categoryTitle: item.category.name,
                     index: index + 1,
                     items: item.formCategoryTypes,

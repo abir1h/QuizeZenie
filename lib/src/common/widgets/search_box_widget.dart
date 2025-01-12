@@ -44,7 +44,8 @@ class _SearchBoxWidgetState extends State<SearchBoxWidget> with AppTheme {
     _textEditingController.dispose();
     super.dispose();
   }
-  ServiceState serviceState=ServiceState();
+
+  ServiceState serviceState = ServiceState();
 
   @override
   Widget build(BuildContext context) {
@@ -130,39 +131,78 @@ class _SearchBoxWidgetState extends State<SearchBoxWidget> with AppTheme {
                 color: Colors.red,
               ),
             ),
-
           GestureDetector(
-            onTap: (){
+            onTap: () {
               showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  isDismissible: false,
-                  builder: (BuildContext context) {
-                return FilterBottomsheet(
-                  context: context,serviceState: widget.serviceState,
-                );
-              },).then((v){
-              setState(() {
-                widget.serviceState.mostRecent=v.mostRecent;
-                widget.serviceState.mostFeedbacks=v.mostFeedbacks;
-                widget.serviceState.mostViewed=v.mostViewed;
-              });
-
-
+                context: context,
+                isScrollControlled: true,
+                isDismissible: false,
+                builder: (BuildContext context) {
+                  return FilterBottomsheet(
+                    context: context,
+                    serviceState: widget.serviceState,
+                  );
+                },
+              ).then((v) {
+                setState(() {
+                  widget.serviceState.mostRecent = v.mostRecent;
+                  widget.serviceState.mostFeedbacks = v.mostFeedbacks;
+                  widget.serviceState.mostViewed = v.mostViewed;
+                  widget.onSearchTermChange.call(_textEditingController.text);
+                });
               });
             },
             child: Row(
               children: [
                 size.s10.kWidth,
-                SvgPicture.asset(ImageAssets.pageInfo,height: size.s16,),              size.s4.kWidth,
-
-                Text(label(e: "Filter", b: "តម្រង"),style: TextStyle(fontWeight: FontWeight.w400,fontSize: size.textXSmall,color: clr.textGrayColor),)
+                SvgPicture.asset(
+                  ImageAssets.pageInfo,
+                  height: size.s16,
+                  color: countTrueConditions() == 0
+                      ? clr.textGrayColor
+                      : clr.appPrimaryColor,
+                ),
+                size.s4.kWidth,
+                Text(
+                  label(e: "Filter ", b: "តម្រង "),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: size.textXSmall,
+                    color: countTrueConditions() == 0
+                        ? clr.textGrayColor
+                        : clr.appPrimaryColor,
+                  ),
+                ),
+                Text(
+                  countTrueConditions() == 0
+                      ? ""
+                      : "(${countTrueConditions().toString()})",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: size.textXSmall,
+                    color: countTrueConditions() == 0
+                        ? clr.textGrayColor
+                        : clr.appPrimaryColor,
+                  ),
+                )
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  int countTrueConditions() {
+    int count = 0;
+
+    // Check each condition and increment the count if true
+    if (widget.serviceState.selectedCategoryId!.name!="") count++;
+    if (widget.serviceState.mostViewed) count++;
+    if (widget.serviceState.mostFeedbacks) count++;
+    if (widget.serviceState.mostRecent) count++;
+
+    return count;
   }
 
   void _onTextChange(String value) {

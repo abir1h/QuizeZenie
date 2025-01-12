@@ -1,11 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:co_learning_mobile_app/src/common/widgets/custom_toasty.dart';
+import 'package:co_learning_mobile_app/src/feature/video/models/video_entity.dart';
 import 'package:co_learning_mobile_app/src/feature/video/widgets/video_tab_section_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/constants/app_theme.dart';
+import '../../../common/constants/common_imports.dart';
 import '../../../common/widgets/app_scaffold.dart';
+import '../../../common/widgets/app_stream.dart';
 import '../../../common/widgets/circular_loader.dart';
+import '../../../common/widgets/paginated_list_view.dart';
+import '../../bookmark/models/bookmark_entity.dart';
+import '../../bookmark/screens/bookmark_screen.dart';
+import '../../profile/widgets/select_laguage_bottomshet.dart';
+import '../services/my_video_screen_service.dart';
+import '../widgets/more_bottomsheet.dart';
 
 class MyVideoScreen extends StatefulWidget {
   const MyVideoScreen({super.key});
@@ -14,8 +24,16 @@ class MyVideoScreen extends StatefulWidget {
   State<MyVideoScreen> createState() => _MyVideoScreenState();
 }
 
-class _MyVideoScreenState extends State<MyVideoScreen> with AppTheme {
+class _MyVideoScreenState extends State<MyVideoScreen>
+    with AppTheme, MyVideoListScreenService {
   final GlobalKey _bodyKey = GlobalKey();
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      loadInitialData();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,33 +45,13 @@ class _MyVideoScreenState extends State<MyVideoScreen> with AppTheme {
           onTabChange: (v) {},
           builder: (context, index) {
             switch (index) {
-              ///Instruction
+              ///All
               case 0:
-                return Expanded(
-                  child: VideoItemSectionWidget(
-                    items: const ["", "", "", ""],
-                    buildItem: (BuildContext context, int index, item) =>
-                        VideoItemWidget(),
-                  ),
-                );
-
-              ///StudentWork
+                return videoList((item) => true);
               case 1:
-                 return Expanded(
-                   child: VideoItemSectionWidget(
-                    items: const ["", "", "", ""],
-                    buildItem: (BuildContext context, int index, item) =>
-                        VideoItemWidget(),
-                                   ),
-                 );
+                return videoList((item) => !item.isPublished);
               case 2:
-                return Expanded(
-                  child: VideoItemSectionWidget(
-                    items: const ["", "", "", ""],
-                    buildItem: (BuildContext context, int index, item) =>
-                        VideoItemWidget(),
-                  ),
-                );
+                return videoList((item) => item.isPublished);
 
               ///Loading state
               default:
@@ -62,6 +60,44 @@ class _MyVideoScreenState extends State<MyVideoScreen> with AppTheme {
           },
         );
       }),
+    );
+  }
+
+  @override
+  void showWarning(String message) {
+    Toasty.of(context).showWarning(message);
+  }
+
+  Widget videoList(bool Function(VideoEntity) filterCondition) {
+    return Expanded(
+      child: AppStreamBuilder<PaginatedListViewController<VideoEntity>>(
+        stream: videoStreamController.stream,
+        loadingBuilder: (context) => const Center(child: CircularLoader()),
+        dataBuilder: (context, data) {
+          return PaginatedListView<VideoEntity>(
+            controller: paginationController,
+            padding:
+                EdgeInsets.symmetric(vertical: size.s16, horizontal: size.s12),
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, item, index) {
+              return filterCondition(item)
+                  ? VideoItemWidget(data: item)
+                  : Offstage();
+            },
+            separatorBuilder: (context) => SizedBox(height: size.s12),
+            loaderBuilder: (context) => Padding(
+              padding: EdgeInsets.all(size.s4),
+              child: const Center(child: CircularLoader()),
+            ),
+          );
+        },
+        emptyBuilder: (context, message, icon) {
+          return EmptyStateWidget(
+            message: message,
+            icon: ImageAssets.videoIcon,
+          );
+        },
+      ),
     );
   }
 }
@@ -102,7 +138,7 @@ class VideoItemSectionWidget<T> extends StatelessWidget with AppTheme {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(top: size.s12),
+      padding: EdgeInsets.only(top: size.s12),
       child: ListView.separated(
         itemCount: items.length,
         physics: const BouncingScrollPhysics(),
@@ -119,7 +155,8 @@ class VideoItemSectionWidget<T> extends StatelessWidget with AppTheme {
 }
 
 class VideoItemWidget extends StatelessWidget with AppTheme {
-  const VideoItemWidget({super.key});
+  final VideoEntity data;
+  const VideoItemWidget({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -135,8 +172,7 @@ class VideoItemWidget extends StatelessWidget with AppTheme {
                 height: size.s20 * 4,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                imageUrl:
-                    "https://plus.unsplash.com/premium_photo-1676478746990-4ef5c8ef234a?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Zmxvd2VyfGVufDB8fDB8fHww",
+                imageUrl: data.thumbnailUrl,
                 placeholder: (context, url) => const Center(
                     child: CircularProgressIndicator()), // Placeholder widget
                 errorWidget: (context, url, error) =>
@@ -151,7 +187,7 @@ class VideoItemWidget extends StatelessWidget with AppTheme {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Video Name  ",
+                data.title,
                 style: TextStyle(
                   color: clr.videoTitleColor,
                   fontSize: size.textSmall,
@@ -160,7 +196,9 @@ class VideoItemWidget extends StatelessWidget with AppTheme {
               ),
               SizedBox(height: size.s8),
               Text(
-                "Chapter name",
+                data.chapters.isNotEmpty
+                    ? data.chapters.map((chapter) => chapter.title).join(', ')
+                    : "No chapter",
                 style: TextStyle(
                   color: clr.textGrayColor,
                   fontSize: size.textXSmall,
@@ -170,10 +208,22 @@ class VideoItemWidget extends StatelessWidget with AppTheme {
             ],
           ),
         ),
-        Icon(
-          Icons.more_vert,
-          size: size.s20,
-          color: clr.videoTitleColor,
+        GestureDetector(onTap: (){
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (BuildContext context) {
+              return MoreBottomSheet(
+                context: context,
+              );
+            },
+          );
+        },
+          child: Icon(
+            Icons.more_vert,
+            size: size.s20,
+            color: clr.videoTitleColor,
+          ),
         )
       ],
     );
