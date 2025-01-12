@@ -2,6 +2,7 @@ import '../../../common/constants/common_imports.dart';
 import '../../../common/models/action_result.dart';
 import '../../../common/models/pagination_entity.dart';
 import '../../../common/network/api_service.dart';
+import '../../bookmark/models/chapter.dart';
 import '../models/video_upload_entity.dart';
 import '../models/comment_entity.dart';
 import '../models/video_entity.dart';
