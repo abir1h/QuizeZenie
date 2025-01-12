@@ -26,7 +26,7 @@ mixin VideoSaveDialogWidget<T extends StatefulWidget> on State<T> {
     recordingTextEditingController.dispose();
   }
 
-  Future<String> showVideoSaveDialogWidget({required BuildContext context}) {
+  Future<String> showVideoSaveDialogWidget({required BuildContext context,required String folderName}) {
     Completer<String> completer = Completer();
     showCupertinoModalPopup(
       context: context,
@@ -121,7 +121,7 @@ mixin VideoSaveDialogWidget<T extends StatefulWidget> on State<T> {
                         children: [
                           SvgPicture.asset(ImageAssets.icPersons),
                           SizedBox(width: ThemeSize.instance.s12),
-                          Text("Team for ICC Kyoto 2024",
+                          Text(folderName,
                               style: TextStyle(
                                   color: ThemeColor.instance.textColorBlack,
                                   fontSize: ThemeSize.instance.textXSmall,

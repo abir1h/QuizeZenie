@@ -10,6 +10,7 @@ class PreviewRawVideoPlayerController {
   void Function()? _onPause;
   void Function()? _onResume;
   void Function(double playedPosition, double totalDuration)? onProgressChange;
+  void Function(Duration?  totalDuration)? totalDuration;
   double Function(double seekPosition, double totalDuration)? interceptSeekTo;
 
   void play(
@@ -102,15 +103,19 @@ class _PreviewRawVideoPlayerState extends State<PreviewRawVideoPlayer> {
     _sliderInProgress = false;
     _controlVisible = true;
     _loadingError = false;
-    if (mounted)
+    if (mounted) {
       setState(() {
         debugPrint("New file played");
       });
+    }
     if (url.isEmpty) return;
 
     _controller = VideoPlayerController.file(File(url));
     _controller?.addListener(_playerStateListener);
     _controller?.initialize().then((value) {
+      if(_controller!.value.isInitialized){
+        widget.controller.totalDuration?.call(_controller?.value.duration);
+      }
       if ((autoPlay ?? false) &&
           (_controller?.value.isInitialized ?? false) &&
           !_controller!.value.isPlaying) {

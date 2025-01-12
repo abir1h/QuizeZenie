@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/chapter.dart';
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/feedback.dart';
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/folder_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -14,18 +17,22 @@ abstract class _ViewModel {
   void navigateToBack();
   bool isPlayerFullscreen();
   void changeOrientationToPortrait();
+  void navigateToChapterCreateBottomSheet();
 }
 
 mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
     implements _ViewModel {
   late _ViewModel _view;
   double currentUploadProgress = 0.0;
+  final AppStreamController<List<ChapterEntity>> chapterStreamController =
+      AppStreamController();
 
   ///Service configurations
   @override
   void initState() {
     _view = this;
     super.initState();
+    _loadChapterList();
   }
 
   @override
@@ -38,12 +45,13 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
     playbackPausePlayStreamController.dispose();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
-
     super.dispose();
   }
 
   ///private fields
-  late String _screenArgs;
+  late String _videoPath;
+  FeedbackEntity _feedbackEntity = FeedbackEntity.empty();
+  FolderEntity _folderEntity = FolderEntity.empty();
 
   // final AppStreamController<bool> bookmarkStreamController =
   // AppStreamController();
@@ -53,9 +61,12 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
       AppStreamController();
 
   ///Load or re-load course details
-  void loadInitialData(String args) {
+  void loadInitialData(
+      String videoPath, FolderEntity folder, FeedbackEntity feedback) {
     if (!mounted) return;
-    _screenArgs = args;
+    _videoPath = videoPath;
+    _folderEntity = folder;
+    _feedbackEntity = feedback;
 
     ///Loading state
     // pageDataStreamController.add(LoadingState<ContentDetailsEntity>());
@@ -68,7 +79,7 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
     //     onContentSelect(value.data!.allContents[0]);
     //   // }
     // });
-    _onPlayVideo(args);
+    _onPlayVideo(videoPath);
   }
 
   // ///Change video playback orientation
@@ -121,6 +132,7 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
     // _isPlaybackComplete = false;
     // var videoContent = VideoContentViewModel.fromJson(content.toJson());
     playerStreamController.add(DataLoadedState<String>(content));
+    uploadVideoFile();
   }
 
   void onPlaybackProgressChanged(double playedPosition, double totalDuration) {
@@ -153,6 +165,10 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
     return seekPosition;
   }
 
+  void onTotalVideoDuration(Duration totalDuration) {
+
+  }
+
   ///HLS Player Service
   final StreamController<bool> _playerPausePlayStreamController =
       StreamController.broadcast();
@@ -178,7 +194,7 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
   Future<void> uploadVideoFile() async {
     ///TODO: Return the result here
     VideoGateway.uploadVideoFile(
-        "Demo", "2", "bf57237f-6f3b-4988-8aad-b748c93e1956", _screenArgs,
+        "Tushar Test", _feedbackEntity.id, _folderEntity.id, _videoPath,
         (progress) {
       setState(() {
         currentUploadProgress = progress;
@@ -191,6 +207,16 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
         _view.showWarning(value.message);
       }
     });
+  }
+
+  _loadChapterList() {
+    if (!mounted) return;
+    chapterStreamController
+        .add(EmptyState(message: "Chapter List is Empty !."));
+  }
+
+  onTapCreateChapter() {
+    _view.navigateToChapterCreateBottomSheet();
   }
 }
 

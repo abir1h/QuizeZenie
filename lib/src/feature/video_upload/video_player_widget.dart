@@ -12,6 +12,7 @@ class PreviewPlayerWidget extends StatefulWidget {
       double seekPosition, double totalDuration)? interceptSeekTo;
   final void Function(
       double playedPosition, double totalDuration)? onProgressChanged;
+  final void Function( Duration videoTotalDuration)? onTotalVideoDuration;
 
   const PreviewPlayerWidget({
     super.key,
@@ -19,7 +20,7 @@ class PreviewPlayerWidget extends StatefulWidget {
     required this.playbackStream,
     this.overlay,
     this.interceptSeekTo,
-    this.onProgressChanged,
+    this.onProgressChanged, this.onTotalVideoDuration,
   });
 
   @override
@@ -35,6 +36,7 @@ class _PreviewPlayerWidgetState extends State<PreviewPlayerWidget> {
 
   @override
   void initState() {
+    _playerController.totalDuration=_totalVideoDuration;
     _playerController.interceptSeekTo = _interceptSeekTo;
     _playerController.onProgressChange = _onProgressChanged;
     _subscription = widget.playerStream.listen(_onPlayVideo);
@@ -81,6 +83,9 @@ class _PreviewPlayerWidgetState extends State<PreviewPlayerWidget> {
   void _onProgressChanged(double playedPosition, double totalDuration) {
     widget.onProgressChanged
         ?.call( playedPosition, totalDuration);
+  }
+  void _totalVideoDuration(Duration? duration){
+    widget.onTotalVideoDuration?.call(duration!);
   }
 
   @override

@@ -371,6 +371,7 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
   void showVideoSaveDialog(File file) {
     showVideoSaveDialogWidget(
       context: context,
+      folderName: selectedFolderEntity.name
     ).then((value) {
       if (value.isNotEmpty) {
         File videoFile = renameVideoFile(value.trim(), file);
@@ -378,7 +379,7 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => VideoUploadScreen(videoAssets: videoFile)),
+              builder: (context) => VideoUploadScreen(videoAssets: videoFile,folder: selectedFolderEntity,feedback: selectedFeedbackEntity,)),
         );
       }
     });

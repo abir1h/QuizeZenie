@@ -1,3 +1,5 @@
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/chapter.dart';
+
 import '../../../common/constants/common_imports.dart';
 import '../../../common/models/action_result.dart';
 import '../../../common/network/api_service.dart';
@@ -8,13 +10,13 @@ import '../models/video_entity.dart';
 mixin VideoGateway {
   static Future<ActionResult<VideoUploadEntity>> uploadVideoFile(
       String title,
-      String feedbackId,
+      int feedbackId,
       String folderId,
       String filePath,
       Function(double progress) onProgress) async {
     Map<String, String> data = {
       "title": title,
-      "feedback_id": feedbackId,
+      "feedback_id": feedbackId.toString(),
       "folder_id": folderId,
     };
     return Server.instance
@@ -87,4 +89,23 @@ mixin VideoGateway {
       return ActionResult<CommentEntity>.error();
     });
   }
+  static Future<ActionResult<List<ChapterEntity>>> chapterCreateAction(
+      String title, String videoId, int time) async {
+    return Server.instance.postRequest(
+      url: ApiCredential.createChapter,
+      postData: {
+        "title": title,
+        "video_id": videoId,
+        "start_time": time,
+      },
+    ).then((value) {
+      return ActionResult<List<ChapterEntity>>.fromServerResponse(
+        response: value,
+        generateData: (x) => ChapterEntity.listFromJson(x),
+      );
+    }).catchError((e) {
+      return ActionResult<List<ChapterEntity>>.error();
+    });
+  }
+
 }

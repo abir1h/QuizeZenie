@@ -62,36 +62,78 @@ class _ExamInstructionBottomSheetState extends State<FeedBackDetailsBottomSheet>
                       SizedBox(
                         height: size.s24,
                       ),
+                      Text(widget.data.name),
+                      SizedBox(
+                        height: size.s24,
+                      ),
 
                       /// Result Details
-                      Flexible(
-                        child: AppScrollView(
-                          padding: EdgeInsets.only(bottom: size.s16),
-                          child: Column(
-                            children: [
-                              GoodImprovementSectionTab(
-                                key: _bodyKey,
-                                builder: (context, index) {
-                                  switch (index) {
-                                    case 0:
-                                      return Container(
-                                        child: Text("good"),
-                                      );
-
-                                    case 1:
-                                      return Container(
-                                        child: Text("improvment"),
-                                      );
-
-                                    ///Loading state
-                                    default:
-                                      return Container();
-                                  }
+                      GoodImprovementSectionTab(
+                        key: _bodyKey,
+                        builder: (context, index) {
+                          switch (index) {
+                            case 0:
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: widget.data.formCategories.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(widget.data.formCategories[index]
+                                          .category.name),
+                                      Wrap(
+                                        direction: Axis.horizontal,
+                                        children: widget
+                                            .data
+                                            .formCategories[index]
+                                            .formCategoryTypes
+                                            .map((i) => i.type.choice
+                                                        ?.toLowerCase() ==
+                                                    "good"
+                                                ? Container(
+                                                    margin: EdgeInsets.only(
+                                                        right: size.s4),
+                                                    color: clr.grayColor,
+                                                    child: Text(i.type.name))
+                                                : const Offstage())
+                                            .toList(),
+                                      )
+                                    ],
+                                  );
                                 },
-                              ),
-                            ],
-                          ),
-                        ),
+                              );
+
+                            case 1:
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(widget.data.formCategories[index]
+                                      .category.name),
+                                  Wrap(
+                                    direction: Axis.horizontal,
+                                    children: widget.data.formCategories[index]
+                                        .formCategoryTypes
+                                        .map((i) =>
+                                            i.type.choice?.toLowerCase() ==
+                                                    "improvement"
+                                                ? Container(
+                                                    margin: EdgeInsets.only(
+                                                        right: size.s4),
+                                                    color: clr.grayColor,
+                                                    child: Text(i.type.name))
+                                                : const Offstage())
+                                        .toList(),
+                                  )
+                                ],
+                              );
+
+                            ///Loading state
+                            default:
+                              return Container();
+                          }
+                        },
                       ),
                     ])))));
   }

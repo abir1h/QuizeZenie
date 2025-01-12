@@ -1,6 +1,6 @@
 import '../../home/models/home_entity.dart';
 
-class Chapter {
+class ChapterEntity {
   String id;
   String title;
   Video video;
@@ -11,7 +11,7 @@ class Chapter {
   String createdAt;
   String updatedAt;
 
-  Chapter({
+  ChapterEntity({
     required this.id,
     required this.title,
     required this.video,
@@ -22,7 +22,7 @@ class Chapter {
     required this.createdAt,
     required this.updatedAt,
   });
-  factory Chapter.empty() => Chapter(
+  factory ChapterEntity.empty() => ChapterEntity(
       id: "",
       title: "",
       video: Video.empty(),
@@ -33,7 +33,7 @@ class Chapter {
       createdAt: "",
       updatedAt: "");
 
-  factory Chapter.fromJson(Map<String, dynamic> json) => Chapter(
+  factory ChapterEntity.fromJson(Map<String, dynamic> json) => ChapterEntity(
     id: json["id"] ?? "",
     title: json["title"] ?? "",
     video: json["video"] != null
@@ -58,4 +58,8 @@ class Chapter {
     "created_at": createdAt,
     "updated_at": updatedAt,
   };
+  static List<ChapterEntity> listFromJson(List<dynamic> json){
+    return json.isNotEmpty ? List.castFrom<dynamic,ChapterEntity>(json.map((x)=> ChapterEntity.fromJson(x)).toList()):[];
+  }
+
 }

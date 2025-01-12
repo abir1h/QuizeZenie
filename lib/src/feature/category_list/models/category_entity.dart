@@ -12,7 +12,7 @@ class CategoryEntity {
   String uploadId;
   FeedbackEntity feedback;
   FolderEntity folder;
-  List<Chapter> chapters;
+  List<ChapterEntity> chapters;
   UploadedBy uploadedBy;
   String createdAt;
   String updatedAt;
@@ -51,8 +51,8 @@ class CategoryEntity {
         : FolderEntity.empty(),
     chapters: json["chapters"] == null
         ? []
-        : List<Chapter>.from(
-        json["chapters"]!.map((x) => Chapter.fromJson(x))),
+        : List<ChapterEntity>.from(
+        json["chapters"]!.map((x) => ChapterEntity.fromJson(x))),
     uploadedBy: json["uploaded_by"] != null
         ? UploadedBy.fromJson(json["uploaded_by"])
         : UploadedBy.empty(),
