@@ -147,18 +147,21 @@ class Server {
   void uploadFile(
       {required String url,
       required File file,
-       String? field='image',
+      String? field = 'image',
+      String? token,
       required void Function(ServerResponse response) onComplete}) async {
     try {
       var request =
           http.MultipartRequest("POST", Uri.parse("$host/api/v1/$url"));
       request.headers.addAll({
-        "Accept": "application/json",
-        "Authorization": "Bearer ${App.currentSession.tokens.accessToken}"
+        "Authorization": token == null
+            ? "Bearer ${App.currentSession.tokens.accessToken}"
+            : "Bearer $token"
       });
       var attachedFile = await http.MultipartFile.fromPath('$field', file.path);
       request.files.add(attachedFile);
       var response = await request.send();
+
       if (response.statusCode == 200) {
         response.stream.transform(utf8.decoder).listen((value) {
           var jsonData = jsonDecode(value);

@@ -88,6 +88,7 @@ class PaginatedListViewController<T>{
   bool _isLoading = false;
   VoidCallback? _updateStateDelegate;
   Future<bool> Function(int nextPage)? _loadMoreDelegate;
+  List<T> get items => _items;
 
   PaginatedListViewController([int pageSize = 10, double loadTriggerOffset = 150]) {
     _pageSize = pageSize;

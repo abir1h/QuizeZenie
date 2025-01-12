@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:co_learning_mobile_app/src/common/config/app.dart';
 import 'package:co_learning_mobile_app/src/common/routes/app_route_args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -166,7 +167,9 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                           width: size.s32,
                           fit: BoxFit.fill,
                           imageUrl:
-                              "https://images.unsplash.com/photo-1532264523420-881a47db012d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9",
+                          App.currentSession.user.profileUrl.isNotEmpty
+                              ? App.currentSession.user.profileUrl
+                              : "https://www.treasury.gov.ph/wp-content/uploads/2022/01/male-placeholder-image.jpeg",
                           placeholder: (context, url) =>
                               const Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) =>
@@ -350,6 +353,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                         return size.s20.kHeight;
                       },
                     ),
+
                   ],
                 ),
               ),

@@ -75,6 +75,7 @@ mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
 
   bool validateRegisterData(
       String username, String email, String password, bool checkTermCondition) {
+
     if (Validator.isEmpty(username)) {
       _view.showWarning("Name is required!");
       return false;
@@ -84,6 +85,15 @@ mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
     } else if (Validator.isEmpty(password)) {
       _view.showWarning("Password is required!");
       return false;
+    } else if (password.length < 8) {
+      _view.showWarning("Password must be at least 8 characters long!");
+      return false;
+    } else if (!RegExp(r'[A-Z]').hasMatch(password)) {
+      _view.showWarning("Password must contain at least one uppercase letter!");
+      return false;
+    } else if (!RegExp(r'[0-9]').hasMatch(password)) {
+      _view.showWarning("Password must contain at least one number!");
+      return false;
     } else if (!checkTermCondition) {
       _view.showWarning("Select terms & conditions, privacy policy!");
       return false;
@@ -91,6 +101,7 @@ mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
       return true;
     }
   }
+
 
   bool validateLoginData(String email, String password) {
     if (Validator.isEmpty(email)) {

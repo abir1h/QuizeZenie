@@ -1,3 +1,4 @@
+import 'package:dotted_separator/source/separator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -24,6 +25,7 @@ class ThemeColor {
 
   Color get bgColorWhite => HexColor("F2F1F9");
   Color get cardStrokeColor => HexColor("4E4E4E");
+  Color get deleteColor => HexColor("FF725E");
 
   Color get iconColorGrey => HexColor("929292");
   Color get textColorGrey => HexColor("B0B0B0");
@@ -170,3 +172,13 @@ extension DoubleExtension on double {
         width: toDouble(),
       );
 }
+Widget get kDash => DashedLine(
+  height: 20,
+  width: double.infinity,
+  axis: Axis.horizontal,
+  color: HexColor("B6B6B6"),
+  dashSpace: 5,
+  dashWidth: 4,
+  padding: EdgeInsets.zero,
+  strokeWidth: 1,
+);

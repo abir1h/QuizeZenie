@@ -13,6 +13,9 @@ class ProfileEntity {
   String profileUrl;
   String postalCode;
   String presentAddress;
+  int totalBookmarks;
+  int totalComments;
+  int totalVideos;
 
   ProfileEntity({
     required this.id,
@@ -28,7 +31,9 @@ class ProfileEntity {
     required this.phoneNumber,
     required this.profileUrl,
     required this.postalCode,
-    required this.presentAddress,
+    required this.presentAddress,required this.totalBookmarks,
+    required this.totalComments,
+    required this.totalVideos,
   });
   factory ProfileEntity.empty() {
     return ProfileEntity(
@@ -45,7 +50,11 @@ class ProfileEntity {
         profileUrl: "",
         postalCode: "",
         presentAddress: "",
-        phoneNumber: "");
+        phoneNumber: "",
+        totalBookmarks:-1 ,
+      totalComments: -1,
+      totalVideos:-1
+    );
   }
   factory ProfileEntity.fromJson(Map<String, dynamic> json) => ProfileEntity(
         id: json["id"] ?? -1,
@@ -62,6 +71,9 @@ class ProfileEntity {
         profileUrl: json["profile_url"] ?? "",
     postalCode: json["postal_code"] ?? "",
     presentAddress: json["present_address"] ?? "",
+    totalComments:  json["total_comments"] ?? -1,
+    totalVideos:  json["total_videos"] ?? -1,
+    totalBookmarks:  json["total_bookmarks"] ?? -1,
       );
 
   Map<String, dynamic> toJson() => {
