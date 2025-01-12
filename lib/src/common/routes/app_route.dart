@@ -76,7 +76,7 @@ mixin RouteGenerator {
           case AppRoute.verifyOtpScreen:
             return VerifyOtpScreen(arguments: setting.arguments);
           case AppRoute.resetPasswordScreen:
-            return const ResetPasswordScreen();
+            return  ResetPasswordScreen(arguments: setting.arguments);
           case AppRoute.profileScreen:
             return const ProfileScreen();
           case AppRoute.accountDetailsScreen:

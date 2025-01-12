@@ -4,10 +4,11 @@ import '../../../common/constants/common_imports.dart';
 import '../../../common/utility/app_label.dart';
 import '../../../common/widgets/action_button.dart';
 import '../../../common/widgets/app_scaffold.dart';
+import '../../../common/widgets/custom_dialog_widget.dart';
 import '../../../common/widgets/custom_toasty.dart';
 import '../../profile/services/profile_screen_service.dart';
 import '../../profile/screens/account_details.dart';
-import '../services/chagne_password_screen_service.dart';
+import '../services/change_password_screen_service.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -96,8 +97,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     title: label(e: en.updateText, b: bn.updateText),
                     radius: size.s8,
                     textColor: clr.whiteColor,
-
-                    tapAction: () => throw UnimplementedError(),
+                    buttonColor:  clr.appPrimaryColor,
+                    onCheck: () => validateResetPasswordData(
+                        currentPasswordController.text,
+                        newPasswordController.text,
+                        confirmPasswordController.text),
+                    tapAction: () => changePassword(),
                     onSuccess: (success) {},
                   ),
                 ))
@@ -114,4 +119,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
   }
+
+  @override
+  void showAlertDialog() {
+     }
 }

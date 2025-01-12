@@ -33,6 +33,7 @@ mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
   TextEditingController confirmPasswordController = TextEditingController();
 
   VerifyOtpScreenArgs? verifyOtpScreenArgs;
+  ResetPasswordScreenArgs? resetPasswordScreenArgs;
 
   ///Service configurations
   @override
@@ -168,5 +169,44 @@ mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
       }
       return value;
     });
+  }
+
+  Future<ActionResult<UserSession>> forgotPasswordRequest() async {
+    return UserAuthenticationGateway.forgotPasswordAction(
+            phoneOrEmailController.text)
+        .then((value) {
+      if (value.status != Status.success) {
+        _view.showWarning(value.message);
+      }
+      return value;
+    });
+  }
+
+  Future<ActionResult<UserSession>> resetPassword(String userId) async {
+    return UserAuthenticationGateway.resetPasswordAction(
+            userId,
+            resetPasswordScreenArgs!.authDataModel!.user.otpId,
+            passwordController.text.trim(),
+            confirmPasswordController.text.trim())
+        .then((value) {
+      if (value.status != Status.success) {
+        _view.showWarning(value.message);
+      }
+      return value;
+    });
+  }
+
+  bool validateResetPasswordData(String newPassword, String confirmPassword) {
+    if (Validator.isEmpty(newPassword)) {
+      _view.showWarning("Enter your new password");
+      return false;
+    } else if (Validator.isEmpty(confirmPassword)) {
+      _view.showWarning("Enter confirm password");
+      return false;
+    } else if (newPassword != confirmPassword) {
+      _view.showWarning("New password and confirm password do not match");
+      return false;
+    }
+    return true;
   }
 }

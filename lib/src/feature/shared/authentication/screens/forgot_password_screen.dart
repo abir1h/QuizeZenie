@@ -2,6 +2,7 @@ import 'package:co_learning_mobile_app/src/common/routes/app_route.dart';
 import 'package:co_learning_mobile_app/src/common/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../common/routes/app_route_args.dart';
 import '../../../../common/widgets/action_button.dart';
 import '../../../../common/widgets/custom_toasty.dart';
 import '../../../../common/widgets/text_field_widget.dart';
@@ -66,22 +67,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                   hintText: label(e: en.nameOrEmailText, b: bn.nameOrEmailText),
                   controller: phoneOrEmailController),
               size.s16.kHeight,
-              size.s16.kHeight,
-/*
               ActionButton<dynamic>(
                 title: label(e: en.continueText, b: bn.continueText),
                 onCheck: () => validateLoginWithPhoneOrEmailData(
                     phoneOrEmailController.text.trim()),
                 radius: size.s8,
                 textColor: clr.whiteColor,
-                tapAction: () => throw UnimplementedError(),
-                onSuccess: (success) {},
+                tapAction: () => forgotPasswordRequest(),
+                onSuccess: (success) {
+                  Navigator.of(context).pushNamed(
+                      AppRoute.verifyOtpScreen,
+                      arguments: VerifyOtpScreenArgs(authDataModel: success,isForgotPassword: true));
+                },
               ),
-*/
-              CustomButton(
-                  onTap: () =>
-                      Navigator.pushNamed(context, AppRoute.verifyOtpScreen),
-                  title: "Continue")
+
             ],
           )),
     );

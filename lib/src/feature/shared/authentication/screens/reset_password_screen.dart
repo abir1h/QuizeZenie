@@ -1,4 +1,5 @@
 import 'package:co_learning_mobile_app/src/common/routes/app_route.dart';
+import 'package:co_learning_mobile_app/src/common/routes/app_route_args.dart';
 import 'package:co_learning_mobile_app/src/common/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
@@ -12,14 +13,20 @@ import '../../../../common/widgets/app_scroll_view.dart';
 import '../services/authentication_screen_service.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key});
-
+  final Object? arguments;
+  const ResetPasswordScreen({super.key, this.arguments})
+      : assert(arguments != null && arguments is ResetPasswordScreenArgs);
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen>
     with AppTheme, Language, UserAuthenticationService {
+  @override
+  void initState() {
+    resetPasswordScreenArgs = widget.arguments as ResetPasswordScreenArgs?;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -66,7 +73,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   prefixIconHorizontalPadding: size.s8,
                   prefixIconVerticalPadding: size.s10,
                   hintText: label(e: en.passwordText, b: bn.passwordText),
-                  controller: phoneOrEmailController),
+                  controller: passwordController),
               size.s20.kHeight,
               AppTextField(
                   outlined: true,
@@ -79,21 +86,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   controller: confirmPasswordController),
               size.s16.kHeight,
               size.s16.kHeight,
-/*
               ActionButton<dynamic>(
                 title: label(e: en.continueText, b: bn.continueText),
-                onCheck: () => validateLoginWithPhoneOrEmailData(
-                    phoneOrEmailController.text.trim()),
+                onCheck: () => validateResetPasswordData(
+                    passwordController.text.trim(),confirmPasswordController.text.trim()),
                 radius: size.s8,
                 textColor: clr.whiteColor,
-                tapAction: () => throw UnimplementedError(),
-                onSuccess: (success) {},
+                tapAction: () => resetPassword(resetPasswordScreenArgs!.authDataModel!.user.id),
+                onSuccess: (success) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      AppRoute.signInScreen, (x) => false);
+                },
               ),
-*/
-              CustomButton(
-                  onTap: () =>
-                      Navigator.pushNamed(context, AppRoute.verifyOtpScreen),
-                  title: "Continue")
+
             ],
           )),
     );
