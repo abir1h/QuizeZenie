@@ -9,6 +9,8 @@ import '../../../common/routes/app_route_args.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../../bookmark/models/feedback.dart';
 import '../../bookmark/models/form_category.dart';
+import '../../feedback_score/gateways/feedback_score_gateway.dart';
+import '../../feedback_score/models/feedback_score_entity.dart';
 import '../gateways/video_gateway.dart';
 import '../models/comment_entity.dart';
 import '../models/video_entity.dart';
@@ -21,7 +23,8 @@ abstract class _ViewModel {
   void changeOrientationToPortrait();
   void navigateToGiveFeedbackScoreScreen(FeedbackEntity feedback);
   void navigateToFeedbackScoreListScreen(String videoId);
-  void navigateToFeedbackScoreDetailsScreen(String feedbackScoreId);
+  void navigateToFeedbackScoreDetailsScreen(
+      String videoId, String feedbackScoreId);
 }
 
 mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
@@ -51,6 +54,8 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
     videoDetailsStreamController.dispose();
+    commentStreamController.dispose();
+    feedbackScoreStreamController.dispose();
     super.dispose();
   }
 
@@ -68,6 +73,8 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
       AppStreamController();
   final AppStreamController<List<CommentEntity>> commentStreamController =
       AppStreamController();
+  final AppStreamController<List<FeedbackScoreEntity>>
+      feedbackScoreStreamController = AppStreamController();
 
   ///Load Video Details Data
   void loadInitialData(String videoId) {
@@ -143,6 +150,35 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
       }
       return value;
     });
+  }
+
+  ///Load Feedback Score Data
+  void loadFeedbackScoreData(String videoId) {
+    ///Loading state
+    if (!mounted) return;
+
+    feedbackScoreStreamController.add(LoadingState());
+
+    try {
+      FeedbackScoreGateway.getFeedbackScoreList(videoId).then((value) {
+        ///Data loaded state
+        if (value.status == Status.success) {
+          feedbackScoreStreamController
+              .add(DataLoadedState<List<FeedbackScoreEntity>>(value.data!));
+        }
+
+        ///Error state
+        else {
+          ///Try reloading
+          Future.delayed(Duration(seconds: AppConstant.reloadInSeconds))
+              .then((value) {
+            if (mounted) loadFeedbackScoreData(videoId);
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   ///Load or re-load course details
@@ -276,7 +312,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     _view.navigateToFeedbackScoreListScreen(videoId);
   }
 
-  void onTapScoreDetailsViewAll(String feedbackScoreId) {
-    _view.navigateToFeedbackScoreDetailsScreen(feedbackScoreId);
+  void onTapScoreDetails(String videoId, String feedbackScoreId) {
+    _view.navigateToFeedbackScoreDetailsScreen(videoId, feedbackScoreId);
   }
 }

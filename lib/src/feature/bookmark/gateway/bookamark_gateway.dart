@@ -4,25 +4,23 @@ import '../../../common/models/action_result.dart';
 import '../../../common/models/pagination_entity.dart';
 import '../../../common/network/api_service.dart';
 
-mixin BookmarkGateway{
-
-
-
-  static Future<ActionResult<PaginationEntity<BookmarkEntity>>> getBookmarkListWithPagination(String paginatedUrlSegment) async{
-    return Server.instance.getRequest(
+mixin BookmarkGateway {
+  static Future<ActionResult<PaginationEntity<BookmarkEntity>>>
+      getBookmarkListWithPagination(String paginatedUrlSegment) async {
+    return Server.instance
+        .getRequest(
       url: "${ApiCredential.bookmarkList}?$paginatedUrlSegment",
-    ).then((value){
+    )
+        .then((value) {
       return ActionResult<PaginationEntity<BookmarkEntity>>.fromServerResponse(
         response: value,
-        generateData:(source)=> PaginationEntity<BookmarkEntity>.fromJson(
+        generateData: (source) => PaginationEntity<BookmarkEntity>.fromJson(
           source: source,
-          generateItem: (x)=> BookmarkEntity.fromJson(x),
+          generateItem: (x) => BookmarkEntity.fromJson(x),
         ),
       );
-    }).catchError((e){
+    }).catchError((e) {
       return ActionResult<PaginationEntity<BookmarkEntity>>.error();
     });
   }
-
-
 }

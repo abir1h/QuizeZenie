@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import '../../../common/constants/common_imports.dart';
 import '../../../common/widgets/custom_toasty.dart';
-import '../models/feedback_score_details_entity.dart';
+import '../../bookmark/models/form_category_type.dart';
 
-class ScoreCategoryWidget<T> extends StatefulWidget {
+class GiveScoreCategoryWidget<T> extends StatefulWidget {
   final String categoryTitle;
   final int index;
-  final List<ScoreType> items;
+  final List<FormCategoryType> items;
   // final int status;
   // final List<CourseOutlineContentEntity> items;
   // final Outline data;
   // final ValueChanged<int> onTapQuizItem, onTapScriptItem, onTapVideoItem;
-  const ScoreCategoryWidget({
+  const GiveScoreCategoryWidget({
     super.key,
     required this.categoryTitle,
     required this.index,
@@ -24,10 +24,10 @@ class ScoreCategoryWidget<T> extends StatefulWidget {
   });
 
   @override
-  State<ScoreCategoryWidget<T>> createState() => _ScoreCategoryWidgetState<T>();
+  State<GiveScoreCategoryWidget<T>> createState() => _GiveScoreCategoryWidgetState<T>();
 }
 
-class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
+class _GiveScoreCategoryWidgetState<T> extends State<GiveScoreCategoryWidget<T>>
     with AppTheme {
   bool _isExpanded = false;
 
@@ -113,7 +113,7 @@ class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            item.typeName,
+                            item.type.name,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: size.textXSmall,

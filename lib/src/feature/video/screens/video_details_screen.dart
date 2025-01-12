@@ -12,6 +12,7 @@ import '../../../common/widgets/app_stream.dart';
 import '../../../common/widgets/circular_loader.dart';
 import '../../bookmark/models/feedback.dart';
 import '../../bookmark/models/form_category.dart';
+import '../../feedback_score/models/feedback_score_entity.dart';
 import '../../feedback_score/screens/feedback_score_screen.dart';
 import '../models/video_entity.dart';
 import '../services/video_details_screen_service.dart';
@@ -49,6 +50,7 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       loadInitialData(screenArgs.videoId);
       loadCommentData(screenArgs.videoId);
+      loadFeedbackScoreData(screenArgs.videoId);
     });
     super.initState();
   }
@@ -68,334 +70,376 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
             );
           },
           dataBuilder: (context, data) {
-            return Stack(
-              fit: StackFit.expand,
+            return Column(
               children: [
-                SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // PreviewPlayerWidget(
-                      //   playerStream: playerStreamController.stream,
-                      //   playbackStream: playbackPausePlayStreamController.stream,
-                      //   onProgressChanged: onPlaybackProgressChanged,
-                      //   interceptSeekTo: onInterceptPlaybackSeekToPosition,
-                      //   // overlay: GestureDetector(
-                      //   //   onTap: onGoBack,
-                      //   //   child: const BackButtonWidget(),
-                      //   // ),
-                      // ),
-                      Stack(
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 16 / 9,
-                            child: Container(
-                              color: Colors.black,
-                              height: double.infinity,
-                              width: double.infinity,
-                            ),
-                          ),
-                          Positioned(
-                            left: size.s16,
-                            top: MediaQuery.of(context).padding.top + size.s2,
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Icon(
-                                Icons.arrow_back,
-                                color: clr.whiteColor,
-                                size: size.s24,
-                              ),
-                            ),
-                          )
-                        ],
+                ///Video Player Section
+                Stack(
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Container(
+                        color: Colors.black,
+                        height: double.infinity,
+                        width: double.infinity,
                       ),
-                      SizedBox(height: size.s12),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: size.s16),
-                        child: Text(
-                          data.title,
-                          style: TextStyle(
-                              color: clr.textColorGrey2,
-                              fontSize: size.textSmall,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "Poppins"),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                    ),
+                    Positioned(
+                      left: size.s16,
+                      top: MediaQuery.of(context).padding.top + size.s2,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: clr.whiteColor,
+                          size: size.s24,
                         ),
                       ),
-                      SizedBox(height: size.s8),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: size.s16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.visibility,
-                              size: size.s12,
-                              color: clr.iconColorGrey,
-                            ),
-                            SizedBox(width: size.s4),
-                            Text(
-                              data.title,
-                              style: TextStyle(
-                                  color: clr.iconColorGrey,
-                                  fontSize: size.textXXXSmall,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Poppins"),
-                            ),
-                            SizedBox(width: size.s8),
-                            Icon(
-                              Icons.access_time_filled,
-                              size: size.s12,
-                              color: clr.iconColorGrey,
-                            ),
-                            SizedBox(width: size.s4),
-                            Text(
-                              data.title,
-                              style: TextStyle(
-                                  color: clr.iconColorGrey,
-                                  fontSize: size.textXXXSmall,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Poppins"),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: size.s8),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: size.s16),
-                        child: Text(
-                          "Published by: ${data.uploadedBy.firstName} ${data.uploadedBy.lastName}",
-                          style: TextStyle(
-                              color: clr.textColorGrey2,
-                              fontSize: size.textXSmall,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: "Poppins"),
-                        ),
-                      ),
-                      SizedBox(height: size.s8),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: size.s16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(size.s8),
-                              decoration: BoxDecoration(
-                                color: clr.iconsBgColorBlue,
-                                borderRadius: BorderRadius.circular(size.s12),
-                              ),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(ImageAssets.icShare),
-                                  SizedBox(width: size.s8),
-                                  Text(
-                                    "Share",
-                                    style: TextStyle(
-                                        color: clr.greyVideoTitle,
-                                        fontSize: size.textXXSmall,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: "Poppins"),
-                                  )
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: size.s8),
-                            Container(
-                                padding: EdgeInsets.all(size.s8),
-                                decoration: BoxDecoration(
-                                  color: clr.iconsBgColorBlue,
-                                  borderRadius: BorderRadius.circular(size.s12),
+                    )
+                  ],
+                ),
+
+                ///Details section
+                if (MediaQuery.of(context).orientation == Orientation.portrait)
+                  Expanded(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // PreviewPlayerWidget(
+                              //   playerStream: playerStreamController.stream,
+                              //   playbackStream: playbackPausePlayStreamController.stream,
+                              //   onProgressChanged: onPlaybackProgressChanged,
+                              //   interceptSeekTo: onInterceptPlaybackSeekToPosition,
+                              //   // overlay: GestureDetector(
+                              //   //   onTap: onGoBack,
+                              //   //   child: const BackButtonWidget(),
+                              //   // ),
+                              // ),
+
+                              SizedBox(height: size.s12),
+                              Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: size.s16),
+                                child: Text(
+                                  data.title,
+                                  style: TextStyle(
+                                      color: clr.textColorGrey2,
+                                      fontSize: size.textSmall,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: "Poppins"),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
+                              ),
+                              SizedBox(height: size.s8),
+                              Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: size.s16),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Icon(
-                                      Icons.bookmark_outlined,
-                                      size: size.s16,
-                                      color: clr.iconsColorBlue,
+                                      Icons.visibility,
+                                      size: size.s12,
+                                      color: clr.iconColorGrey,
+                                    ),
+                                    SizedBox(width: size.s4),
+                                    Text(
+                                      data.title,
+                                      style: TextStyle(
+                                          color: clr.iconColorGrey,
+                                          fontSize: size.textXXXSmall,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: "Poppins"),
                                     ),
                                     SizedBox(width: size.s8),
+                                    Icon(
+                                      Icons.access_time_filled,
+                                      size: size.s12,
+                                      color: clr.iconColorGrey,
+                                    ),
+                                    SizedBox(width: size.s4),
                                     Text(
-                                      "Bookmark",
+                                      data.title,
                                       style: TextStyle(
-                                          color: clr.greyVideoTitle,
+                                          color: clr.iconColorGrey,
+                                          fontSize: size.textXXXSmall,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: "Poppins"),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: size.s8),
+                              Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: size.s16),
+                                child: Text(
+                                  "Published by: ${data.uploadedBy.firstName} ${data.uploadedBy.lastName}",
+                                  style: TextStyle(
+                                      color: clr.textColorGrey2,
+                                      fontSize: size.textXSmall,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: "Poppins"),
+                                ),
+                              ),
+                              SizedBox(height: size.s8),
+                              Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: size.s16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(size.s8),
+                                      decoration: BoxDecoration(
+                                        color: clr.iconsBgColorBlue,
+                                        borderRadius:
+                                            BorderRadius.circular(size.s12),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(ImageAssets.icShare),
+                                          SizedBox(width: size.s8),
+                                          Text(
+                                            "Share",
+                                            style: TextStyle(
+                                                color: clr.greyVideoTitle,
+                                                fontSize: size.textXXSmall,
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: "Poppins"),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: size.s8),
+                                    Container(
+                                        padding: EdgeInsets.all(size.s8),
+                                        decoration: BoxDecoration(
+                                          color: clr.iconsBgColorBlue,
+                                          borderRadius:
+                                              BorderRadius.circular(size.s12),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.bookmark_outlined,
+                                              size: size.s16,
+                                              color: clr.iconsColorBlue,
+                                            ),
+                                            SizedBox(width: size.s8),
+                                            Text(
+                                              "Bookmark",
+                                              style: TextStyle(
+                                                  color: clr.greyVideoTitle,
+                                                  fontSize: size.textXXSmall,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "Poppins"),
+                                            )
+                                          ],
+                                        )),
+                                    SizedBox(width: size.s8),
+                                    GestureDetector(
+                                      onTap: () =>
+                                          onTapGiveScore(data.feedback),
+                                      child: Container(
+                                          padding: EdgeInsets.all(size.s8),
+                                          decoration: BoxDecoration(
+                                            color: clr.iconsBgColorBlue,
+                                            borderRadius:
+                                                BorderRadius.circular(size.s12),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.beenhere,
+                                                size: size.s16,
+                                                color: clr.iconsColorBlue,
+                                              ),
+                                              SizedBox(width: size.s8),
+                                              Text(
+                                                "Give Score",
+                                                style: TextStyle(
+                                                    color: clr.greyVideoTitle,
+                                                    fontSize: size.textXXSmall,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Poppins"),
+                                              )
+                                            ],
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: size.s8),
+                              AppStreamBuilder<List<CommentEntity>>(
+                                stream: commentStreamController.stream,
+                                loadingBuilder: (context) {
+                                  return const Center(
+                                    child: CircularLoader(),
+                                  );
+                                },
+                                dataBuilder: (context, data2) {
+                                  return CommentItemSectionWidget(
+                                      onTapViewAll: () => onTapViewAll(data2),
+                                      items: data2,
+                                      buildItem: (BuildContext context,
+                                              int index, item) =>
+                                          CommentItemWidget(data: item));
+                                },
+                                emptyBuilder: (context, message, icon) {
+                                  return const Offstage();
+                                },
+                              ),
+                              SizedBox(height: size.s12),
+                              AppStreamBuilder<List<FeedbackScoreEntity>>(
+                                stream: feedbackScoreStreamController.stream,
+                                loadingBuilder: (context) {
+                                  return const Center(
+                                    child: CircularLoader(),
+                                  );
+                                },
+                                dataBuilder: (context, data3) {
+                                  return ScoreItemSectionWidget(
+                                      onTapViewAll: () =>
+                                          onTapScoreViewAll(data.id),
+                                      items: data3,
+                                      buildItem: (BuildContext context,
+                                              int index, item) =>
+                                          ScoreItemWidget(
+                                            data: item,
+                                            onTap: () => onTapScoreDetails(
+                                                screenArgs.videoId,
+                                                item.scoredBy.id),
+                                          ));
+                                },
+                                emptyBuilder: (context, message, icon) {
+                                  return const Offstage();
+                                },
+                              ),
+                              SizedBox(height: size.s12),
+                              Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: size.s16),
+                                child: Text(
+                                  "Speaker ratio",
+                                  style: TextStyle(
+                                      color: clr.textColorGrey2,
+                                      fontSize: size.textSmall,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: "Poppins"),
+                                ),
+                              ),
+                              SizedBox(height: size.s12),
+                              Container(
+                                width: double.infinity,
+                                margin:
+                                    EdgeInsets.symmetric(horizontal: size.s16),
+                                padding: EdgeInsets.all(size.s12),
+                                decoration: BoxDecoration(
+                                  color: clr.ratioBGColor,
+                                  borderRadius: BorderRadius.circular(size.s10),
+                                  border: Border.all(
+                                      color: clr.ratioStrokeColor,
+                                      width: size.s1),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Speaker 1: 64%",
+                                      style: TextStyle(
+                                          color: clr.textColorGrey2,
                                           fontSize: size.textXXSmall,
                                           fontWeight: FontWeight.w500,
                                           fontFamily: "Poppins"),
-                                    )
+                                    ),
+                                    SizedBox(height: size.s4),
+                                    Container(
+                                      color: clr.ratioSpeakerColor,
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                    ),
+                                    SizedBox(height: size.s8),
+                                    Text(
+                                      "Speaker 2: 36%",
+                                      style: TextStyle(
+                                          color: clr.textColorGrey2,
+                                          fontSize: size.textXXSmall,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: "Poppins"),
+                                    ),
+                                    SizedBox(height: size.s4),
+                                    Container(
+                                      color: clr.ratioSpeakerColor,
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                    ),
                                   ],
-                                )),
-                            SizedBox(width: size.s8),
-                            GestureDetector(
-                              onTap: () => onTapGiveScore(data.feedback),
-                              child: Container(
-                                  padding: EdgeInsets.all(size.s8),
-                                  decoration: BoxDecoration(
-                                    color: clr.iconsBgColorBlue,
-                                    borderRadius:
-                                        BorderRadius.circular(size.s12),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.beenhere,
-                                        size: size.s16,
-                                        color: clr.iconsColorBlue,
-                                      ),
-                                      SizedBox(width: size.s8),
-                                      Text(
-                                        "Give Score",
-                                        style: TextStyle(
-                                            color: clr.greyVideoTitle,
-                                            fontSize: size.textXXSmall,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: "Poppins"),
-                                      )
-                                    ],
-                                  )),
-                            ),
-                          ],
+                                ),
+                              ),
+                              SizedBox(height: size.s64 * 2)
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(height: size.s8),
-                      AppStreamBuilder<List<CommentEntity>>(
-                        stream: commentStreamController.stream,
-                        loadingBuilder: (context) {
-                          return const Center(
-                            child: CircularLoader(),
-                          );
-                        },
-                        dataBuilder: (context, data2) {
-                          return CommentItemSectionWidget(
-                              onTapViewAll: () => onTapViewAll(data2),
-                              items: data2,
-                              buildItem:
-                                  (BuildContext context, int index, item) =>
-                                      CommentItemWidget(data: item));
-                        },
-                        emptyBuilder: (context, message, icon) {
-                          return const Offstage();
-                        },
-                      ),
-                      SizedBox(height: size.s12),
-                      ScoreItemSectionWidget(
-                          onTapViewAll: () => onTapScoreViewAll(data.id),
-                          items: [""],
-                          buildItem: (BuildContext context, int index, item) =>
-                              ScoreItemWidget(
-                                onTap: () => onTapScoreDetailsViewAll(""),
-                              )),
-                      SizedBox(height: size.s12),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: size.s16),
-                        child: Text(
-                          "Speaker ratio",
-                          style: TextStyle(
-                              color: clr.textColorGrey2,
-                              fontSize: size.textSmall,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: "Poppins"),
-                        ),
-                      ),
-                      SizedBox(height: size.s12),
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.symmetric(horizontal: size.s16),
-                        padding: EdgeInsets.all(size.s12),
-                        decoration: BoxDecoration(
-                          color: clr.ratioBGColor,
-                          borderRadius: BorderRadius.circular(size.s10),
-                          border: Border.all(
-                              color: clr.ratioStrokeColor, width: size.s1),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(
-                              "Speaker 1: 64%",
-                              style: TextStyle(
-                                  color: clr.textColorGrey2,
-                                  fontSize: size.textXXSmall,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Poppins"),
-                            ),
-                            SizedBox(height: size.s4),
                             Container(
-                              color: clr.ratioSpeakerColor,
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                            ),
-                            SizedBox(height: size.s8),
-                            Text(
-                              "Speaker 2: 36%",
-                              style: TextStyle(
-                                  color: clr.textColorGrey2,
-                                  fontSize: size.textXXSmall,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Poppins"),
-                            ),
-                            SizedBox(height: size.s4),
-                            Container(
-                              color: clr.ratioSpeakerColor,
-                              padding: EdgeInsets.symmetric(vertical: 10),
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.s16, vertical: size.s10),
+                              decoration: BoxDecoration(
+                                color: clr.whiteColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: const Offset(0, -2),
+                                      blurRadius: size.s4,
+                                      spreadRadius: 0,
+                                      color: clr.blackColor.withOpacity(.1))
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  FeedBackWidget(
+                                    title: "Good",
+                                    image: ImageAssets.chat,
+                                    bgColor: clr.bgImprove,
+                                    textColor: clr.improveText,
+                                    onTap: () => onTapComment(
+                                        true,
+                                        data.id,
+                                        data.feedback.id.toString(),
+                                        data.feedback.formCategories),
+                                  ),
+                                  size.s16.kWidth,
+                                  FeedBackWidget(
+                                    title: "Improvement",
+                                    image: ImageAssets.chat,
+                                    bgColor: clr.bgGood,
+                                    textColor: clr.blueText,
+                                    onTap: () => onTapComment(
+                                        false,
+                                        data.id,
+                                        data.feedback.id.toString(),
+                                        data.feedback.formCategories),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
-                        ),
-                      ),
-                      SizedBox(height: size.s64 * 2)
-                    ],
-                  ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.s16, vertical: size.s10),
-                      decoration: BoxDecoration(
-                        color: clr.whiteColor,
-                        boxShadow: [
-                          BoxShadow(
-                              offset: const Offset(0, -2),
-                              blurRadius: size.s4,
-                              spreadRadius: 0,
-                              color: clr.blackColor.withOpacity(.1))
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FeedBackWidget(
-                            title: "Good",
-                            image: ImageAssets.chat,
-                            bgColor: clr.bgImprove,
-                            textColor: clr.improveText,
-                            onTap: () => onTapComment(
-                                true,
-                                data.id,
-                                data.feedback.id.toString(),
-                                data.feedback.formCategories!),
-                          ),
-                          size.s16.kWidth,
-                          FeedBackWidget(
-                            title: "Improvement",
-                            image: ImageAssets.chat,
-                            bgColor: clr.bgGood,
-                            textColor: clr.blueText,
-                            onTap: () => onTapComment(
-                                false,
-                                data.id,
-                                data.feedback.id.toString(),
-                                data.feedback.formCategories!),
-                          ),
-                        ],
-                      ),
+                        )
+                      ],
                     ),
-                  ],
-                )
+                  ),
               ],
             );
           },
@@ -494,15 +538,17 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
   }
 
   @override
-  void navigateToFeedbackScoreDetailsScreen(String feedbackScoreId) {
+  void navigateToFeedbackScoreDetailsScreen(
+      String videoId, String feedbackScoreId) {
     Navigator.of(context).pushNamed(AppRoute.feedbackScoreDetailsScreen,
-        arguments: VideoDetailsScreenArgs(videoId: feedbackScoreId));
+        arguments:
+            FeedbackScoreArgs(videoId: videoId, scoreId: feedbackScoreId));
   }
 
   @override
   void navigateToFeedbackScoreListScreen(String videoId) {
     Navigator.of(context).pushNamed(AppRoute.feedbackScoreScreen,
-        arguments: VideoDetailsScreenArgs(videoId: videoId));
+        arguments: FeedbackScoreArgs(videoId: videoId));
   }
 
   @override

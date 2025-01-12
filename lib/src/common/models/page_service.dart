@@ -2,9 +2,9 @@ import 'dart:async';
 
 class ServiceState {
   String searchTerm = "";
-  bool mostViewed =false;
-  bool mostRecent =false;
-  bool mostFeedbacks =false;
+  bool mostViewed = false;
+  bool mostRecent = false;
+  bool mostFeedbacks = false;
   int pageSize = 10;
   int pageNumber = 1;
   int totalPage = 0;
@@ -37,7 +37,13 @@ class ServiceState {
           String userId, String courseId, String courseTopicId) =>
       "?userId=$userId&courseId=$courseId&courseTopicId=$courseTopicId&size=$pageSize&pageNumber=$pageNumber";
 
-
   String getSearchPaginatedUrlSegment(int pageSize, int pageNumber) =>
       "?size=$pageSize&pageNumber=$pageNumber&${searchTerm.isNotEmpty ? "title=$searchTerm&" : ""}most_viewed=$mostViewed&most_recent=$mostRecent&most_feedbacks=$mostFeedbacks";
+
+  String getPaginatedUrlSegmentForFeedback(
+    String videoId,
+    int pageSize,
+    int pageNumber,
+  ) =>
+      "$videoId/?page=$pageNumber&page_size=$pageSize";
 }
