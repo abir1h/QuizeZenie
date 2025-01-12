@@ -106,11 +106,12 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
                               GestureDetector(
                                 onTap: onTapCreateChapter,
                                 child: Container(
-                                  margin:
-                                      EdgeInsets.symmetric(horizontal: size.s24),
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: size.s24),
                                   padding:
                                       EdgeInsets.symmetric(vertical: size.s4),
-                                  decoration: BoxDecoration(color: clr.grayColor),
+                                  decoration:
+                                      BoxDecoration(color: clr.grayColor),
                                   child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -298,12 +299,11 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
       context: context,
       builder: (BuildContext context) {
         return CreateChapterBottomSheet(
-videoId: "uguyf",
+          videoId: "uguyf",
         );
       },
     );
   }
-
 }
 
 class ChapterItemSectionWidget<T> extends StatelessWidget with AppTheme {

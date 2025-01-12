@@ -81,18 +81,20 @@ class _ExamInstructionBottomSheetState extends State<CreateChapterBottomSheet>
                     controller: TextEditingController(),
                     title: "Chapter Title",
                   ),
-
+                  SizedBox(
+                    height:24,
+                  ),
                   ///Post button
                   ActionButton<List<ChapterEntity>>(
                     title: "jgsd",
                     radius: size.s8,
                     textColor: clr.whiteColor,
-                    tapAction: () => doCrateChapter("Title 1",widget.videoId,10),
+                    tapAction: () => doCrateChapter("Title 1",widget.videoId,3),
                     onSuccess: (success) {
 
                     }),
                   SizedBox(
-                    height: MediaQuery.of(context).padding.bottom,
+                    height:65,
                   ),
                 ],
               ),
