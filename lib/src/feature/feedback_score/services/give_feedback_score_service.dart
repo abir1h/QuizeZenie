@@ -30,7 +30,7 @@ mixin GiveFeedbackScoreService<T extends StatefulWidget> on State<T>
     super.dispose();
   }
 
-  Future<ActionResult<FeedbackScoreEntity>> giveScore(
+  Future<ActionResult<List<FeedbackScoreEntity>>> giveScore(
       String videoId, FeedbackEntity feedbackEntity) async {
     return FeedbackScoreGateway.giveScore(videoId, feedbackEntity)
         .then((value) {

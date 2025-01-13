@@ -1,4 +1,5 @@
 import '../../../common/constants/common_imports.dart';
+import '../../video/models/video_entity.dart';
 import '../models/bookmark_entity.dart';
 import '../../../common/models/action_result.dart';
 import '../../../common/models/pagination_entity.dart';
@@ -21,6 +22,22 @@ mixin BookmarkGateway {
       );
     }).catchError((e) {
       return ActionResult<PaginationEntity<BookmarkEntity>>.error();
+    });
+  }
+
+  static Future<ActionResult<VideoEntity>> doBookmark(String videoId) async {
+    return Server.instance.postRequest(
+      url: ApiCredential.doBookmark,
+      postData: {
+        "bookmarked_content": videoId,
+      },
+    ).then((value) {
+      return ActionResult<VideoEntity>.fromServerResponse(
+        response: value,
+        generateData: (x) => VideoEntity.fromJson(x),
+      );
+    }).catchError((e) {
+      return ActionResult<VideoEntity>.error();
     });
   }
 }

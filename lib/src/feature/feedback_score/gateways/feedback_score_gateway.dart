@@ -58,7 +58,7 @@ mixin FeedbackScoreGateway {
     });
   }
 
-  static Future<ActionResult<FeedbackScoreEntity>> giveScore(
+  static Future<ActionResult<List<FeedbackScoreEntity>>> giveScore(
       String videoId, FeedbackEntity feedbackEntity) async {
     return Server.instance.postRequest(
       url: ApiCredential.feedbackScore,
@@ -79,12 +79,12 @@ mixin FeedbackScoreGateway {
             .toList(),
       },
     ).then((value) {
-      return ActionResult<FeedbackScoreEntity>.fromServerResponse(
+      return ActionResult<List<FeedbackScoreEntity>>.fromServerResponse(
         response: value,
-        generateData: (x) => FeedbackScoreEntity.fromJson(x),
+        generateData: (x) => FeedbackScoreEntity.listFromJson(x),
       );
     }).catchError((e) {
-      return ActionResult<FeedbackScoreEntity>.error();
+      return ActionResult<List<FeedbackScoreEntity>>.error();
     });
   }
 }
