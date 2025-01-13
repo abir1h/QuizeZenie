@@ -32,141 +32,158 @@ class _ExamInstructionBottomSheetState extends State<FeedBackDetailsBottomSheet>
                   color: clr.whiteColor,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(size.s20),
-                    topRight: Radius.circular(size.s20 ),
+                    topRight: Radius.circular(size.s20),
                   ),
                 ),
-                child: SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ///Title
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: size.s16, vertical: size.s10),
-                          child: Text(
-                            'Preview Evaluation Criteria',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              color: clr.iconColorGray,
-                              fontWeight: FontWeight.w500,
-                              fontSize: size.textXSmall,
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ///Title
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.s16, vertical: size.s10),
+                              child: Text(
+                                'Preview Evaluation Criteria',
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  color: clr.iconColorGray,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: size.textXSmall,
+                                ),
+                              ),
                             ),
+                            Divider(
+                              color: clr.dividerColorGray,
+                            ),
+                            SizedBox(
+                              height: size.s16,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: size.s16,
+                              ),
+                              child: Text(
+                                widget.data.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: size.textSmall,
+                                    color: clr.profileCardTextColor),
+                              ),
+                            ),
+                            SizedBox(
+                              height: size.s16,
+                            ),
+
+                            /// Result Details
+                            GoodImprovementSectionTab(
+                              key: _bodyKey,
+                              builder: (context, index) {
+                                switch (index) {
+                                  case 0:
+                                    return feedbackListWidget(
+                                      widget.data.formCategories,
+                                      "good",
+                                    );
+
+                                  case 1:
+                                    return feedbackListWidget(
+                                      widget.data.formCategories,
+                                      "improvement",
+                                    );
+
+                                  ///Loading state
+                                  default:
+                                    return Container();
+                                }
+                              },
+                            ),
+                            SizedBox(height: 100.h ,)
+                          ]),
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        child: Container(
+                          width:1.sw,
+                          decoration: BoxDecoration(color: clr.whiteColor),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Divider(
+                                color: clr.dividerColorGray,
+                              ),
+                              Padding(
+                                padding:  EdgeInsets.symmetric(horizontal: size.s16,vertical: size.s12),
+                                child: CustomButton(
+                                  verticalPadding: size.s8,
+                                    onTap: () => Navigator.pop(context),
+                                    title: "Ok"),
+                              )
+                            ],
                           ),
-                        ),
-                        Divider(
-                          color: clr.dividerColorGray,
-                        ),
-                        SizedBox(
-                          height: size.s16,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: size.s16,
-                          ),
-                          child: Text(
-                            widget.data.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: size.textSmall,
-                                color: clr.profileCardTextColor),
-                          ),
-                        ),
-                        SizedBox(
-                          height: size.s16,
-                        ),
-
-                        /// Result Details
-                        GoodImprovementSectionTab(
-                          key: _bodyKey,
-                          builder: (context, index) {
-                            switch (index) {
-                              case 0:
-                                return feedbackListWidget(
-                                  widget.data.formCategories,
-                                  "good",
-                                );
-
-                              case 1:
-                                return feedbackListWidget(
-                                  widget.data.formCategories,
-                                  "improvement",
-                                );
-
-                              ///Loading state
-                              default:
-                                return Container();
-                            }
-                          },
-                        ),
-                       /* Divider(
-                          color: clr.dividerColorGray,
-                        ),
-                        CustomButton(onTap: ()=>Navigator.pop(context)  , title: "Ok")*/
-
-                      ]),
+                        ))
+                  ],
                 ))));
   }
 
   Widget feedbackListWidget(
       List<FormCategory> formCategories, String filterChoice) {
-    return AspectRatio(
-      aspectRatio: 1, // Define the height for the ListView area
-      child: ListView.builder(
-        itemCount: formCategories.length,
-        padding: EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s10),
-        itemBuilder: (BuildContext context, int index) {
-          final category = formCategories[index];
+    return ListView.builder(
+      itemCount: formCategories.length,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s10),
+      itemBuilder: (BuildContext context, int index) {
+        final category = formCategories[index];
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${index + 1}. ${category.category.name}",
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: size.textXSmall,
-                    color: clr.textColorBlack),
-              ),
-              SizedBox(height: size.s10),
-              Wrap(
-                spacing: size.s10,
-                runSpacing: size.s10,
-                children: category.formCategoryTypes
-                    .where((i) => i.type.choice?.toLowerCase() == filterChoice)
-                    .map((i) => Container(
-                  width: 160.w,
-                  padding: EdgeInsets.symmetric(
-                    vertical: size.s12,
-                    horizontal: size.s16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: clr.greyBorder,
-                    borderRadius: BorderRadius.circular(size.s8),
-                  ),
-                  child: Center(
-                    child: Text(
-                      i.type.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: size.textXXSmall,
-                        color: clr.textColorBlack1,
-                      ),
-                    ),
-                  ),
-                ))
-                    .toList(),
-              ),
-              SizedBox(height: size.s10),
-            ],
-          );
-        },
-      ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "${index + 1}. ${category.category.name}",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: size.textXSmall,
+                  color: clr.textColorBlack),
+            ),
+            SizedBox(height: size.s10),
+            Wrap(
+              spacing: size.s10,
+              runSpacing: size.s10,
+              children: category.formCategoryTypes
+                  .where((i) => i.type.choice?.toLowerCase() == filterChoice)
+                  .map((i) => Container(
+                        width: 160.w,
+                        padding: EdgeInsets.symmetric(
+                          vertical: size.s12,
+                          horizontal: size.s16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: clr.greyBorder,
+                          borderRadius: BorderRadius.circular(size.s8),
+                        ),
+                        child: Center(
+                          child: Text(
+                            i.type.name,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: size.textXXSmall,
+                              color: clr.textColorBlack1,
+                            ),
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            ),
+            SizedBox(height: size.s10),
+          ],
+        );
+      },
     );
   }
-
 }
-

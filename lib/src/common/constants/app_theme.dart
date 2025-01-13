@@ -26,6 +26,9 @@ class ThemeColor {
   Color get bgColorWhite => HexColor("F2F1F9");
   Color get cardStrokeColor => HexColor("4E4E4E");
   Color get deleteColor => HexColor("FF725E");
+  Color get chapterBorder => HexColor("DBE5FF");
+  Color get chapterBackground => HexColor("EDF2FC");
+  Color get chapterTextColor => HexColor("575A61");
 
   Color get iconColorGrey => HexColor("929292");
   Color get textColorGrey => HexColor("B0B0B0");
@@ -117,6 +120,7 @@ class ThemeColor {
   Color get scoreExpandedCardTextColor => HexColor("0A0A0A");
   Color get scoreIconColor => HexColor("3E5FBD");
   Color get scoreCardColor2 => HexColor("F0F8FF");
+  Color get durationColor => HexColor("9CABC233");
 
 }
 
