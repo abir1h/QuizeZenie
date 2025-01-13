@@ -67,8 +67,8 @@ class _SelectFolderDropDownVideoRecordScreenState<T>
                       children: [
                         SvgPicture.asset(
                           widget.prefix ?? ImageAssets.folder,
-                          height: size.s24,
-                          width: size.s24,
+                          height: size.s20,
+                          width: size.s20,
                           color: clr.whiteColor,
                         ),
                         size.s4.kWidth,
