@@ -69,9 +69,10 @@ mixin FeedbackScoreGateway {
             .map((e) => {
                   "category_id": e.category.id,
                   "types": e.formCategoryTypes
+                      .where((v) => v.type.score != -1)
                       .map((v) => {
                             "type_id": v.type.id,
-                            "score": 1,
+                            "score": v.type.score,
                           })
                       .toList(),
                 })

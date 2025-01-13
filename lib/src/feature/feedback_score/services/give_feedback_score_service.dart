@@ -4,6 +4,7 @@ import '../../../common/constants/app_constant.dart';
 import '../../../common/models/action_result.dart';
 import '../../../common/routes/app_route_args.dart';
 import '../../../common/widgets/app_stream.dart';
+import '../../bookmark/models/feedback.dart';
 import '../gateways/feedback_score_gateway.dart';
 import '../models/feedback_score_entity.dart';
 
@@ -26,39 +27,22 @@ mixin GiveFeedbackScoreService<T extends StatefulWidget> on State<T>
 
   @override
   void dispose() {
-    feedbackScoreStreamController.dispose();
     super.dispose();
   }
 
-  final AppStreamController<FeedbackScoreEntity> feedbackScoreStreamController =
-      AppStreamController();
-
-  ///Load Feedback Score Data
-  // void loadFeedbackScoreData(String videoId) {
-  //   ///Loading state
-  //   if (!mounted) return;
-  //
-  //   feedbackScoreStreamController.add(LoadingState());
-  //
-  //   try {
-  //     FeedbackScoreGateway.getFeedbackScoreList(videoId).then((value) {
-  //       ///Data loaded state
-  //       if (value.status == Status.success) {
-  //         feedbackScoreStreamController
-  //             .add(DataLoadedState<FeedbackScoreEntity>(value.data!));
-  //       }
-  //
-  //       ///Error state
-  //       else {
-  //         ///Try reloading
-  //         Future.delayed(Duration(seconds: AppConstant.reloadInSeconds))
-  //             .then((value) {
-  //           if (mounted) loadFeedbackScoreData(videoId);
-  //         });
-  //       }
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  Future<ActionResult<FeedbackScoreEntity>> giveScore(
+      String videoId, FeedbackEntity feedbackEntity) async {
+    return FeedbackScoreGateway.giveScore(videoId, feedbackEntity)
+        .then((value) {
+      if (value.status != Status.success) {
+        _view.showWarning(value.message);
+      } else {
+        _view.showSuccess(value.message);
+        // setState(() {
+        //   loadCommentData(videoId);
+        // });
+      }
+      return value;
+    });
+  }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../common/constants/common_imports.dart';
 import '../../../common/routes/app_route.dart';
@@ -195,26 +196,30 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      padding: EdgeInsets.all(size.s8),
-                                      decoration: BoxDecoration(
-                                        color: clr.iconsBgColorBlue,
-                                        borderRadius:
-                                            BorderRadius.circular(size.s12),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          SvgPicture.asset(ImageAssets.icShare),
-                                          SizedBox(width: size.s8),
-                                          Text(
-                                            "Share",
-                                            style: TextStyle(
-                                                color: clr.greyVideoTitle,
-                                                fontSize: size.textXXSmall,
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: "Poppins"),
-                                          )
-                                        ],
+                                    GestureDetector(
+                                      onTap: () => Share.share(data.videoUrl),
+                                      child: Container(
+                                        padding: EdgeInsets.all(size.s8),
+                                        decoration: BoxDecoration(
+                                          color: clr.iconsBgColorBlue,
+                                          borderRadius:
+                                              BorderRadius.circular(size.s12),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                                ImageAssets.icShare),
+                                            SizedBox(width: size.s8),
+                                            Text(
+                                              "Share",
+                                              style: TextStyle(
+                                                  color: clr.greyVideoTitle,
+                                                  fontSize: size.textXXSmall,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "Poppins"),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     SizedBox(width: size.s8),
@@ -245,8 +250,8 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                         )),
                                     SizedBox(width: size.s8),
                                     GestureDetector(
-                                      onTap: () =>
-                                          onTapGiveScore(data.feedback),
+                                      onTap: () => onTapGiveScore(
+                                          data.id, data.feedback),
                                       child: Container(
                                           padding: EdgeInsets.all(size.s8),
                                           decoration: BoxDecoration(
@@ -552,9 +557,10 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
   }
 
   @override
-  void navigateToGiveFeedbackScoreScreen(FeedbackEntity feedback) {
+  void navigateToGiveFeedbackScoreScreen(
+      String videoId, FeedbackEntity feedback) {
     Navigator.of(context).pushNamed(AppRoute.giveFeedbackScoreScreen,
-        arguments: GiveScoreScreenArgs(feedback: feedback));
+        arguments: GiveScoreScreenArgs(videoId: videoId, feedback: feedback));
   }
 }
 
@@ -664,8 +670,9 @@ class CommentItemWidget extends StatelessWidget with AppTheme {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+          Wrap(
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               SvgPicture.asset(ImageAssets.icProfile),
               SizedBox(width: size.s8),
