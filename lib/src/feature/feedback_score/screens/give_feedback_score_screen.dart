@@ -5,7 +5,9 @@ import '../../../common/constants/app_theme.dart';
 import '../../../common/constants/common_imports.dart';
 import '../../../common/routes/app_route_args.dart';
 import '../../../common/utility/app_label.dart';
+import '../../../common/widgets/action_button.dart';
 import '../../../common/widgets/app_scaffold.dart';
+import '../../bookmark/models/form_category_type.dart';
 import '../services/give_feedback_score_service.dart';
 import '../widgets/give_score_category_widget.dart';
 import '../widgets/score_category_widget.dart';
@@ -31,6 +33,14 @@ class _GiveFeedbackScoreScreenState extends State<GiveFeedbackScoreScreen>
     //   loadCommentData(screenArgs.videoId);
     // });
     super.initState();
+  }
+
+  int totalSelectedScore = 0;
+
+  void updateTotalScore(int previousScore, int newScore) {
+    setState(() {
+      totalSelectedScore += newScore - previousScore;
+    });
   }
 
   @override
@@ -78,7 +88,7 @@ class _GiveFeedbackScoreScreenState extends State<GiveFeedbackScoreScreen>
                             fontFamily: "Poppins"),
                       ),
                       Text(
-                        "00",
+                        totalSelectedScore.toString(),
                         style: TextStyle(
                             color: clr.appPrimaryColor,
                             fontSize: size.textMedium,
@@ -87,7 +97,21 @@ class _GiveFeedbackScoreScreenState extends State<GiveFeedbackScoreScreen>
                       ),
                     ],
                   ),
-                )
+                ),
+                SizedBox(height: size.s12),
+                ActionButton(
+                  buttonColor: clr.appPrimaryColor,
+                  title: "Save",
+                  radius: size.s8,
+                  tapAction: () =>
+                      giveScore(screenArgs.videoId, screenArgs.feedback),
+                  onSuccess: (x) {
+                    Navigator.pop(context, x);
+                    if (mounted) {
+                      setState(() {});
+                    }
+                  },
+                ),
               ],
             ),
           ),
@@ -159,10 +183,21 @@ class _GiveFeedbackScoreScreenState extends State<GiveFeedbackScoreScreen>
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   final item = screenArgs.feedback.formCategories[index];
+
                   return GiveScoreCategoryWidget(
                     categoryTitle: item.category.name,
                     index: index + 1,
                     items: item.formCategoryTypes,
+                    onScoreSelected:
+                        (int score, FormCategoryType selectedItem) {
+                      int previousScore = selectedItem.type.score;
+
+                      // Update the total score based on the new selection
+                      updateTotalScore(previousScore, score);
+                      setState(() {
+                        selectedItem.type.score = score;
+                      });
+                    },
                   );
                 },
                 separatorBuilder: (context, index) {

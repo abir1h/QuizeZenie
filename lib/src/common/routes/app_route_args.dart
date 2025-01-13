@@ -34,9 +34,10 @@ class AccountDetailsScreenArgs {
 }
 
 class GiveScoreScreenArgs {
+  String videoId;
   FeedbackEntity feedback;
 
-  GiveScoreScreenArgs({required this.feedback});
+  GiveScoreScreenArgs({required this.videoId, required this.feedback});
 }
 
 class FeedbackScoreArgs {

@@ -133,7 +133,9 @@ class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
                                   padding:
                                       EdgeInsets.symmetric(vertical: size.s8),
                                   decoration: BoxDecoration(
-                                      color: clr.whiteColor,
+                                      color: item.score == 2
+                                          ? clr.appPrimaryColor
+                                          : clr.whiteColor,
                                       borderRadius:
                                           BorderRadius.circular(size.s4),
                                       border: Border.all(
@@ -145,7 +147,9 @@ class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
                                       Icon(
                                         Icons.circle_outlined,
                                         size: size.s16,
-                                        color: clr.toggleIconColorColor,
+                                        color: item.score == 2
+                                            ? clr.whiteColor
+                                            : clr.toggleIconColorColor,
                                       ),
                                       SizedBox(width: size.s4),
                                       Text(
@@ -153,7 +157,9 @@ class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: size.textXXSmall,
-                                            color: clr.toggleIconColorColor),
+                                            color: item.score == 2
+                                                ? clr.whiteColor
+                                                : clr.toggleIconColorColor),
                                       ),
                                     ],
                                   ),
@@ -166,7 +172,9 @@ class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
                                   padding:
                                       EdgeInsets.symmetric(vertical: size.s8),
                                   decoration: BoxDecoration(
-                                      color: clr.whiteColor,
+                                      color: item.score == 1
+                                          ? clr.appPrimaryColor
+                                          : clr.whiteColor,
                                       borderRadius:
                                           BorderRadius.circular(size.s4),
                                       border: Border.all(
@@ -178,7 +186,9 @@ class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
                                       Icon(
                                         Icons.change_history,
                                         size: size.s16,
-                                        color: clr.toggleIconColorColor,
+                                        color: item.score == 1
+                                            ? clr.whiteColor
+                                            : clr.toggleIconColorColor,
                                       ),
                                       SizedBox(width: size.s4),
                                       Text(
@@ -186,7 +196,9 @@ class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: size.textXXSmall,
-                                            color: clr.toggleIconColorColor),
+                                            color: item.score == 1
+                                                ? clr.whiteColor
+                                                : clr.toggleIconColorColor),
                                       ),
                                     ],
                                   ),
@@ -199,7 +211,9 @@ class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
                                   padding:
                                       EdgeInsets.symmetric(vertical: size.s8),
                                   decoration: BoxDecoration(
-                                      color: clr.whiteColor,
+                                      color: item.score == 0
+                                          ? clr.appPrimaryColor
+                                          : clr.whiteColor,
                                       borderRadius:
                                           BorderRadius.circular(size.s4),
                                       border: Border.all(
@@ -211,7 +225,9 @@ class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
                                       Icon(
                                         Icons.close,
                                         size: size.s16,
-                                        color: clr.toggleIconColorColor,
+                                        color: item.score == 0
+                                            ? clr.whiteColor
+                                            : clr.toggleIconColorColor,
                                       ),
                                       SizedBox(width: size.s4),
                                       Text(
@@ -219,7 +235,9 @@ class _ScoreCategoryWidgetState<T> extends State<ScoreCategoryWidget<T>>
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: size.textXXSmall,
-                                            color: clr.toggleIconColorColor),
+                                            color: item.score == 0
+                                                ? clr.whiteColor
+                                                : clr.toggleIconColorColor),
                                       ),
                                     ],
                                   ),

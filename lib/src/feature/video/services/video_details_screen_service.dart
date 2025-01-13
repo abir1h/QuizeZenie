@@ -21,7 +21,8 @@ abstract class _ViewModel {
   void navigateToBack();
   bool isPlayerFullscreen();
   void changeOrientationToPortrait();
-  void navigateToGiveFeedbackScoreScreen(FeedbackEntity feedback);
+  void navigateToGiveFeedbackScoreScreen(
+      String videoId, FeedbackEntity feedback);
   void navigateToFeedbackScoreListScreen(String videoId);
   void navigateToFeedbackScoreDetailsScreen(
       String videoId, String feedbackScoreId);
@@ -304,8 +305,8 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     print(currentPosition);
   }
 
-  void onTapGiveScore(FeedbackEntity feedback) {
-    _view.navigateToGiveFeedbackScoreScreen(feedback);
+  void onTapGiveScore(String videoId, FeedbackEntity feedback) {
+    _view.navigateToGiveFeedbackScoreScreen(videoId, feedback);
   }
 
   void onTapScoreViewAll(String videoId) {

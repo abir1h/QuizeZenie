@@ -403,7 +403,8 @@ class _CommentCreateBottomSheetState extends State<CommentCreateBottomSheet>
   }
 
   @override
-  void navigateToGiveFeedbackScoreScreen(FeedbackEntity feedback) {
+  void navigateToGiveFeedbackScoreScreen(
+      String videoId, FeedbackEntity feedback) {
     // TODO: implement navigateToGiveFeedbackScoreScreen
   }
 }

@@ -8,23 +8,18 @@ class GiveScoreCategoryWidget<T> extends StatefulWidget {
   final String categoryTitle;
   final int index;
   final List<FormCategoryType> items;
-  // final int status;
-  // final List<CourseOutlineContentEntity> items;
-  // final Outline data;
-  // final ValueChanged<int> onTapQuizItem, onTapScriptItem, onTapVideoItem;
+  final Function(int, FormCategoryType) onScoreSelected;
   const GiveScoreCategoryWidget({
     super.key,
     required this.categoryTitle,
     required this.index,
     required this.items,
-    // required this.data,
-    // required this.onTapQuizItem,
-    // required this.onTapScriptItem,
-    // required this.onTapVideoItem,
+    required this.onScoreSelected,
   });
 
   @override
-  State<GiveScoreCategoryWidget<T>> createState() => _GiveScoreCategoryWidgetState<T>();
+  State<GiveScoreCategoryWidget<T>> createState() =>
+      _GiveScoreCategoryWidgetState<T>();
 }
 
 class _GiveScoreCategoryWidgetState<T> extends State<GiveScoreCategoryWidget<T>>
@@ -128,100 +123,136 @@ class _GiveScoreCategoryWidgetState<T> extends State<GiveScoreCategoryWidget<T>>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                child: Container(
-                                  width: double.infinity,
-                                  padding:
-                                      EdgeInsets.symmetric(vertical: size.s8),
-                                  decoration: BoxDecoration(
-                                      color: clr.whiteColor,
-                                      borderRadius:
-                                          BorderRadius.circular(size.s4),
-                                      border: Border.all(
-                                          color: clr.scoreDetailsCardColor,
-                                          width: size.s1)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.circle_outlined,
-                                        size: size.s16,
-                                        color: clr.toggleIconColorColor,
-                                      ),
-                                      SizedBox(width: size.s4),
-                                      Text(
-                                        "(2 Points)",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: size.textXXSmall,
-                                            color: clr.toggleIconColorColor),
-                                      ),
-                                    ],
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // If this option is selected, update score to 2, else set score to -1
+                                    widget.onScoreSelected(
+                                      item.type.score == 2 ? -1 : 2,
+                                      item,
+                                    );
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: size.s8),
+                                    decoration: BoxDecoration(
+                                        color: item.type.score == 2
+                                            ? Colors.blue
+                                            : clr.whiteColor,
+                                        borderRadius:
+                                            BorderRadius.circular(size.s4),
+                                        border: Border.all(
+                                            color: clr.scoreDetailsCardColor,
+                                            width: size.s1)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.circle_outlined,
+                                          size: size.s16,
+                                          color: clr.toggleIconColorColor,
+                                        ),
+                                        SizedBox(width: size.s4),
+                                        Text(
+                                          "(2 Points)",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: size.textXXSmall,
+                                              color: clr.toggleIconColorColor),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                               SizedBox(width: size.s8),
                               Expanded(
-                                child: Container(
-                                  width: double.infinity,
-                                  padding:
-                                      EdgeInsets.symmetric(vertical: size.s8),
-                                  decoration: BoxDecoration(
-                                      color: clr.whiteColor,
-                                      borderRadius:
-                                          BorderRadius.circular(size.s4),
-                                      border: Border.all(
-                                          color: clr.scoreDetailsCardColor,
-                                          width: size.s1)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.change_history,
-                                        size: size.s16,
-                                        color: clr.toggleIconColorColor,
-                                      ),
-                                      SizedBox(width: size.s4),
-                                      Text(
-                                        "(1 Points)",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: size.textXXSmall,
-                                            color: clr.toggleIconColorColor),
-                                      ),
-                                    ],
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // If this option is selected, update score to 1, else set score to -1
+                                    widget.onScoreSelected(
+                                      item.type.score == 1 ? -1 : 1,
+                                      item,
+                                    );
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: size.s8),
+                                    decoration: BoxDecoration(
+                                        color: item.type.score == 1
+                                            ? Colors.blue
+                                            : clr.whiteColor,
+                                        borderRadius:
+                                            BorderRadius.circular(size.s4),
+                                        border: Border.all(
+                                            color: clr.scoreDetailsCardColor,
+                                            width: size.s1)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.change_history,
+                                          size: size.s16,
+                                          color: clr.toggleIconColorColor,
+                                        ),
+                                        SizedBox(width: size.s4),
+                                        Text(
+                                          "(1 Points)",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: size.textXXSmall,
+                                              color: clr.toggleIconColorColor),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                               SizedBox(width: size.s8),
                               Expanded(
-                                child: Container(
-                                  width: double.infinity,
-                                  padding:
-                                      EdgeInsets.symmetric(vertical: size.s8),
-                                  decoration: BoxDecoration(
-                                      color: clr.whiteColor,
-                                      borderRadius:
-                                          BorderRadius.circular(size.s4),
-                                      border: Border.all(
-                                          color: clr.scoreDetailsCardColor,
-                                          width: size.s1)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.close,
-                                        size: size.s16,
-                                        color: clr.toggleIconColorColor,
-                                      ),
-                                      SizedBox(width: size.s4),
-                                      Text(
-                                        "(0 Points)",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: size.textXXSmall,
-                                            color: clr.toggleIconColorColor),
-                                      ),
-                                    ],
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // If this option is selected, update score to 0, else set score to -1
+                                    widget.onScoreSelected(
+                                      item.type.score == 0 ? -1 : 0,
+                                      item,
+                                    );
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: size.s8),
+                                    decoration: BoxDecoration(
+                                        color: item.type.score == 0
+                                            ? Colors.blue
+                                            : clr.whiteColor,
+                                        borderRadius:
+                                            BorderRadius.circular(size.s4),
+                                        border: Border.all(
+                                            color: clr.scoreDetailsCardColor,
+                                            width: size.s1)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.close,
+                                          size: size.s16,
+                                          color: clr.toggleIconColorColor,
+                                        ),
+                                        SizedBox(width: size.s4),
+                                        Text(
+                                          "(0 Points)",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: size.textXXSmall,
+                                              color: clr.toggleIconColorColor),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
