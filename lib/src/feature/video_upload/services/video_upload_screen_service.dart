@@ -26,6 +26,7 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
   double currentUploadProgress = 0.0;
   final AppStreamController<List<ChapterEntity>> chapterStreamController =
       AppStreamController();
+   String videoId="";
 
   ///Service configurations
   @override
@@ -201,7 +202,8 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
       });
       log("Upload Progress: ${(progress * 100).toStringAsFixed(2)}%");
     }).then((value) {
-      if (value.status == Status.success) {
+      if (value.status == Status.success&&value.data!=null) {
+         videoId =value.data!.id;
         _view.showSuccess(value.message);
       } else {
         _view.showWarning(value.message);

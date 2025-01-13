@@ -295,14 +295,19 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
 
   @override
   void navigateToChapterCreateBottomSheet() {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) {
-        return CreateChapterBottomSheet(
-          videoId: "uguyf",
-        );
-      },
-    );
+    if(videoId.isNotEmpty){
+      showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          return CreateChapterBottomSheet(
+            videoId:videoId,
+          );
+        },
+      );
+    }else{
+      Toasty.of(context).showWarning("Please wait while uploading video!");
+    }
+
   }
 }
 
