@@ -76,13 +76,12 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                 ///Video Player Section
                 Stack(
                   children: [
-                    AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Container(
-                        color: Colors.black,
-                        height: double.infinity,
-                        width: double.infinity,
-                      ),
+                    PreviewPlayerWidget(
+                      playerStream: playerStreamController.stream,
+                      playbackStream: playbackPausePlayStreamController.stream,
+                      onProgressChanged: onPlaybackProgressChanged,
+                      interceptSeekTo: onInterceptPlaybackSeekToPosition,
+                      onTotalVideoDuration: (e){},
                     ),
                     Positioned(
                       left: size.s16,
