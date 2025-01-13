@@ -39,7 +39,15 @@ class _GiveFeedbackScoreScreenState extends State<GiveFeedbackScoreScreen>
 
   void updateTotalScore(int previousScore, int newScore) {
     setState(() {
-      totalSelectedScore += newScore - previousScore;
+      // Only update the total if the previous score wasn't -1 (it was selected previously)
+      if (previousScore != -1) {
+        totalSelectedScore -= previousScore; // Subtract the old score
+      }
+
+      // If the new score isn't -1, add it to the total
+      if (newScore != -1) {
+        totalSelectedScore += newScore;
+      }
     });
   }
 
