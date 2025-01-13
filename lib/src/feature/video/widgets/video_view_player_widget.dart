@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/chapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
@@ -47,11 +48,12 @@ class VideoViewRawVideoPlayer extends StatefulWidget {
   final VideoViewRawVideoPlayerController controller;
   final Widget? overlay;
   final double aspectRatio;
+  final List<ChapterEntity> chapters;
   const VideoViewRawVideoPlayer(
       {super.key,
       required this.controller,
       this.overlay,
-      this.aspectRatio = 16 / 9});
+      this.aspectRatio = 16 / 9, required this.chapters});
 
   @override
   _VideoViewRawVideoPlayerState createState() => _VideoViewRawVideoPlayerState();
@@ -110,7 +112,7 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
     }
     if (url.isEmpty) return;
 
-    _controller = VideoPlayerController.file(File(url));
+    _controller =  VideoPlayerController.network(url);
     _controller?.addListener(_playerStateListener);
     _controller?.initialize().then((value) {
       if(_controller!.value.isInitialized){
@@ -368,20 +370,20 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                         ignoring: !_controlVisible,
                         child: Stack(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16,right: 16)
-                              ,child: Align(
-                                alignment: Alignment.topRight,
-                                child: GestureDetector(
-                                  onTap: _toggleOrientation,
-                                  child: const Icon(
-                                    Icons.screen_rotation,
-                                    color: Colors.white,
-                                    size: 24,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(top: 16,right: 16)
+                            //   ,child: Align(
+                            //     alignment: Alignment.topRight,
+                            //     child: GestureDetector(
+                            //       onTap: _toggleOrientation,
+                            //       child: const Icon(
+                            //         Icons.screen_rotation,
+                            //         color: Colors.white,
+                            //         size: 24,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
 
                             ///Loading control
                             if (!(_controller?.value.isInitialized ?? false) ||
@@ -641,8 +643,7 @@ class _OrientationDetectorWidgetState extends State<OrientationDetectorWidget> {
 
       if (_mediaQuery.orientation == Orientation.portrait) {
         return AspectRatio(
-          // aspectRatio: widget.aspectRatio,
-          aspectRatio: 1,
+          aspectRatio: widget.aspectRatio,
           child: widget.child,
         );
       } else {

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:share_plus/share_plus.dart';
-
 import '../../../common/constants/common_imports.dart';
 import '../../../common/routes/app_route.dart';
 import '../../../common/routes/app_route_args.dart';
@@ -20,9 +19,7 @@ import '../services/video_details_screen_service.dart';
 import '../widgets/comment_create_bottom_sheet.dart';
 import '../widgets/comments_bottom_sheet.dart';
 import '../widgets/feed_back_widget.dart';
-import '../../../common/widgets/app_scaffold.dart';
-import '../../../common/widgets/custom_button.dart';
-import '../../video_upload/video_player_widget.dart';
+import '../widgets/video_view_video_player_widget.dart';
 
 class VideoDetailsScreen extends StatefulWidget {
   final Object? arguments;
@@ -59,7 +56,7 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      top: false,
+      top: MediaQuery.of(context).orientation == Orientation.portrait,
       bottom: true,
       child: Scaffold(
         backgroundColor: clr.whiteColor,
@@ -76,11 +73,12 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                 ///Video Player Section
                 Stack(
                   children: [
-                    PreviewPlayerWidget(
+                    VideoViewPlayerWidget(
                       playerStream: playerStreamController.stream,
                       playbackStream: playbackPausePlayStreamController.stream,
                       onProgressChanged: onPlaybackProgressChanged,
                       interceptSeekTo: onInterceptPlaybackSeekToPosition,
+                      chapters: data.chapters,
                       onTotalVideoDuration: (e){},
                     ),
                     Positioned(

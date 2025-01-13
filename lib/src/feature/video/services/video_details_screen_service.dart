@@ -65,7 +65,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
 
   // final AppStreamController<bool> bookmarkStreamController =
   // AppStreamController();
-  final AppStreamController<String> playerStreamController =
+  final AppStreamController<VideoContentViewModel> playerStreamController =
       AppStreamController();
   final AppStreamController<bool> playbackPausePlayStreamController =
       AppStreamController();
@@ -90,6 +90,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
         if (value.status == Status.success) {
           videoDetailsStreamController
               .add(DataLoadedState<VideoEntity>(value.data!));
+          _onPlayVideo(value.data!);
         }
 
         ///Error state
@@ -229,7 +230,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
   // }
 
   ///Video playback section
-  void _onPlayVideo(String content) async {
+  void _onPlayVideo(VideoEntity content) async {
     ///Debounce click
     // if(playerStreamController.value != null && (playerStreamController.value as DataLoadedState<CourseDetailsContent>).data.id == content.id) {
     //   playbackPausePlayStreamController.add(DataLoadedState<bool>(true));
@@ -249,8 +250,8 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
 
     ///Play the video
     // _isPlaybackComplete = false;
-    // var videoContent = VideoContentViewModel.fromJson(content.toJson());
-    playerStreamController.add(DataLoadedState<String>(content));
+    var videoContent = VideoContentViewModel.fromJson(content.toJson());
+    playerStreamController.add(DataLoadedState<VideoContentViewModel>(videoContent));
   }
 
   void onPlaybackProgressChanged(double playedPosition, double totalDuration) {
@@ -316,4 +317,10 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
   void onTapScoreDetails(String videoId, String feedbackScoreId) {
     _view.navigateToFeedbackScoreDetailsScreen(videoId, feedbackScoreId);
   }
+}
+
+
+class VideoContentViewModel extends VideoEntity{
+  VideoContentViewModel.fromJson(super.json) : super.fromJson();
+  VideoContentViewModel.empty() : super.empty();
 }

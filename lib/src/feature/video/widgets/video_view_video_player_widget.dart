@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/chapter.dart';
+import 'package:co_learning_mobile_app/src/feature/video/models/video_entity.dart';
+
 import '../../../common/widgets/app_stream.dart';
+import '../services/video_details_screen_service.dart';
 import 'video_view_player_widget.dart';
 import 'package:flutter/material.dart';
 
 class VideoViewPlayerWidget extends StatefulWidget {
-  final Stream<DataState<String>> playerStream;
+  final Stream<DataState<VideoContentViewModel>> playerStream;
+  final List<ChapterEntity> chapters;
   final Stream<DataState<bool>> playbackStream;
   final Widget? overlay;
 
@@ -20,7 +25,7 @@ class VideoViewPlayerWidget extends StatefulWidget {
     required this.playbackStream,
     this.overlay,
     this.interceptSeekTo,
-    this.onProgressChanged, this.onTotalVideoDuration,
+    this.onProgressChanged, this.onTotalVideoDuration, required this.chapters,
   });
 
   @override
@@ -30,8 +35,8 @@ class VideoViewPlayerWidget extends StatefulWidget {
 class _VideoViewPlayerWidgetState extends State<VideoViewPlayerWidget> {
   final VideoViewRawVideoPlayerController _playerController = VideoViewRawVideoPlayerController();
 
-  // VideoContentViewModel _currentContent = VideoContentViewModel.empty();
-  StreamSubscription<DataState<String>>? _subscription;
+  VideoContentViewModel _currentContent = VideoContentViewModel.empty();
+  StreamSubscription<DataState<VideoContentViewModel>>? _subscription;
   StreamSubscription<DataState<bool>>? _playbackSubscription;
 
   @override
@@ -52,11 +57,10 @@ class _VideoViewPlayerWidgetState extends State<VideoViewPlayerWidget> {
     super.dispose();
   }
 
-  void _onPlayVideo(DataState<String> event) {
+  void _onPlayVideo(DataState<VideoEntity> event) {
     if (!mounted) return;
-    // _currentContent = (event as DataLoadedState<String>).data;
-    _playerController.play(
-      (event as DataLoadedState<String>).data,
+    _currentContent = (event as DataLoadedState<VideoContentViewModel>).data;
+    _playerController.play(_currentContent.videoUrl,
       autoPlay: true,
       // playPosition:
       // _currentContent.video.lastStudyTime < _currentContent.video.duration
@@ -92,6 +96,8 @@ class _VideoViewPlayerWidgetState extends State<VideoViewPlayerWidget> {
   Widget build(BuildContext context) {
     return VideoViewRawVideoPlayer(
       controller: _playerController,
+      chapters: widget.chapters,
+      aspectRatio: 16/9,
       overlay: Align(alignment: Alignment.topLeft, child: widget.overlay),
     );
   }
