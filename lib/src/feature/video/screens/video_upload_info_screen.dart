@@ -348,7 +348,7 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
 
   @override
   void onNavigateVideoUploadScreen(FeedbackEntity feedback, FolderEntity folder, String videoName) {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => VideoUploadScreen(videoAssets: files![0],folder: folder,feedback: feedback, videoName: videoName,)),
