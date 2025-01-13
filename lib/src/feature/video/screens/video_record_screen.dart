@@ -107,10 +107,7 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
                             child: Column(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      left: size.s16,
-                                      right: size.s16,
-                                      bottom: size.s24),
+                                  padding: EdgeInsets.symmetric(horizontal: size.s16,vertical: size.s24),
                                   child: SelectFolderDropDownVideoRecordScreen<
                                       FolderEntity>(
                                     onLoadData: getFolderListEntityList,
@@ -131,7 +128,7 @@ class _VideoRecordScreenState extends State<VideoRecordScreen>
                               right: size.s16,
                               bottom: size.s24),
                           child:
-                              FeedBackDropDownVideoRecordScreen<FeedbackEntity>(
+                              FeedBackDropDownVideoRecordScreen<FeedbackEntity>(     
                             onLoadData: getFeedEntityList,
                             onSelected: (x) {
                               selectedFeedbackEntity = x;

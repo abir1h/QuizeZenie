@@ -68,6 +68,7 @@ class ThemeColor {
   Color get secondaryBackgroundLight => const Color(0xFFD8D8ED);
   Color get dividerColorGrey => HexColor("7E7E7E");
   Color get borderColor => HexColor("C4D8EC");
+  Color get dividerColorGray => HexColor("C1C1C1");
   Color get timeLineCircleColor => HexColor("E7FFF0");
   Color get checkColor => HexColor("42996F");
   Color get dividerColor => HexColor("E0E5EC");

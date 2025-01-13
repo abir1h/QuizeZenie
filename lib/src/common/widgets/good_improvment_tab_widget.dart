@@ -31,14 +31,17 @@ class _GoodImprovementSectionTabState extends State<GoodImprovementSectionTab> w
               child: GestureDetector(
                 onTap: () => onTabChange(e.key),
                 child: Container(
+
                   decoration: BoxDecoration(
                     // borderRadius: BorderRadius.circular(size.s4),
-                    color: e.key == _selectedIndex
-                        ? clr.amberColor
-                        : clr.grayColor,
+                    color:e.key == _selectedIndex
+                        ? (e.key == 0
+                        ? clr.improveText
+                        : clr.appPrimaryColor) // Selected background
+                        : clr.greyBorder,   
                   ),
                   padding: EdgeInsets.symmetric(
-                      horizontal: size.s8, vertical: size.s8),
+                      horizontal: size.s8, vertical: size.s10),
                   child: Center(
                     child: Text(
                       "${e.value}",
@@ -56,7 +59,7 @@ class _GoodImprovementSectionTabState extends State<GoodImprovementSectionTab> w
             ))
                 .toList(),
           ),
-          widget.builder(context, _selectedIndex)
+            widget.builder(context, _selectedIndex)
         ],
       ),
     );
