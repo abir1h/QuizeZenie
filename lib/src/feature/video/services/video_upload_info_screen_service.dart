@@ -1,14 +1,21 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:co_learning_mobile_app/src/common/widgets/custom_toasty.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get_thumbnail_video/index.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'dart:typed_data';
 
+import '../../../common/models/action_result.dart';
+import '../../bookmark/models/feedback.dart';
+import '../../bookmark/models/folder_entity.dart';
+import '../gateways/video_recorded_screen_gateway.dart';
+
 abstract class _ViewModel {
   void showWarning(String message);
   void showSuccess(String message);
+  void onNavigateVideoUploadScreen(FeedbackEntity feedback,FolderEntity folder,String videoName);
 }
 
 mixin VideoUploadInfoScreenService<T extends StatefulWidget> on State<T>
@@ -22,6 +29,9 @@ mixin VideoUploadInfoScreenService<T extends StatefulWidget> on State<T>
   ThumbnailRequest? thumbnailRequest;
   ThumbnailResult? thumbnailResult;
 
+  FeedbackEntity feedbackEntity = FeedbackEntity.empty();
+  FolderEntity folderEntity = FolderEntity.empty();
+
   /// Service configurations
   @override
   void initState() {
@@ -29,27 +39,26 @@ mixin VideoUploadInfoScreenService<T extends StatefulWidget> on State<T>
     super.initState();
   }
 
-  Future<List<FeedBack?>> loadFeedBack() async {
-    return [
-      FeedBack(id: 1, title: 'Test 1'),
-      FeedBack(id: 2, title: 'Test 2'),
-      FeedBack(id: 3, title: 'Test 3'),
-      FeedBack(id: 4, title: 'Test 4'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-      FeedBack(id: 5, title: 'Test 5'),
-    ];
+  Future<List<FeedbackEntity>> getFeedEntityList() async {
+    return VideoRecordedScreenGateway.getFeedbackList().then((value) {
+      if (value.status == Status.success) {
+        return value.data!;
+      } else {
+        _view.showWarning(value.message);
+        return [];
+      }
+    });
+  }
+
+  Future<List<FolderEntity>> getFolderListEntityList() async {
+    return VideoRecordedScreenGateway.getFolderList().then((value) {
+      if (value.status == Status.success) {
+        return value.data!;
+      } else {
+        _view.showWarning(value.message);
+        return [];
+      }
+    });
   }
 
   void pickVideoFile() async {
@@ -154,6 +163,14 @@ mixin VideoUploadInfoScreenService<T extends StatefulWidget> on State<T>
           ),
         );
     return completer.future;
+  }
+
+  void onTapContinueButton() {
+    if (folderEntity.id.isEmpty || feedbackEntity.id == -1) {
+      Toasty.of(context).showWarning("Please Select Folder or Feedback!");
+    } else {
+      onNavigateVideoUploadScreen(feedbackEntity,folderEntity,videoNameController.text.trim());
+    }
   }
 }
 

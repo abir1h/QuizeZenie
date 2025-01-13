@@ -33,6 +33,7 @@ mixin VideoRecordService<T extends StatefulWidget> on State<T>
   Timer? _timer;
   FolderEntity selectedFolderEntity=FolderEntity.empty();
   FeedbackEntity selectedFeedbackEntity=FeedbackEntity.empty();
+  String videoName="";
 
   // Keep track of the current camera index
   int _currentCameraIndex = 0;

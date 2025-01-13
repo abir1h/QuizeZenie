@@ -10,15 +10,15 @@ class TextFieldWidget extends StatefulWidget with AppTheme {
   final TextInputType keyboardType;
   final String? prefixIcon;
   final bool obscure;
+  final ValueChanged<String>? onChangeValue;
   const TextFieldWidget(
-      {Key? key,
+      {super.key,
       required this.controller,
       required this.hintText,
       this.multiline = false,
       this.keyboardType = TextInputType.text,
         this.prefixIcon,
-      this.obscure = false})
-      : super(key: key);
+      this.obscure = false,  this.onChangeValue});
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
@@ -48,6 +48,9 @@ class _TextFieldWidgetState extends State<TextFieldWidget> with AppTheme {
       ),
       child: TextField(
         controller: widget.controller,
+        onChanged: (value){
+          widget.onChangeValue?.call(value);
+        },
         minLines: widget.multiline ? 5 : 1,
         maxLines: widget.multiline ? null : 1,
         keyboardType:

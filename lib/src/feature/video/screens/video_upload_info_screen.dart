@@ -1,3 +1,5 @@
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/feedback.dart';
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/folder_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -6,6 +8,7 @@ import '../../../common/widgets/custom_toasty.dart';
 import '../../../common/constants/common_imports.dart';
 import '../../../common/utility/app_label.dart';
 import '../../../common/widgets/custom_button.dart';
+import '../../video_upload/video_upload_screen.dart';
 import '../services/video_upload_info_screen_service.dart';
 import '../widgets/feed_back_widget.dart';
 
@@ -45,7 +48,7 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
               EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s20),
           decoration: BoxDecoration(color: clr.whiteColor),
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -133,7 +136,7 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
                         child: isLoading
                             ? Padding(
                                 padding: EdgeInsets.all(size.s12),
-                                child: CircularProgressIndicator(),
+                                child: const CircularProgressIndicator(),
                               )
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,14 +288,16 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
                       fontWeight: FontWeight.w500),
                 ),
                 size.s8.kHeight,
-                CustomDropDown(
+                CustomDropDown<FeedbackEntity>(
                     prefix: ImageAssets.assignment_turned_in,
-                    onLoadData: loadFeedBack,
-                    onSelected: (status) {},
+                    onLoadData: getFeedEntityList,
+                    onSelected: (status) {
+                      feedbackEntity = status;
+                    },
                     hintText: label(
                         e: "Name of Feedback Criteria...",
                         b: "ជ្ឈ្មោះ​នៃ​លក្ខណៈ​វិនិច្ឆ័យ​នៃ​ការ​ផ្ដល់​យោបល់..."),
-                    onGenerateTitle: (x) => x!.title),
+                    onGenerateTitle: (x) => x.name),
                 size.s8.kHeight,
                 Text(
                   label(e: "Folder or Category", b: "ថតឬប្រភេទ"),
@@ -302,17 +307,19 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
                       fontWeight: FontWeight.w500),
                 ),
                 size.s8.kHeight,
-                CustomDropDown(
+                CustomDropDown<FolderEntity>(
                     prefix: ImageAssets.folder,
-                    onLoadData: loadFeedBack,
-                    onSelected: (status) {},
+                    onLoadData: getFolderListEntityList,
+                    onSelected: (status) {
+                      folderEntity = status;
+                    },
                     hintText: label(
                         e: "Select Folder or Category",
                         b: "ជ្រើសរើស Folder ឬ Category"),
-                    onGenerateTitle: (x) => x!.title),
+                    onGenerateTitle: (x) => x.name),
                 size.s24.kHeight,
                 CustomButton(
-                    onTap: () {},
+                    onTap:onTapContinueButton,
                     title: "Continue",
                     radius: size.s8,
                     verticalPadding: size.s10,
@@ -338,6 +345,13 @@ class _VideoUploadInfoScreenState extends State<VideoUploadInfoScreen>
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
   }
+
+  @override
+  void onNavigateVideoUploadScreen(FeedbackEntity feedback, FolderEntity folder, String videoName) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => VideoUploadScreen(videoAssets: files![0],folder: folder,feedback: feedback, videoName: videoName,)),
+    );
+  }
 }
-
-

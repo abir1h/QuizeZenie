@@ -6,6 +6,7 @@ import '../../../common/constants/app_theme.dart';
 import '../../../common/widgets/action_button.dart';
 import '../../../common/widgets/app_scroll_view.dart';
 import '../../../common/widgets/good_improvment_tab_widget.dart';
+import '../../../common/widgets/time_input_widget.dart';
 import '../services/chapter_create_bottom_sheet_screen_service.dart';
 
 class CreateChapterBottomSheet extends StatefulWidget {
@@ -81,6 +82,7 @@ class _ExamInstructionBottomSheetState extends State<CreateChapterBottomSheet>
                     controller: TextEditingController(),
                     title: "Chapter Title",
                   ),
+                  TimeInputScreen(onTimeChanged: (value ) { print(value); },),
                   SizedBox(
                     height:24,
                   ),

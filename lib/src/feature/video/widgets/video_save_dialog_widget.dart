@@ -26,7 +26,7 @@ mixin VideoSaveDialogWidget<T extends StatefulWidget> on State<T> {
     recordingTextEditingController.dispose();
   }
 
-  Future<String> showVideoSaveDialogWidget({required BuildContext context,required String folderName}) {
+  Future<String> showVideoSaveDialogWidget({required BuildContext context,required String folderName,required   Function(String ) videoName}) {
     Completer<String> completer = Completer();
     showCupertinoModalPopup(
       context: context,
@@ -76,7 +76,11 @@ mixin VideoSaveDialogWidget<T extends StatefulWidget> on State<T> {
                       SizedBox(height: ThemeSize.instance.s8),
                       TextFieldWidget(
                           hintText: "Recording Name",
-                          controller: recordingTextEditingController),
+                          controller: recordingTextEditingController,
+                        onChangeValue: (value){
+                          videoName.call(value);
+                        },
+                      ),
                       SizedBox(height: ThemeSize.instance.s16),
                       const HeaderTextWidget(title: "Recorded by:"),
                       SizedBox(height: ThemeSize.instance.s8),
