@@ -641,8 +641,8 @@ class _OrientationDetectorWidgetState extends State<OrientationDetectorWidget> {
 
       if (_mediaQuery.orientation == Orientation.portrait) {
         return AspectRatio(
-          // aspectRatio: widget.aspectRatio,
-          aspectRatio: 1,
+           aspectRatio: 16/11,
+          // aspectRatio: 1,
           child: widget.child,
         );
       } else {

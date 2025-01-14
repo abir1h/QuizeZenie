@@ -27,13 +27,15 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
   final AppStreamController<List<ChapterEntity>> chapterStreamController =
       AppStreamController();
    String videoId="";
+   Duration? totalVideoDuration;
+   Duration? userPlayedPosition;
 
   ///Service configurations
   @override
   void initState() {
     _view = this;
     super.initState();
-    _loadChapterList();
+    _initialLoadChapterList();
   }
 
   @override
@@ -136,9 +138,17 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
     uploadVideoFile();
   }
 
+  Duration secondsToDuration(int totalSeconds) {
+    return Duration(seconds: totalSeconds);
+  }
   void onPlaybackProgressChanged(double playedPosition, double totalDuration) {
     // ///Update last played position only if played position is larger
-    // int playedPositionSec = (playedPosition ~/ 1000).round();
+    int playedPositionSec = (playedPosition ~/ 1000).round();
+    setState(() {
+      totalVideoDuration =secondsToDuration((totalDuration ~/ 1000).round()) ;
+      userPlayedPosition =secondsToDuration(playedPositionSec) ;
+    });
+
     // if(currentContent.lastStudyTimeSec < playedPositionSec) {
     //   currentContent.lastStudyTimeSec = playedPositionSec;
     // }
@@ -167,6 +177,7 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
   }
 
   void onTotalVideoDuration(Duration totalDuration) {
+
 
   }
 
@@ -211,10 +222,15 @@ mixin VideoUploadScreenServices<T extends StatefulWidget> on State<T>
     });
   }
 
-  _loadChapterList() {
+  _initialLoadChapterList() {
     if (!mounted) return;
     chapterStreamController
         .add(EmptyState(message: "Chapter List is Empty !."));
+  }
+
+  onLoadChapterList(List<ChapterEntity> chapterList){
+    chapterStreamController
+            .add(DataLoadedState<List<ChapterEntity>>(chapterList));
   }
 
   onTapCreateChapter() {

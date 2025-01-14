@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:co_learning_mobile_app/src/common/widgets/app_scaffold.dart';
 import 'package:co_learning_mobile_app/src/common/widgets/app_scroll_view.dart';
 import 'package:co_learning_mobile_app/src/common/widgets/custom_button.dart';
@@ -10,8 +11,10 @@ import 'package:co_learning_mobile_app/src/feature/video_upload/services/video_u
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../common/constants/app_constant.dart';
 import '../../common/constants/common_imports.dart';
 import '../../common/widgets/app_stream.dart';
 import '../bookmark/models/feedback.dart';
@@ -53,24 +56,64 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
       bottom: true,
       child: AppScaffold(
           title: "Video Upload",
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Column(
-                children: [
-                  PreviewPlayerWidget(
-                    playerStream: playerStreamController.stream,
-                    playbackStream: playbackPausePlayStreamController.stream,
-                    onProgressChanged: onPlaybackProgressChanged,
-                    interceptSeekTo: onInterceptPlaybackSeekToPosition,
-                    onTotalVideoDuration: onTotalVideoDuration,
-                    // overlay: GestureDetector(
-                    //   onTap: onGoBack,
-                    //   child: const BackButtonWidget(),
-                    // ),
+          floatingActionButton: Container(
+            width: 1.sw,
+            decoration: BoxDecoration(color: clr.whiteColor, boxShadow: [
+              BoxShadow(
+                  offset: Offset(0, -2),
+                  blurRadius: size.s4,
+                  spreadRadius: 0,
+                  color: clr.blackColor.withOpacity(.1))
+            ]),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.s16, vertical: size.s12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomButton(
+                            verticalPadding: size.s8,
+                            bgColor: clr.disableButtonGray,
+                            textSize: size.textXSmall,
+                            fontWeight: FontWeight.w600,
+                            onTap: () => Navigator.pop(context),
+                            title: "Save Draft"),
+                      ),
+                      size.s16.kWidth,
+                      Expanded(
+                        child: CustomButton(
+                          verticalPadding: size.s8,
+                          onTap: () => Navigator.pop(context),
+                          title: "Publish Video",
+                          textSize: size.textXSmall,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                  // IconButton(onPressed: uploadVideoFile, icon: const Icon(Icons.upload)),
-                  Slider(
+                )
+              ],
+            ),
+          ),
+          child: Column(
+            children: <Widget>[
+              PreviewPlayerWidget(
+                playerStream: playerStreamController.stream,
+                playbackStream: playbackPausePlayStreamController.stream,
+                onProgressChanged: onPlaybackProgressChanged,
+                interceptSeekTo: onInterceptPlaybackSeekToPosition,
+                onTotalVideoDuration: onTotalVideoDuration,
+                // overlay: GestureDetector(
+                //   onTap: onGoBack,
+                //   child: const BackButtonWidget(),
+                // ),
+              ),
+              // IconButton(onPressed: uploadVideoFile, icon: const Icon(Icons.upload)),
+              /*Slider(
                     value: currentUploadProgress.clamp(0.0, 1.0),
                     onChanged: null,
                     min: 0.0,
@@ -81,76 +124,150 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
                   Text(
                     '${(currentUploadProgress * 100).toStringAsFixed(1)}%', // Display percentage
                     style: const TextStyle(fontSize: 16),
-                  ),
+                  ),*/
 
-                  ///My Courses
-                  AppStreamBuilder<List<ChapterEntity>>(
-                      stream: chapterStreamController.stream,
-                      loadingBuilder: (context) {
-                        return const Offstage();
-                      },
-                      dataBuilder: (context, data) {
-                        return ChapterItemSectionWidget<ChapterEntity>(
-                          items: data,
-                          buildItem: (context, index, item) {
-                            return ChapterItemWidget(
-                              key: ObjectKey(item),
-                              onTap: () {},
-                              data: item,
-                            );
-                          },
-                        );
-                      },
-                      emptyBuilder: (context, message, icon) => Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: onTapCreateChapter,
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: size.s24),
-                                  padding:
-                                      EdgeInsets.symmetric(vertical: size.s4),
-                                  decoration:
-                                      BoxDecoration(color: clr.grayColor),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.menu_book_outlined,
-                                        color: Color(0xff717680),
-                                        size: 20,
-                                      ),
-                                      SizedBox(
-                                        height: 4,
-                                      ),
-                                      Text(
-                                        "Create Chapter",
+              ///My Courses
+              Expanded(
+                child: AppStreamBuilder<List<ChapterEntity>>(
+                    stream: chapterStreamController.stream,
+                    loadingBuilder: (context) {
+                      return const Offstage();
+                    },
+                    dataBuilder: (context, data) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size.s16, vertical: size.s12),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: Text(
+                                      'Chapters',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: size.textSmall,
+                                          color: clr.textColorBlack1),
+                                    )),
+                                GestureDetector(
+                                  onTap:onTapCreateChapter,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: size.s12,
+                                        vertical: size.s4),
+                                    decoration: BoxDecoration(
+                                      color: clr.appPrimaryColor,
+                                      borderRadius:
+                                      BorderRadius.circular(size.s4),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "Create",
                                         style: TextStyle(
-                                            color: Color(
-                                              0xff717680,
-                                            ),
-                                            fontSize: 14),
-                                      )
+                                            fontWeight: FontWeight.w500,
+                                            color: clr.whiteColor,
+                                            fontSize: size.textXXSmall),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            size.s16.kHeight,
+                            Flexible(
+                              child: ChapterItemSectionWidget<ChapterEntity>(
+                                items: data,
+                                buildItem: (context, index, item) {
+                                  return Column(
+                                    children: [
+                                      ChapterItemWidget(
+                                        key: ObjectKey(item),
+                                        onTapEdit: () {},
+                                        onDelete: () {},
+                                        data: item,
+                                      ),
+                                      if(index==data.length-1)
+                                      SizedBox(height: 100,)
                                     ],
-                                  ),
-                                ),
+                                  );
+                                },
                               ),
-                              SizedBox(
-                                width: double.maxFinite,
-                                height: size.s64,
-                                child: Center(
-                                  child: Text(
-                                    message,
-                                  ),
+                            ),
+
+
+                          ],
+                        ),
+                      );
+                    },
+                    emptyBuilder: (context, message, icon) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        size.s8.kHeight,
+                        GestureDetector(
+                          onTap: onTapCreateChapter,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: size.s16),
+                            padding:
+                            EdgeInsets.symmetric(vertical: size.s8),
+                            decoration: BoxDecoration(
+                                color: clr.chapterBackground,
+                                borderRadius:
+                                BorderRadius.circular(size.s8),
+                                border:
+                                Border.all(color: clr.chapterBorder)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  ImageAssets.book,
+                                  height: size.s20,
                                 ),
-                              )
-                            ],
-                          )),
-                ],
+                                size.s10.kWidth,
+                                Text(
+                                  "Create Chapter",
+                                  style: TextStyle(
+                                      fontSize: size.textXSmall,
+                                      fontWeight: FontWeight.w500,
+                                      color: clr.chapterTextColor),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            size.s16.kHeight,
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.s16),
+                              child: Text(
+                                "If you have feedback on an individual scene, it will be displayed here.",
+                                style: TextStyle(
+                                    color: clr.textLightGrey,
+                                    fontSize: size.textXXSmall,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: "Poppins"),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            size.s42.kHeight,
+                            Center(
+                              child: SvgPicture.asset(
+                                ImageAssets.groupImage,
+                                height: 100,
+                                width: 116,
+                              ),
+                            ),
+                            SizedBox(height: size.s16),
+                          ],
+                        ),
+                      ],
+                    )),
               ),
             ],
-          )),
+          ),),
     );
   }
 
@@ -182,19 +299,23 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
 
   @override
   void navigateToChapterCreateBottomSheet() {
-    if(videoId.isNotEmpty){
+    if (videoId.isNotEmpty) {
       showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
           return CreateChapterBottomSheet(
-            videoId:videoId,
+            videoId: videoId,
+            totalDuration: totalVideoDuration!,
+            userPosition: userPlayedPosition!,
+            chapterList: (value) {
+              onLoadChapterList(value);
+            },
           );
         },
       );
-    }else{
+    } else {
       Toasty.of(context).showWarning("Please wait while uploading video!");
     }
-
   }
 }
 
@@ -226,78 +347,143 @@ class ChapterItemSectionWidget<T> extends StatelessWidget with AppTheme {
 
 class ChapterItemWidget extends StatelessWidget with AppTheme {
   final ChapterEntity data;
-  final VoidCallback onTap;
+  final VoidCallback onTapEdit;
+  final VoidCallback onDelete;
   const ChapterItemWidget({
     super.key,
     required this.data,
-    required this.onTap,
+    required this.onTapEdit,
+    required this.onDelete,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s12),
-        decoration: BoxDecoration(
-            color: clr.bgGood,
-            borderRadius: BorderRadius.circular(size.s8),
-            border: Border.all(color: clr.scoreBorderColor, width: size.s1)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SvgPicture.asset(ImageAssets.icProfile),
-                SizedBox(width: size.s8),
-                Expanded(
-                  child: Text(
-                    "User Name",
-                    style: TextStyle(
-                        color: clr.profileCardTextColor,
-                        fontSize: size.textXSmall,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Poppins"),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s12),
+      decoration: BoxDecoration(
+          color: clr.whiteColor,
+          borderRadius: BorderRadius.circular(size.s8),
+          border: Border.all(color: clr.borderGray, width: size.s1)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(size.s8), // Rounded image
+                  child: AspectRatio(aspectRatio: 120/72,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+
+                      imageUrl: data.thumbnailUrl,
+                      // placeholder: (context, url) =>
+                      //     const CircularProgressIndicator(), // Placeholder widget
+                      errorWidget: (context, url, error) => Image.network(
+                        "https://archive.org/download/placeholder-image/placeholder-image.jpg",
+                        height: 60.h,
+                        width: 60.w,
+                        fit: BoxFit.cover,
+                        color: clr.borderGray,
+                      ), // Error widget
+                    ),
                   ),
                 ),
-                Text(
-                  "View",
-                  style: TextStyle(
-                      color: clr.appPrimaryColor,
-                      fontSize: size.textXXSmall,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Poppins"),
+              ),
+              size.s12.kWidth,
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: size.textSmall,
+                        color: clr.textColorGrey2,
+                      ),
+                    ),
+                    size.s20.kHeight,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: size.s12, vertical: size.s4),
+                          decoration: BoxDecoration(
+                            color: clr.scoreExpandedCardItemColor,
+                            borderRadius: BorderRadius.circular(size.s4),
+                          ),
+                          child: Text(
+                            formatDuration(data.startTimeSeconds),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: size.textSmall,
+                              color: clr.blackColor,
+                            ),
+                          ),
+                        ),
+                        Expanded(child: size.s8.kWidth),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                                onTap: onDelete,
+                                child: SvgPicture.asset(ImageAssets.delete)),
+                            size.s8.kWidth,
+                            GestureDetector(
+                              onTap: onTapEdit,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: size.s12, vertical: size.s2),
+                                decoration: BoxDecoration(
+                                  color: clr.scoreExpandedCardItemColor,
+                                  borderRadius: BorderRadius.circular(size.s4),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Edit",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: size.textSmall,
+                                      color: clr.appPrimaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    )
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(height: size.s8),
-            Divider(color: clr.scoreDividerColor, height: size.s1),
-            SizedBox(height: size.s8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Total Score:",
-                  style: TextStyle(
-                      color: clr.profileCardTextColor,
-                      fontSize: size.textXSmall,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Poppins"),
-                ),
-                Text(
-                  "20",
-                  style: TextStyle(
-                      color: clr.scoreColor,
-                      fontSize: size.textX28Large,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: "Poppins"),
-                ),
-              ],
-            )
-          ],
-        ),
+              ),
+              size.s12.kWidth,
+            ],
+          ),
+        ],
       ),
     );
+  }
+
+  String formatDuration(int totalSeconds) {
+    Duration duration = Duration(seconds: totalSeconds);
+
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes.remainder(60);
+    int seconds = duration.inSeconds.remainder(60);
+
+    if (hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:'
+          '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    } else {
+      return '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    }
   }
 }

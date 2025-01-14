@@ -101,11 +101,13 @@ mixin VideoSaveDialogWidget<T extends StatefulWidget> on State<T> {
                                   width: ThemeSize.instance.s32,
                                   fit: BoxFit.fill,
                                   imageUrl:
-                                      "https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1902/pavelstasevich190200120/124934975-no-image-available-icon-vector-flat.jpg?ver=6",
-                                  placeholder: (context, url) => const Center(
-                                      child: CircularProgressIndicator()),
+                                  App.currentSession.user.profileUrl.isNotEmpty
+                                      ? App.currentSession.user.profileUrl
+                                      : "https://www.treasury.gov.ph/wp-content/uploads/2022/01/male-placeholder-image.jpeg",
+                                  placeholder: (context, url) =>
+                                  const Center(child: CircularProgressIndicator()),
                                   errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
+                                  const Icon(Icons.error),
                                 )),
                           ),
                           SizedBox(width: ThemeSize.instance.s12),
