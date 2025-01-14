@@ -299,7 +299,7 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
   @override
   Widget build(BuildContext context) {
     return OrientationDetectorWidget(
-      aspectRatio: _controller?.value.aspectRatio ?? 16 / 9,
+      aspectRatio:  widget.aspectRatio ,
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -314,7 +314,7 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
           if (_controller?.value.isInitialized ?? false)
             Center(
               child: AspectRatio(
-                aspectRatio: _controller?.value.aspectRatio ?? 16 / 9,
+                aspectRatio: widget.aspectRatio ,
                 child: VideoPlayer(
                   _controller!,
                 ),
