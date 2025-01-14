@@ -115,16 +115,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               return ClipRRect(
                                                 borderRadius: BorderRadius.circular(50),
                                                 child: CachedNetworkImage(
-                                                  imageUrl: data.profileUrl.isNotEmpty
-                                                      ? data.profileUrl
-                                                      : "https://www.treasury.gov.ph/wp-content/uploads/2022/01/male-placeholder-image.jpeg",
+                                                  imageUrl:  data.profileUrl,
                                                   fit: BoxFit.cover,
                                                   height: size.s20 * 4,
                                                   width: size.s20 * 4,
                                                   placeholder: (context, url) =>
                                                   const CircularProgressIndicator(),
                                                   errorWidget: (context, url, error) =>
-                                                  const Icon(Icons.error),
+                                                      Image.asset(ImageAssets.placeholder),
                                                 ),
                                               );
                                             }

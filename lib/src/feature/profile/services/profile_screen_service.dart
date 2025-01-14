@@ -120,7 +120,7 @@ mixin ProfileScreenService<T extends StatefulWidget> on State<T>
   Future<ActionResult<dynamic>> updateProfile() async {
     Map<String, dynamic> data = {};
 
-    addIfNotEmpty(data, "name", fullNameController.text);
+    addIfNotEmpty(data, "full_name", fullNameController.text);
     addIfNotEmpty(data, "email", emailController.text);
     addIfNotEmpty(data, "contact_no", phoneController.text);
     addIfNotEmpty(data, "present_address", permanentAddressController.text);

@@ -50,6 +50,7 @@ class ImageAssets {
   static String get videoIcon => 'videoIcon'.svg;
   static String get book => 'book'.svg;
   static String get delete => 'delete'.svg;
+  static String get placeholder => 'placeholder'.png;
 
 /* static String get emptyProfile => 'img'.png;
   static String get animEmpty => 'Animation - 1706009676891'.json;
