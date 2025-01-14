@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/constants/app_theme.dart';
 import '../../../common/constants/common_imports.dart';
+import '../../../common/routes/app_route.dart';
+import '../../../common/routes/app_route_args.dart';
 import '../../../common/widgets/app_scaffold.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../../../common/widgets/circular_loader.dart';
@@ -81,7 +83,15 @@ class _MyVideoScreenState extends State<MyVideoScreen>
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, item, index) {
               return filterCondition(item)
-                  ? VideoItemWidget(data: item)
+                  ? VideoItemWidget(
+                      data: item,
+                      onTapDetails: () {
+                        Navigator.of(context).pushNamed(
+                            AppRoute.videoDetailsScreen,
+                            arguments:
+                                VideoDetailsScreenArgs(videoId: item.id));
+                      },
+                    )
                   : Offstage();
             },
             separatorBuilder: (context) => SizedBox(height: size.s12),
@@ -156,76 +166,82 @@ class VideoItemSectionWidget<T> extends StatelessWidget with AppTheme {
 
 class VideoItemWidget extends StatelessWidget with AppTheme {
   final VideoEntity data;
-  const VideoItemWidget({super.key, required this.data});
+  final VoidCallback onTapDetails;
+  const VideoItemWidget(
+      {super.key, required this.data, required this.onTapDetails});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 2,
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(size.s10),
-              child: CachedNetworkImage(
-                height: size.s20 * 4,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                imageUrl: data.thumbnailUrl,
-                placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator()), // Placeholder widget
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.error), // Error widget
-              )),
-        ),
-        SizedBox(width: size.s12),
-        Expanded(
-          flex: 3,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                data.title,
-                style: TextStyle(
-                  color: clr.videoTitleColor,
-                  fontSize: size.textSmall,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: size.s8),
-              Text(
-                data.chapters.isNotEmpty
-                    ? data.chapters.map((chapter) => chapter.title).join(', ')
-                    : "No chapter",
-                style: TextStyle(
-                  color: clr.textGrayColor,
-                  fontSize: size.textXSmall,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
+    return GestureDetector(
+      onTap: onTapDetails,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(size.s10),
+                child: CachedNetworkImage(
+                  height: size.s20 * 4,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  imageUrl: data.thumbnailUrl,
+                  placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator()), // Placeholder widget
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error), // Error widget
+                )),
           ),
-        ),
-        GestureDetector(onTap: (){
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (BuildContext context) {
-              return MoreBottomSheet(
+          SizedBox(width: size.s12),
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  data.title,
+                  style: TextStyle(
+                    color: clr.videoTitleColor,
+                    fontSize: size.textSmall,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: size.s8),
+                Text(
+                  data.chapters.isNotEmpty
+                      ? data.chapters.map((chapter) => chapter.title).join(', ')
+                      : "No chapter",
+                  style: TextStyle(
+                    color: clr.textGrayColor,
+                    fontSize: size.textXSmall,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
                 context: context,
+                isScrollControlled: true,
+                builder: (BuildContext context) {
+                  return MoreBottomSheet(
+                    context: context,
+                  );
+                },
               );
             },
-          );
-        },
-          child: Icon(
-            Icons.more_vert,
-            size: size.s20,
-            color: clr.videoTitleColor,
-          ),
-        )
-      ],
+            child: Icon(
+              Icons.more_vert,
+              size: size.s20,
+              color: clr.videoTitleColor,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

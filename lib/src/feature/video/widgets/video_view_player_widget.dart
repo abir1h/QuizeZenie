@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:co_learning_mobile_app/src/common/utility/app_label.dart';
 import 'package:co_learning_mobile_app/src/feature/bookmark/models/chapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,7 @@ class VideoViewRawVideoPlayerController {
   void Function()? _onPause;
   void Function()? _onResume;
   void Function(double playedPosition, double totalDuration)? onProgressChange;
-  void Function(Duration?  totalDuration)? totalDuration;
+  void Function(Duration? totalDuration)? totalDuration;
   double Function(double seekPosition, double totalDuration)? interceptSeekTo;
 
   void play(
@@ -49,14 +50,17 @@ class VideoViewRawVideoPlayer extends StatefulWidget {
   final Widget? overlay;
   final double aspectRatio;
   final List<ChapterEntity> chapters;
-  const VideoViewRawVideoPlayer(
-      {super.key,
-      required this.controller,
-      this.overlay,
-      this.aspectRatio = 16 / 9, required this.chapters});
+  const VideoViewRawVideoPlayer({
+    super.key,
+    required this.controller,
+    this.overlay,
+    this.aspectRatio = 16 / 9,
+    required this.chapters,
+  });
 
   @override
-  _VideoViewRawVideoPlayerState createState() => _VideoViewRawVideoPlayerState();
+  _VideoViewRawVideoPlayerState createState() =>
+      _VideoViewRawVideoPlayerState();
 }
 
 class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
@@ -72,6 +76,12 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
   bool _sliderInProgress = false;
   bool _controlVisible = true;
   bool _loadingError = false;
+  List<double> _chapterPositions = [];
+
+  double convertSecondsToMilliseconds(int seconds) {
+    // Convert to milliseconds by multiplying by 1000
+    return seconds * 1000.0; // Result will be a double
+  }
 
   @override
   void initState() {
@@ -80,6 +90,15 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
     widget.controller._onPause = _pause;
     widget.controller._onResume = _resume;
     widget.controller._onTogglePausePlay = _togglePausePlay;
+
+    widget.controller.totalDuration = (duration) {
+      if (duration != null) {
+        _chapterPositions = widget.chapters
+            .map((chapter) =>
+                convertSecondsToMilliseconds(chapter.startTimeSeconds))
+            .toList();
+      }
+    };
   }
 
   @override
@@ -112,10 +131,10 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
     }
     if (url.isEmpty) return;
 
-    _controller =  VideoPlayerController.network(url);
+    _controller = VideoPlayerController.network(url);
     _controller?.addListener(_playerStateListener);
     _controller?.initialize().then((value) {
-      if(_controller!.value.isInitialized){
+      if (_controller!.value.isInitialized) {
         widget.controller.totalDuration?.call(_controller?.value.duration);
       }
       if ((autoPlay ?? false) &&
@@ -299,7 +318,7 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
   @override
   Widget build(BuildContext context) {
     return OrientationDetectorWidget(
-      aspectRatio:  widget.aspectRatio ,
+      aspectRatio: widget.aspectRatio,
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -314,7 +333,7 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
           if (_controller?.value.isInitialized ?? false)
             Center(
               child: AspectRatio(
-                aspectRatio: widget.aspectRatio ,
+                aspectRatio: widget.aspectRatio,
                 child: VideoPlayer(
                   _controller!,
                 ),
@@ -370,21 +389,6 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                         ignoring: !_controlVisible,
                         child: Stack(
                           children: [
-                            // Padding(
-                            //   padding: const EdgeInsets.only(top: 16,right: 16)
-                            //   ,child: Align(
-                            //     alignment: Alignment.topRight,
-                            //     child: GestureDetector(
-                            //       onTap: _toggleOrientation,
-                            //       child: const Icon(
-                            //         Icons.screen_rotation,
-                            //         color: Colors.white,
-                            //         size: 24,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
-
                             ///Loading control
                             if (!(_controller?.value.isInitialized ?? false) ||
                                 (_controller?.value.isBuffering ?? false))
@@ -447,14 +451,16 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                                       children: [
                                         Expanded(
                                           child: SliderTheme(
-                                            data: const SliderThemeData(
+                                            data: SliderThemeData(
                                               thumbShape: RoundSliderThumbShape(
                                                   enabledThumbRadius: 6),
                                               overlayShape:
                                                   RoundSliderOverlayShape(
                                                       overlayRadius: 12.0),
-                                              trackShape:
-                                                  PreviewCustomTrackShape(),
+                                              trackShape: ChapterTrackShape(
+                                                chapters: widget.chapters,
+                                                videoDuration: _videoDuration,
+                                              ),
                                               trackHeight: 4,
                                               overlayColor: Colors.transparent,
                                               thumbColor: Colors.white,
@@ -513,21 +519,11 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                                             ),
                                           ),
                                         ),
-                                        // GestureDetector(
-                                        //   onTap: _toggleOrientation,
-                                        //   child: const Icon(
-                                        //     Icons.zoom_out_map_rounded,
-                                        //     color: Colors.white,
-                                        //     size: 24,
-                                        //   ),
-                                        // ),
                                       ],
                                     ),
 
                                     ///Content duration and played duration
                                     Row(
-                                      // mainAxisAlignment:
-                                      //     MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
@@ -543,7 +539,43 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                                             ),
                                           ),
                                         ),
-                                        const Spacer(),
+                                        if (_getCurrentChapterName() != null)
+                                          const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Icon(
+                                              Icons.circle,
+                                              color: Colors.white,
+                                              size: 4,
+                                            ),
+                                          ),
+                                        if (_getCurrentChapterName() != null)
+                                          Expanded(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  _getCurrentChapterName()!,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 12,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                SizedBox(width: 4),
+                                                Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_outlined,
+                                                  color: Colors.white,
+                                                  size: 14,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        Spacer(),
                                         PopupMenuButton<double>(
                                           initialValue:
                                               _controller?.value.playbackSpeed,
@@ -617,6 +649,19 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
       ),
     );
   }
+
+  String? _getCurrentChapterName() {
+    if (_controller == null || !_controller!.value.isInitialized) return null;
+
+    final currentPosition = _sliderValue;
+    for (int i = widget.chapters.length - 1; i >= 0; i--) {
+      if (currentPosition >=
+          convertSecondsToMilliseconds(widget.chapters[i].startTimeSeconds)) {
+        return widget.chapters[i].title;
+      }
+    }
+    return null;
+  }
 }
 
 class OrientationDetectorWidget extends StatefulWidget {
@@ -657,10 +702,19 @@ class _OrientationDetectorWidgetState extends State<OrientationDetectorWidget> {
   }
 }
 
-class PreviewCustomTrackShape extends SliderTrackShape
-    with BaseSliderTrackShape {
-  /// Create a slider track that draws two rectangles with rounded outer edges.
-  const PreviewCustomTrackShape();
+class ChapterTrackShape extends SliderTrackShape with BaseSliderTrackShape {
+  final List<ChapterEntity> chapters;
+  final double videoDuration;
+
+  const ChapterTrackShape({
+    required this.chapters,
+    required this.videoDuration,
+  });
+
+  double convertSecondsToMilliseconds(int seconds) {
+    // Convert to milliseconds by multiplying by 1000
+    return seconds * 1000.0; // Result will be a double
+  }
 
   @override
   void paint(
@@ -676,83 +730,74 @@ class PreviewCustomTrackShape extends SliderTrackShape
     double additionalActiveTrackHeight = 2,
     Offset? secondaryOffset,
   }) {
-    // If the slider [SliderThemeData.trackHeight] is less than or equal to 0,
-    // then it makes no difference whether the track is painted or not,
-    // therefore the painting  can be a no-op.
-    if (sliderTheme.trackHeight == null || sliderTheme.trackHeight! <= 0) {
-      return;
-    }
+    assert(sliderTheme.disabledActiveTrackColor != null);
+    assert(sliderTheme.disabledInactiveTrackColor != null);
+    assert(sliderTheme.activeTrackColor != null);
+    assert(sliderTheme.inactiveTrackColor != null);
+    assert(sliderTheme.thumbShape != null);
 
-    // Assign the track segment paints, which are leading: active and
-    // trailing: inactive.
-    final ColorTween activeTrackColorTween = ColorTween(
-        begin: sliderTheme.disabledActiveTrackColor,
-        end: sliderTheme.activeTrackColor);
-    final ColorTween inactiveTrackColorTween = ColorTween(
-        begin: sliderTheme.disabledInactiveTrackColor,
-        end: sliderTheme.inactiveTrackColor);
-    final Paint activePaint = Paint()
-      ..color = activeTrackColorTween.evaluate(enableAnimation)!;
-    final Paint inactivePaint = Paint()
-      ..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
-    final Paint leftTrackPaint;
-    final Paint rightTrackPaint;
-    switch (textDirection) {
-      case TextDirection.ltr:
-        leftTrackPaint = activePaint;
-        rightTrackPaint = inactivePaint;
-        break;
-      case TextDirection.rtl:
-        leftTrackPaint = inactivePaint;
-        rightTrackPaint = activePaint;
-        break;
-    }
+    // If the slider is disabled, use the disabled track colors
+    final activeTrackColorTween = ColorTween(
+      begin: sliderTheme.disabledActiveTrackColor,
+      end: sliderTheme.activeTrackColor,
+    );
+    final inactiveTrackColorTween = ColorTween(
+      begin: sliderTheme.disabledInactiveTrackColor,
+      end: sliderTheme.inactiveTrackColor,
+    );
+    final activeTrackColor = activeTrackColorTween.evaluate(enableAnimation)!;
+    final inactiveTrackColor =
+        inactiveTrackColorTween.evaluate(enableAnimation)!;
 
-    final Rect trackRect = getPreferredRect(
+    final trackRect = getPreferredRect(
       parentBox: parentBox,
       offset: offset,
       sliderTheme: sliderTheme,
       isEnabled: isEnabled,
       isDiscrete: isDiscrete,
     );
-    final Radius trackRadius = Radius.circular(trackRect.height / 2);
-    final Radius activeTrackRadius =
-        Radius.circular((trackRect.height + additionalActiveTrackHeight) / 2);
 
-    context.canvas.drawRRect(
-      RRect.fromLTRBAndCorners(
-        trackRect.left,
-        (textDirection == TextDirection.ltr) ? trackRect.top : trackRect.top,
-        thumbCenter.dx,
-        (textDirection == TextDirection.ltr)
-            ? trackRect.bottom
-            : trackRect.bottom,
-        topLeft: (textDirection == TextDirection.ltr)
-            ? activeTrackRadius
-            : trackRadius,
-        bottomLeft: (textDirection == TextDirection.ltr)
-            ? activeTrackRadius
-            : trackRadius,
-      ),
-      leftTrackPaint,
+    // Draw the inactive track
+    final Paint inactivePaint = Paint()..color = inactiveTrackColor;
+    final Paint activePaint = Paint()..color = activeTrackColor;
+
+    final horizontalAdjustment = 2.0;
+    final trackHeight = sliderTheme.trackHeight!;
+    final trackLeft = trackRect.left + horizontalAdjustment;
+    final trackTop = trackRect.top + (trackRect.height - trackHeight) / 2;
+    final trackWidth = trackRect.width - 2 * horizontalAdjustment;
+    final trackRectangle =
+        Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
+
+    // Draw inactive track
+    context.canvas.drawRect(trackRectangle, inactivePaint);
+
+    // Draw active track
+    final activeRect = Rect.fromLTWH(
+      trackLeft,
+      trackTop,
+      thumbCenter.dx - trackLeft,
+      trackHeight,
     );
-    context.canvas.drawRRect(
-      RRect.fromLTRBAndCorners(
-        thumbCenter.dx,
-        (textDirection == TextDirection.rtl) ? trackRect.top : trackRect.top,
-        trackRect.right,
-        (textDirection == TextDirection.rtl)
-            ? trackRect.bottom
-            : trackRect.bottom,
-        topRight: (textDirection == TextDirection.rtl)
-            ? activeTrackRadius
-            : trackRadius,
-        bottomRight: (textDirection == TextDirection.rtl)
-            ? activeTrackRadius
-            : trackRadius,
-      ),
-      rightTrackPaint,
-    );
+    context.canvas.drawRect(activeRect, activePaint);
+
+    // Draw chapter markers
+    final Paint markerPaint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 2;
+
+    for (var chapter in chapters) {
+      final double markerPosition =
+          convertSecondsToMilliseconds(chapter.startTimeSeconds) /
+              videoDuration;
+      final double markerX = trackLeft + (trackWidth * markerPosition);
+
+      context.canvas.drawLine(
+        Offset(markerX, trackTop - 2),
+        Offset(markerX, trackTop + trackHeight + 2),
+        markerPaint,
+      );
+    }
   }
 }
 
