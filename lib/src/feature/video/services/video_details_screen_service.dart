@@ -77,6 +77,8 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
       AppStreamController();
   final AppStreamController<List<FeedbackScoreEntity>>
       feedbackScoreStreamController = AppStreamController();
+  final AppStreamController<Duration> onPlayedStreamController =
+  AppStreamController();
 
   ///Load Video Details Data
   void loadInitialData(String videoId) {
