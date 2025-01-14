@@ -16,8 +16,11 @@ import '../services/chapter_create_bottom_sheet_screen_service.dart';
 
 class CreateChapterBottomSheet extends StatefulWidget {
   final String videoId;
+  final String? chapterId;
+  final String? title;
   final Duration totalDuration;
   final Duration userPosition;
+  final Duration? chapterTime;
   final ValueChanged<List<ChapterEntity>> chapterList;
   const CreateChapterBottomSheet({
     super.key,
@@ -25,6 +28,7 @@ class CreateChapterBottomSheet extends StatefulWidget {
     required this.totalDuration,
     required this.userPosition,
     required this.chapterList,
+    this.title="", this.chapterTime, this.chapterId
   });
 
   @override
@@ -34,7 +38,18 @@ class CreateChapterBottomSheet extends StatefulWidget {
 
 class _ExamInstructionBottomSheetState extends State<CreateChapterBottomSheet>
     with AppTheme, CreateChapterBottomSheetScreenServices {
+  @override
+  void initState() {
+    loadEditData();    super.initState();
+  }
+  loadEditData(){
+    if(widget.title!.isNotEmpty){
+      titleController.text=widget.title!;
+      videoDuration=widget.chapterTime!.inSeconds;
+      print(videoDuration);
 
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -137,7 +152,15 @@ class _ExamInstructionBottomSheetState extends State<CreateChapterBottomSheet>
                           ),
                         ),
                         size.s12.kHeight,
-                        TimeInputScreen(
+                        widget.title!.isNotEmpty?TimeInputScreen(
+                          onTimeChanged: (value) {
+                            setState(() {
+                              videoDuration = value;
+                            });
+                          },
+                          initialTime: widget.chapterTime!,
+                          totalDuration: widget.totalDuration,
+                        ):TimeInputScreen(
                           onTimeChanged: (value) {
                             setState(() {
                               videoDuration = value;
@@ -155,7 +178,7 @@ class _ExamInstructionBottomSheetState extends State<CreateChapterBottomSheet>
                            textColor: clr.whiteColor,
                            enabled:titleController.text.isNotEmpty ?true:false ,
                            buttonColor: titleController.text.isNotEmpty?clr.appPrimaryColor:clr.disableButtonGray ,
-                           tapAction: () => doCrateChapter(titleController.text,widget.videoId,videoDuration!),
+                           tapAction: () => widget.title!.isEmpty?doCrateChapter(titleController.text,widget.videoId,videoDuration!):chapterEdit(titleController.text, videoDuration!, widget.chapterId!),
                            onSuccess: (success) {
                              if(mounted){
                                widget.chapterList.call(success);

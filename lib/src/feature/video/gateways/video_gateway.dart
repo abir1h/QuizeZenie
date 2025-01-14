@@ -89,6 +89,7 @@ mixin VideoGateway {
       return ActionResult<CommentEntity>.error();
     });
   }
+
   static Future<ActionResult<List<ChapterEntity>>> chapterCreateAction(
       String title, String videoId, int time) async {
     return Server.instance.postRequest(
@@ -108,22 +109,72 @@ mixin VideoGateway {
     });
   }
 
-
-
-  static Future<ActionResult<PaginationEntity<VideoEntity>>> getVideoListWithPagination(String paginatedUrlSegment) async{
-    return Server.instance.getRequest(
-      url: "${ApiCredential.myVideoList}?$paginatedUrlSegment",
-    ).then((value){
-      return ActionResult<PaginationEntity<VideoEntity>>.fromServerResponse(
+  static Future<ActionResult<List<ChapterEntity>>> chapterEditAction(
+      String title, int time, String chapterId) async {
+    return Server.instance.putRequest(
+      url: "${ApiCredential.createChapter}$chapterId/",
+      putData: {
+        "title": title,
+        "start_time": time,
+      },
+    ).then((value) {
+      return ActionResult<List<ChapterEntity>>.fromServerResponse(
         response: value,
-        generateData:(source)=> PaginationEntity<VideoEntity>.fromJson(
-          source: source,
-          generateItem: (x)=> VideoEntity.fromJson(x),
-        ),
+        generateData: (x) => ChapterEntity.listFromJson(x),
       );
-    }).catchError((e){
-      return ActionResult<PaginationEntity<VideoEntity>>.error();
+    }).catchError((e) {
+      return ActionResult<List<ChapterEntity>>.error();
     });
   }
 
+  static Future<ActionResult<VideoEntity>> publishVideo(
+      bool isPublished, String videoId) async {
+    return Server.instance.multipartPutRequest(
+        url: "${ApiCredential.fileUpload}$videoId/",
+        fields: {
+          "is_published": isPublished.toString(),
+        }).then((value) {
+      return ActionResult<VideoEntity>.fromServerResponse(
+        response: value,
+        generateData: (x) => VideoEntity.fromJson(x),
+      );
+    }).catchError((e) {
+      return ActionResult<VideoEntity>.error();
+    });
+  }
+
+  static Future<ActionResult<List<ChapterEntity>>> chapterDeleteAction(
+      String contentId) async {
+    return Server.instance
+        .deleteRequest(
+      url: "${ApiCredential.createChapter}$contentId/",
+    )
+        .then((value) {
+      return ActionResult<List<ChapterEntity>>.fromServerResponse(
+        response: value,
+        generateData: (x) => ChapterEntity.listFromJson(x),
+      );
+    }).catchError((e) {
+      return ActionResult<List<ChapterEntity>>.error();
+    });
+  }
+
+  static Future<ActionResult<PaginationEntity<VideoEntity>>>
+      getVideoListWithPagination(String paginatedUrlSegment) async {
+    return Server.instance
+        .getRequest(
+      url: "${ApiCredential.myVideoList}?$paginatedUrlSegment",
+    )
+        .then((value) {
+      return ActionResult<PaginationEntity<VideoEntity>>.fromServerResponse(
+        response: value,
+        generateData: (source) => PaginationEntity<VideoEntity>.fromJson(
+          source: source,
+          generateItem: (x) => VideoEntity.fromJson(x),
+        ),
+      );
+    }).catchError((e) {
+      return ActionResult<PaginationEntity<VideoEntity>>.error();
+    });
+  }
 }

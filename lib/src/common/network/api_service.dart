@@ -144,6 +144,153 @@ class Server {
     }
   }
 
+  Future<ServerResponse> putRequest({
+    required String url,
+    required dynamic putData,
+    String? token,
+  }) async {
+    try {
+      var body = json.encode(putData);
+      var response = await _client.put(
+        Uri.parse("$host/api/v1/$url"),
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": token == null
+              ? "Bearer ${App.currentSession.tokens.accessToken}"
+              : "Bearer $token"
+        },
+        body: utf8.encode(body),
+      );
+      debugPrint("REQUEST => ${response.request.toString()}");
+      debugPrint("REQUEST DATA => $body");
+      debugPrint("RESPONSE DATA => ${response.body.toString()}");
+
+      var jsonData = jsonDecode(response.body);
+      if (response.statusCode != 401) {
+        return ServerResponse.fromJson(jsonData);
+      } else {
+        if (!_sessionExpireStreamController.isClosed) {
+          _sessionExpireStreamController.sink.add(jsonData["message"]);
+        }
+        return ServerResponse(
+            status: false, data: jsonData, message: jsonData["message"]);
+      }
+    } on SocketException catch (_) {
+      return ServerResponse(
+          status: false,
+          data: _,
+          message: "Request failed! Check internet connection.");
+    } on Exception catch (_) {
+      return ServerResponse(
+          status: false,
+          data: _,
+          message: "Request failed! Unknown error occurred.");
+    }
+  }
+  Future<ServerResponse> multipartPutRequest({
+    required String url,
+    required Map<String, String> fields, // Form data fields
+    List<http.MultipartFile>? files,    // Files to include
+    String? token,
+  }) async {
+    try {
+      var uri = Uri.parse("$host/api/v1/$url");
+      var request = http.MultipartRequest("PUT", uri);
+
+      // Add fields to the request
+      request.fields.addAll(fields);
+
+      // Add authorization header
+      request.headers.addAll({
+        "Accept": "application/json",
+        "Authorization": token == null
+            ? "Bearer ${App.currentSession.tokens.accessToken}"
+            : "Bearer $token",
+      });
+
+      // Add files if provided
+      if (files != null) {
+        request.files.addAll(files);
+      }
+
+      debugPrint("REQUEST URL => $uri");
+      debugPrint("REQUEST FIELDS => ${request.fields}");
+      debugPrint("REQUEST HEADERS => ${request.headers}");
+      debugPrint("REQUEST FILES => ${files?.map((file) => file.filename).join(", ")}");
+
+      // Send the request
+      var response = await request.send();
+
+      // Read and decode the response
+      var responseBody = await response.stream.bytesToString();
+      debugPrint("RESPONSE DATA => $responseBody");
+
+      var jsonData = jsonDecode(responseBody);
+
+      if (response.statusCode != 401) {
+        return ServerResponse.fromJson(jsonData);
+      } else {
+        if (!_sessionExpireStreamController.isClosed) {
+          _sessionExpireStreamController.sink.add(jsonData["message"]);
+        }
+        return ServerResponse(
+            status: false, data: jsonData, message: jsonData["message"]);
+      }
+    } on SocketException catch (_) {
+      return ServerResponse(
+          status: false,
+          data: _,
+          message: "Request failed! Check internet connection.");
+    } on Exception catch (_) {
+      return ServerResponse(
+          status: false,
+          data: _,
+          message: "Request failed! Unknown error occurred.");
+    }
+  }
+
+  Future<ServerResponse> deleteRequest({
+    required String url,
+    String? token,
+  }) async {
+    try {
+      var response = await _client.delete(
+        Uri.parse("$host/api/v1/$url"),
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": token == null
+              ? "Bearer ${App.currentSession.tokens.accessToken}"
+              : "Bearer $token"
+        },
+      );
+      debugPrint("REQUEST => ${response.request.toString()}");
+      debugPrint("RESPONSE DATA => ${response.body.toString()}");
+
+      var jsonData = jsonDecode(response.body);
+      if (response.statusCode != 401) {
+        return ServerResponse.fromJson(jsonData);
+      } else {
+        if (!_sessionExpireStreamController.isClosed) {
+          _sessionExpireStreamController.sink.add(jsonData["message"]);
+        }
+        return ServerResponse(
+            status: false, data: jsonData, message: jsonData["message"]);
+      }
+    } on SocketException catch (_) {
+      return ServerResponse(
+          status: false,
+          data: _,
+          message: "Request failed! Check internet connection.");
+    } on Exception catch (_) {
+      return ServerResponse(
+          status: false,
+          data: _,
+          message: "Request failed! Unknown error occurred.");
+    }
+  }
+
   void uploadFile(
       {required String url,
       required File file,
