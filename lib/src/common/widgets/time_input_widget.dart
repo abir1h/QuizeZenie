@@ -180,7 +180,7 @@ class _TimeInputScreenState extends State<TimeInputScreen> with AppTheme {
       _setInitialTime(widget.totalDuration);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Entered time cannot exceed the total duration of the video."),
           duration: Duration(seconds: 2),
         ),

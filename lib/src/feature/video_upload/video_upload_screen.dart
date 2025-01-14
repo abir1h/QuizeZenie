@@ -6,6 +6,7 @@ import 'package:co_learning_mobile_app/src/common/widgets/app_scroll_view.dart';
 import 'package:co_learning_mobile_app/src/common/widgets/custom_button.dart';
 import 'package:co_learning_mobile_app/src/common/widgets/custom_toasty.dart';
 import 'package:co_learning_mobile_app/src/feature/bookmark/models/chapter.dart';
+import 'package:co_learning_mobile_app/src/feature/video/models/video_entity.dart';
 import 'package:co_learning_mobile_app/src/feature/video_upload/video_player_widget.dart';
 import 'package:co_learning_mobile_app/src/feature/video_upload/services/video_upload_screen_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../common/constants/app_constant.dart';
 import '../../common/constants/common_imports.dart';
+import '../../common/widgets/action_button.dart';
 import '../../common/widgets/app_stream.dart';
 import '../bookmark/models/feedback.dart';
 import '../bookmark/models/folder_entity.dart';
@@ -43,7 +45,8 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
   void initState() {
     ///Initially load course details
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      loadInitialData(widget.videoAssets.path, widget.folder, widget.feedback);
+
+      loadInitialData(widget.videoAssets.path, widget.folder, widget.feedback,widget.videoName);
     });
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.initState();
@@ -75,23 +78,26 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
                   child: Row(
                     children: [
                       Expanded(
-                        child: CustomButton(
-                            verticalPadding: size.s8,
-                            bgColor: clr.disableButtonGray,
-                            textSize: size.textXSmall,
-                            fontWeight: FontWeight.w600,
-                            onTap: () => Navigator.pop(context),
-                            title: "Save Draft"),
+                        child: ActionButton<VideoEntity>(
+                            title: "Save Draft",
+                            radius: size.s8,
+                            buttonColor: clr.disableButtonGray,textColor: Colors.white,
+                            tapAction: () =>throw UnimplementedError(),
+                            onSuccess: (success) {
+
+                            }),
                       ),
                       size.s16.kWidth,
                       Expanded(
-                        child: CustomButton(
-                          verticalPadding: size.s8,
-                          onTap: () => Navigator.pop(context),
-                          title: "Publish Video",
-                          textSize: size.textXSmall,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        child: ActionButton<VideoEntity>(
+                            title: "Publish Video",
+                            radius: size.s8,
+                            textColor: clr.whiteColor,
+                            tapAction: () =>publishVideo(true,videoId),
+                            onSuccess: (success) {
+                              Navigator.pop(context);
+
+                            }),
                       ),
                     ],
                   ),
@@ -131,7 +137,43 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
                 child: AppStreamBuilder<List<ChapterEntity>>(
                     stream: chapterStreamController.stream,
                     loadingBuilder: (context) {
-                      return const Offstage();
+                      return Container(
+                        padding: EdgeInsets.only(
+                          left: 24.w,
+                          right: 24.w,
+                          top: 24.w,
+                          bottom: 24.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(18.w),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 42.w,
+                              width: 42.w,
+                              child: CircularProgressIndicator(
+                                valueColor: const AlwaysStoppedAnimation(
+                                  Colors.indigo,
+                                ),
+                                strokeWidth: 2.w,
+                              ),
+                            ),
+                            SizedBox(height: 16.w,),
+                            Text(
+                              "Please wait..",
+                              style: TextStyle(
+                                color: Colors.indigo,
+                                fontSize: 20.sp,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      );
                     },
                     dataBuilder: (context, data) {
                       return Padding(
@@ -182,8 +224,27 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
                                     children: [
                                       ChapterItemWidget(
                                         key: ObjectKey(item),
-                                        onTapEdit: () {},
-                                        onDelete: () {},
+                                        onTapEdit: () {
+
+                                          showCupertinoModalPopup(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return CreateChapterBottomSheet(
+                                                videoId: videoId,
+                                                totalDuration: totalVideoDuration!,
+                                                userPosition: userPlayedPosition!,
+                                                title: item.title,
+                                                chapterTime:  Duration(seconds:  item.startTimeSeconds.round()),
+                                                chapterId: item.id,
+
+                                                chapterList: (value) {
+                                                  onLoadChapterList(value);
+                                                },
+                                              );
+                                            },
+                                          );
+                                        },
+                                        onDelete: ()=>chapterDelete(item.id),
                                         data: item,
                                       ),
                                       if(index==data.length-1)
@@ -307,6 +368,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen>
             videoId: videoId,
             totalDuration: totalVideoDuration!,
             userPosition: userPlayedPosition!,
+
             chapterList: (value) {
               onLoadChapterList(value);
             },
@@ -431,7 +493,7 @@ class ChapterItemWidget extends StatelessWidget with AppTheme {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             GestureDetector(
-                                onTap: onDelete,
+                                onTap:onDelete,
                                 child: SvgPicture.asset(ImageAssets.delete)),
                             size.s8.kWidth,
                             GestureDetector(

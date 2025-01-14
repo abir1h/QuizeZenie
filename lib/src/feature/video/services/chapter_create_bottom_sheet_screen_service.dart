@@ -9,13 +9,14 @@ abstract class _ViewModel {
   void showSuccess(String message);
 }
 
-mixin CreateChapterBottomSheetScreenServices<T extends StatefulWidget> on State<T>
-    implements _ViewModel {
+mixin CreateChapterBottomSheetScreenServices<T extends StatefulWidget>
+    on State<T> implements _ViewModel {
   late _ViewModel _view;
   final AppStreamController<List<ChapterEntity>> chapterStreamController =
       AppStreamController();
- TextEditingController titleController=TextEditingController();
- int? videoDuration;
+  TextEditingController titleController = TextEditingController();
+  int? videoDuration;
+
   ///Service configurations
   @override
   void initState() {
@@ -25,16 +26,30 @@ mixin CreateChapterBottomSheetScreenServices<T extends StatefulWidget> on State<
 
   @override
   void dispose() {
+    titleController.clear();
+
     super.dispose();
   }
 
   Future<ActionResult<List<ChapterEntity>>> doCrateChapter(
       String title, String videoId, int time) async {
-    return VideoGateway.chapterCreateAction(title, videoId, time  ).then((value) {
+    return VideoGateway.chapterCreateAction(title, videoId, time).then((value) {
       if (value.status != Status.success) {
-
         _view.showWarning(value.message);
-      }        _view.showSuccess(value.message);
+      }
+      _view.showSuccess(value.message);
+
+      return value;
+    });
+  }
+
+  Future<ActionResult<List<ChapterEntity>>> chapterEdit(
+      String title, int time, String chapterId) async {
+    return VideoGateway.chapterEditAction(title, time, chapterId).then((value) {
+      if (value.status != Status.success) {
+         _view.showWarning(value.message);
+      }
+      _view.showSuccess(value.message);
 
       return value;
     });
