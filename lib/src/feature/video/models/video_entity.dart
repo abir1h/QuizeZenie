@@ -18,6 +18,7 @@ class VideoEntity {
   late String updatedAt;
   late bool isPublished;
   late bool isFeatured;
+  late bool isBookmarked;
 
   // VideoEntity({
   //   required this.id,
@@ -36,61 +37,49 @@ class VideoEntity {
   //   required this.isFeatured,
   // });
 
-   VideoEntity.empty() {
-        id ="";
-        title= "";
-        description= "";
-        videoUrl= "";
-        thumbnailUrl= "";
-        uploadId= "";
-        feedback= FeedbackEntity.empty();
-        folder= FolderEntity.empty();
-        chapters= [];
-        uploadedBy= UploadedBy.empty();
-        createdAt= "";
-        updatedAt= "";
-        isPublished= false;
-        isFeatured= false;
+  VideoEntity.empty() {
+    id = "";
+    title = "";
+    description = "";
+    videoUrl = "";
+    thumbnailUrl = "";
+    uploadId = "";
+    feedback = FeedbackEntity.empty();
+    folder = FolderEntity.empty();
+    chapters = [];
+    uploadedBy = UploadedBy.empty();
+    createdAt = "";
+    updatedAt = "";
+    isPublished = false;
+    isFeatured = false;
+    isBookmarked = false;
   }
 
   VideoEntity.fromJson(Map<String, dynamic> json) {
-    id=
-    json["id"] ?? "";
-    title=
-    json["title"] ?? "";
-    description=
-    json["description"] ?? "";
-    videoUrl=
-    json["video_url"] ?? "";
-    thumbnailUrl=
-    json["thumbnail_url"] ?? "";
-    uploadId=
-    json["upload_id"] ?? "";
-    feedback=
-    json["feedback"] != null
+    id = json["id"] ?? "";
+    title = json["title"] ?? "";
+    description = json["description"] ?? "";
+    videoUrl = json["video_url"] ?? "";
+    thumbnailUrl = json["thumbnail_url"] ?? "";
+    uploadId = json["upload_id"] ?? "";
+    feedback = json["feedback"] != null
         ? FeedbackEntity.fromJson(json["feedback"])
         : FeedbackEntity.empty();
-    folder=
-    json["folder"] != null
+    folder = json["folder"] != null
         ? FolderEntity.fromJson(json["folder"])
         : FolderEntity.empty();
-    chapters=
-    json["chapters"] == null
+    chapters = json["chapters"] == null
         ? []
         : List<ChapterEntity>.from(
-        json["chapters"]!.map((x) => ChapterEntity.fromJson(x)));
-    uploadedBy=
-    json["uploaded_by"] != null
+            json["chapters"]!.map((x) => ChapterEntity.fromJson(x)));
+    uploadedBy = json["uploaded_by"] != null
         ? UploadedBy.fromJson(json["uploaded_by"])
         : UploadedBy.empty();
-    createdAt=
-    json["created_at"] ?? "";
-    updatedAt=
-    json["updated_at"] ?? "";
-    isPublished=
-    json["is_published"] ?? "";
-    isFeatured=
-    json["is_featured"] ?? "";
+    createdAt = json["created_at"] ?? "";
+    updatedAt = json["updated_at"] ?? "";
+    isPublished = json["is_published"] ?? "";
+    isFeatured = json["is_featured"] ?? "";
+    isBookmarked = json["is_bookmarked"] ?? "";
   }
 
   Map<String, dynamic> toJson() => {
@@ -107,5 +96,6 @@ class VideoEntity {
         "updated_at": updatedAt,
         "is_published": isPublished,
         "is_featured": isFeatured,
+        "is_bookmarked": isBookmarked,
       };
 }

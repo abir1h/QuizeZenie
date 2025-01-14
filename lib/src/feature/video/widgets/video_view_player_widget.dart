@@ -452,10 +452,11 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                                         Expanded(
                                           child: SliderTheme(
                                             data: SliderThemeData(
-                                              thumbShape: RoundSliderThumbShape(
-                                                  enabledThumbRadius: 6),
+                                              thumbShape:
+                                                  const RoundSliderThumbShape(
+                                                      enabledThumbRadius: 6),
                                               overlayShape:
-                                                  RoundSliderOverlayShape(
+                                                  const RoundSliderOverlayShape(
                                                       overlayRadius: 12.0),
                                               trackShape: ChapterTrackShape(
                                                 chapters: widget.chapters,
@@ -464,8 +465,8 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                                               trackHeight: 4,
                                               overlayColor: Colors.transparent,
                                               thumbColor: Colors.white,
-                                              activeTrackColor: Colors.white,
-                                              inactiveTrackColor: Colors.grey,
+                                              activeTrackColor: Colors.red,
+                                              inactiveTrackColor: Colors.white,
                                             ),
                                             child: Slider(
                                               min: 0,
@@ -527,55 +528,66 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10.0),
-                                          child: Text(
-                                            "${formatDuration(Duration(milliseconds: _sliderValue.toInt()))} / ${formatDuration((_controller?.value.duration ?? const Duration()))}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                        if (_getCurrentChapterName() != null)
-                                          const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Icon(
-                                              Icons.circle,
-                                              color: Colors.white,
-                                              size: 4,
-                                            ),
-                                          ),
-                                        if (_getCurrentChapterName() != null)
-                                          Expanded(
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  _getCurrentChapterName()!,
+                                        Expanded(
+                                          flex: 2,
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0),
+                                                child: Text(
+                                                  "${formatDuration(Duration(milliseconds: _sliderValue.toInt()))} / ${formatDuration((_controller?.value.duration ?? const Duration()))}",
                                                   style: const TextStyle(
                                                     color: Colors.white,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 14,
                                                   ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
                                                 ),
-                                                SizedBox(width: 4),
-                                                Icon(
-                                                  Icons
-                                                      .arrow_forward_ios_outlined,
-                                                  color: Colors.white,
-                                                  size: 14,
-                                                )
-                                              ],
-                                            ),
+                                              ),
+                                              if (_getCurrentChapterName() !=
+                                                  null)
+                                                const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 8),
+                                                  child: Icon(
+                                                    Icons.circle,
+                                                    color: Colors.white,
+                                                    size: 4,
+                                                  ),
+                                                ),
+                                              if (_getCurrentChapterName() !=
+                                                  null)
+                                                Flexible(
+                                                  child: Text(
+                                                    _getCurrentChapterName()!,
+                                                    // "Always Remember Us This Way Always Remember Us This Way",
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 12,
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              if (_getCurrentChapterName() !=
+                                                  null)
+                                                const Padding(
+                                                  padding:
+                                                      EdgeInsets.only(left: 4),
+                                                  child: Icon(
+                                                    Icons
+                                                        .arrow_forward_ios_outlined,
+                                                    color: Colors.white,
+                                                    size: 14,
+                                                  ),
+                                                ),
+                                            ],
                                           ),
-                                        Spacer(),
+                                        ),
+                                        const SizedBox(width: 12),
                                         PopupMenuButton<double>(
                                           initialValue:
                                               _controller?.value.playbackSpeed,
@@ -712,8 +724,7 @@ class ChapterTrackShape extends SliderTrackShape with BaseSliderTrackShape {
   });
 
   double convertSecondsToMilliseconds(int seconds) {
-    // Convert to milliseconds by multiplying by 1000
-    return seconds * 1000.0; // Result will be a double
+    return seconds * 1000.0;
   }
 
   @override
@@ -736,14 +747,13 @@ class ChapterTrackShape extends SliderTrackShape with BaseSliderTrackShape {
     assert(sliderTheme.inactiveTrackColor != null);
     assert(sliderTheme.thumbShape != null);
 
-    // If the slider is disabled, use the disabled track colors
     final activeTrackColorTween = ColorTween(
       begin: sliderTheme.disabledActiveTrackColor,
-      end: sliderTheme.activeTrackColor,
+      end: Colors.red,
     );
     final inactiveTrackColorTween = ColorTween(
       begin: sliderTheme.disabledInactiveTrackColor,
-      end: sliderTheme.inactiveTrackColor,
+      end: Colors.white,
     );
     final activeTrackColor = activeTrackColorTween.evaluate(enableAnimation)!;
     final inactiveTrackColor =
@@ -757,7 +767,6 @@ class ChapterTrackShape extends SliderTrackShape with BaseSliderTrackShape {
       isDiscrete: isDiscrete,
     );
 
-    // Draw the inactive track
     final Paint inactivePaint = Paint()..color = inactiveTrackColor;
     final Paint activePaint = Paint()..color = activeTrackColor;
 
@@ -769,10 +778,8 @@ class ChapterTrackShape extends SliderTrackShape with BaseSliderTrackShape {
     final trackRectangle =
         Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
 
-    // Draw inactive track
     context.canvas.drawRect(trackRectangle, inactivePaint);
 
-    // Draw active track
     final activeRect = Rect.fromLTWH(
       trackLeft,
       trackTop,
@@ -781,20 +788,23 @@ class ChapterTrackShape extends SliderTrackShape with BaseSliderTrackShape {
     );
     context.canvas.drawRect(activeRect, activePaint);
 
-    // Draw chapter markers
+    // Draw chapter markers (skip the first chapter)
     final Paint markerPaint = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 2;
+      ..color = Colors.grey
+      ..strokeWidth = trackHeight;
 
-    for (var chapter in chapters) {
+    // Start from index 1 to skip the first chapter
+    for (var i = 1; i < chapters.length; i++) {
+      final chapter = chapters[i];
       final double markerPosition =
           convertSecondsToMilliseconds(chapter.startTimeSeconds) /
               videoDuration;
       final double markerX = trackLeft + (trackWidth * markerPosition);
 
+      // Draw marker with same height as slider
       context.canvas.drawLine(
-        Offset(markerX, trackTop - 2),
-        Offset(markerX, trackTop + trackHeight + 2),
+        Offset(markerX, trackTop),
+        Offset(markerX, trackTop + trackHeight),
         markerPaint,
       );
     }

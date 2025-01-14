@@ -79,7 +79,7 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                       onProgressChanged: onPlaybackProgressChanged,
                       interceptSeekTo: onInterceptPlaybackSeekToPosition,
                       chapters: data.chapters,
-                      onTotalVideoDuration: (e){},
+                      onTotalVideoDuration: (e) {},
                     ),
                     Positioned(
                       left: size.s16,
@@ -162,13 +162,17 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                       color: clr.iconColorGrey,
                                     ),
                                     SizedBox(width: size.s4),
-                                    Text(
-                                      data.title,
-                                      style: TextStyle(
-                                          color: clr.iconColorGrey,
-                                          fontSize: size.textXXXSmall,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: "Poppins"),
+                                    Expanded(
+                                      child: Text(
+                                        data.title,
+                                        style: TextStyle(
+                                            color: clr.iconColorGrey,
+                                            fontSize: size.textXXXSmall,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: "Poppins"),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -220,31 +224,38 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                       ),
                                     ),
                                     SizedBox(width: size.s8),
-                                    Container(
-                                        padding: EdgeInsets.all(size.s8),
-                                        decoration: BoxDecoration(
-                                          color: clr.iconsBgColorBlue,
-                                          borderRadius:
-                                              BorderRadius.circular(size.s12),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.bookmark_outlined,
-                                              size: size.s16,
-                                              color: clr.iconsColorBlue,
-                                            ),
-                                            SizedBox(width: size.s8),
-                                            Text(
-                                              "Bookmark",
-                                              style: TextStyle(
-                                                  color: clr.greyVideoTitle,
-                                                  fontSize: size.textXXSmall,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: "Poppins"),
-                                            )
-                                          ],
-                                        )),
+                                    GestureDetector(
+                                      onTap: () {
+                                        doBookmark(data.id);
+                                      },
+                                      child: Container(
+                                          padding: EdgeInsets.all(size.s8),
+                                          decoration: BoxDecoration(
+                                            color: clr.iconsBgColorBlue,
+                                            borderRadius:
+                                                BorderRadius.circular(size.s12),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.bookmark_outlined,
+                                                size: size.s16,
+                                                color: data.isBookmarked
+                                                    ? clr.iconsColorBlue
+                                                    : clr.grayColor,
+                                              ),
+                                              SizedBox(width: size.s8),
+                                              Text(
+                                                "Bookmark",
+                                                style: TextStyle(
+                                                    color: clr.greyVideoTitle,
+                                                    fontSize: size.textXXSmall,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Poppins"),
+                                              )
+                                            ],
+                                          )),
+                                    ),
                                     SizedBox(width: size.s8),
                                     GestureDetector(
                                       onTap: () => onTapGiveScore(

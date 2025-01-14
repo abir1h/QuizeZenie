@@ -7,6 +7,7 @@ import '../../../common/constants/app_constant.dart';
 import '../../../common/models/action_result.dart';
 import '../../../common/routes/app_route_args.dart';
 import '../../../common/widgets/app_stream.dart';
+import '../../bookmark/gateway/bookamark_gateway.dart';
 import '../../bookmark/models/feedback.dart';
 import '../../bookmark/models/form_category.dart';
 import '../../feedback_score/gateways/feedback_score_gateway.dart';
@@ -154,6 +155,21 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     });
   }
 
+  ///Do Comment
+  Future<ActionResult<VideoEntity>> doBookmark(String videoId) async {
+    return BookmarkGateway.doBookmark(videoId).then((value) {
+      if (value.status != Status.success) {
+        _view.showWarning(value.message);
+      } else {
+        _view.showSuccess(value.message);
+        setState(() {
+          loadInitialData(videoId);
+        });
+      }
+      return value;
+    });
+  }
+
   ///Load Feedback Score Data
   void loadFeedbackScoreData(String videoId) {
     ///Loading state
@@ -251,7 +267,8 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     ///Play the video
     // _isPlaybackComplete = false;
     var videoContent = VideoContentViewModel.fromJson(content.toJson());
-    playerStreamController.add(DataLoadedState<VideoContentViewModel>(videoContent));
+    playerStreamController
+        .add(DataLoadedState<VideoContentViewModel>(videoContent));
   }
 
   void onPlaybackProgressChanged(double playedPosition, double totalDuration) {
@@ -319,8 +336,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
   }
 }
 
-
-class VideoContentViewModel extends VideoEntity{
+class VideoContentViewModel extends VideoEntity {
   VideoContentViewModel.fromJson(super.json) : super.fromJson();
   VideoContentViewModel.empty() : super.empty();
 }
