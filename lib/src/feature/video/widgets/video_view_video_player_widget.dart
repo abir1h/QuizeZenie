@@ -11,7 +11,9 @@ class VideoViewPlayerWidget extends StatefulWidget {
   final Stream<DataState<VideoContentViewModel>> playerStream;
   final List<ChapterEntity> chapters;
   final Stream<DataState<bool>> playbackStream;
+  final Stream<DataState<Duration>>? playedPositionStream;
   final Widget? overlay;
+  final VoidCallback? onTapChapter;
 
   final double Function(
       double seekPosition, double totalDuration)? interceptSeekTo;
@@ -23,6 +25,8 @@ class VideoViewPlayerWidget extends StatefulWidget {
     super.key,
     required this.playerStream,
     required this.playbackStream,
+    this.onTapChapter,
+    this.playedPositionStream,
     this.overlay,
     this.interceptSeekTo,
     this.onProgressChanged, this.onTotalVideoDuration, required this.chapters,
@@ -38,6 +42,7 @@ class _VideoViewPlayerWidgetState extends State<VideoViewPlayerWidget> {
   VideoContentViewModel _currentContent = VideoContentViewModel.empty();
   StreamSubscription<DataState<VideoContentViewModel>>? _subscription;
   StreamSubscription<DataState<bool>>? _playbackSubscription;
+  StreamSubscription<DataState<Duration>>? _playedPositionSubscription;
 
   @override
   void initState() {
@@ -46,6 +51,7 @@ class _VideoViewPlayerWidgetState extends State<VideoViewPlayerWidget> {
     _playerController.onProgressChange = _onProgressChanged;
     _subscription = widget.playerStream.listen(_onPlayVideo);
     _playbackSubscription = widget.playbackStream.listen(_onPlaybackChange);
+    _playedPositionSubscription=widget.playedPositionStream?.listen(_onPlayedPosition);
     super.initState();
   }
 
@@ -54,6 +60,7 @@ class _VideoViewPlayerWidgetState extends State<VideoViewPlayerWidget> {
     _subscription?.cancel();
     _playerController.dispose();
     _playbackSubscription?.cancel();
+    _playedPositionSubscription?.cancel();
     super.dispose();
   }
 
@@ -67,6 +74,9 @@ class _VideoViewPlayerWidgetState extends State<VideoViewPlayerWidget> {
       //     ? Duration(seconds: _currentContent.video.lastStudyTime)
       //     : null,
     );
+  }
+  void _onPlayedPosition(DataState<Duration> event) {
+    _playerController.onPlayedPosition((event as DataLoadedState<Duration>).data);
   }
 
   void _onPlaybackChange(DataState<bool> event) {
@@ -97,6 +107,9 @@ class _VideoViewPlayerWidgetState extends State<VideoViewPlayerWidget> {
     return VideoViewRawVideoPlayer(
       controller: _playerController,
       chapters: widget.chapters,
+      onTapChapter: (){
+        widget.onTapChapter?.call();
+      },
       aspectRatio: 16/9,
       overlay: Align(alignment: Alignment.topLeft, child: widget.overlay),
     );

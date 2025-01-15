@@ -16,6 +16,7 @@ import '../../feedback_score/models/feedback_score_entity.dart';
 import '../../feedback_score/screens/feedback_score_screen.dart';
 import '../models/video_entity.dart';
 import '../services/video_details_screen_service.dart';
+import '../widgets/chapters_bottom_sheet_screen.dart';
 import '../widgets/comment_create_bottom_sheet.dart';
 import '../widgets/comments_bottom_sheet.dart';
 import '../widgets/feed_back_widget.dart';
@@ -78,7 +79,23 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                       playbackStream: playbackPausePlayStreamController.stream,
                       onProgressChanged: onPlaybackProgressChanged,
                       interceptSeekTo: onInterceptPlaybackSeekToPosition,
+                      playedPositionStream: onPlayedStreamController.stream,
                       chapters: data.chapters,
+                      onTapChapter: (){
+                        showCupertinoModalPopup(
+                          context: context,
+
+                          builder: (BuildContext context) {
+                            return ChaptersBottomSheet(
+                              chapterList: data.chapters,
+                              onSelectChapter: (chapter){
+                                onPlayedStreamController
+                                    .add(DataLoadedState<Duration>(Duration(seconds: chapter.startTimeSeconds)));
+                              },
+                            );
+                          },
+                        );
+                      },
                       onTotalVideoDuration: (e) {},
                     ),
                     Positioned(

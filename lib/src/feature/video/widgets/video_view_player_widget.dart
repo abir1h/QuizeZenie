@@ -8,6 +8,7 @@ import 'package:video_player/video_player.dart';
 
 class VideoViewRawVideoPlayerController {
   void Function(String url, Duration? playPosition, bool? autoPlay)? _onPlay;
+  void Function(Duration playPosition)? _onPlayedPosition;
   void Function()? _onTogglePausePlay;
   void Function()? _onPause;
   void Function()? _onResume;
@@ -21,6 +22,9 @@ class VideoViewRawVideoPlayerController {
     Duration? playPosition,
   }) {
     _onPlay?.call(url, playPosition, autoPlay);
+  }
+  void onPlayedPosition( Duration playPosition) {
+    _onPlayedPosition?.call(playPosition);
   }
 
   void togglePausePlay() {
@@ -42,6 +46,7 @@ class VideoViewRawVideoPlayerController {
     interceptSeekTo = null;
     _onPause = null;
     _onResume = null;
+    _onPlayedPosition=null;
   }
 }
 
@@ -50,12 +55,13 @@ class VideoViewRawVideoPlayer extends StatefulWidget {
   final Widget? overlay;
   final double aspectRatio;
   final List<ChapterEntity> chapters;
+  final VoidCallback? onTapChapter;
   const VideoViewRawVideoPlayer({
     super.key,
     required this.controller,
     this.overlay,
     this.aspectRatio = 16 / 9,
-    required this.chapters,
+    required this.chapters,  this.onTapChapter,
   });
 
   @override
@@ -90,6 +96,7 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
     widget.controller._onPause = _pause;
     widget.controller._onResume = _resume;
     widget.controller._onTogglePausePlay = _togglePausePlay;
+    widget.controller._onPlayedPosition= _onPlayedPosition;
 
     widget.controller.totalDuration = (duration) {
       if (duration != null) {
@@ -153,6 +160,13 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
     }).whenComplete(() {
       if (mounted) setState(() {});
     });
+  }
+  void _onPlayedPosition(Duration playPosition)  {
+    if (_controller?.value.isInitialized ?? false) {
+      if (_controller!.value.duration > playPosition) {
+        _seekToPosition(playPosition.inMilliseconds.toDouble());
+      }
+    }
   }
 
   void _playerStateListener() {
@@ -558,18 +572,23 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                                               if (_getCurrentChapterName() !=
                                                   null)
                                                 Flexible(
-                                                  child: Text(
-                                                    _getCurrentChapterName()!,
-                                                    // "Always Remember Us This Way Always Remember Us This Way",
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 12,
+                                                  child: GestureDetector(
+                                                    onTap: (){
+                                                      widget.onTapChapter?.call();
+                                                    }
+                                                    ,child: Text(
+                                                      _getCurrentChapterName()!,
+                                                      // "Always Remember Us This Way Always Remember Us This Way",
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 12,
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                               if (_getCurrentChapterName() !=
