@@ -20,16 +20,15 @@ class BookmarkEntity {
   });
 
   factory BookmarkEntity.fromJson(Map<String, dynamic> json) => BookmarkEntity(
-        id: json["id"],
-        bookmarkedContent:
-        json["bookmarked_content"] != null
+        id: json["id"] ?? -1,
+        bookmarkedContent: json["bookmarked_content"] != null
             ? BookmarkedContent.fromJson(json["bookmarked_content"])
-            : BookmarkedContent.empty() ,
-        bookmarkedBy:   json["bookmarked_by"] != null
+            : BookmarkedContent.empty(),
+        bookmarkedBy: json["bookmarked_by"] != null
             ? UploadedBy.fromJson(json["bookmarked_by"])
-            : UploadedBy.empty() ,
-        createdAt: json["created_at"]??"",
-        updatedAt: json["updated_at"]??"",
+            : UploadedBy.empty(),
+        createdAt: json["created_at"] ?? "",
+        updatedAt: json["updated_at"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -40,7 +39,6 @@ class BookmarkEntity {
         "updated_at": updatedAt,
       };
 }
-
 
 class BookmarkedContent {
   String id;
@@ -92,29 +90,29 @@ class BookmarkedContent {
 
   factory BookmarkedContent.fromJson(Map<String, dynamic> json) =>
       BookmarkedContent(
-        id: json["id"]??"",
-        title: json["title"]??"",
-        description: json["description"]??"",
-        videoUrl: json["video_url"]??"",
-        thumbnailUrl: json["thumbnail_url"]??"",
-        uploadId: json["upload_id"]??"",
+        id: json["id"] ?? "",
+        title: json["title"] ?? "",
+        description: json["description"] ?? "",
+        videoUrl: json["video_url"] ?? "",
+        thumbnailUrl: json["thumbnail_url"] ?? "",
+        uploadId: json["upload_id"] ?? "",
         feedback: json["feedback"] != null
             ? FeedbackEntity.fromJson(json["feedback"])
             : FeedbackEntity.empty(),
         folder: json["folder"] != null
             ? FolderEntity.fromJson(json["folder"])
             : FolderEntity.empty(),
-        chapters:json["chapters"] == null
+        chapters: json["chapters"] == null
             ? []
             : List<ChapterEntity>.from(
-            json["chapters"]!.map((x) => ChapterEntity.fromJson(x))),
-        uploadedBy:json["uploaded_by"] != null
+                json["chapters"]!.map((x) => ChapterEntity.fromJson(x))),
+        uploadedBy: json["uploaded_by"] != null
             ? UploadedBy.fromJson(json["uploaded_by"])
             : UploadedBy.empty(),
-        createdAt: json["created_at"]??"",
-        updatedAt: json["updated_at"]??"",
-        isPublished: json["is_published"]??"",
-        isFeatured: json["is_featured"]??"",
+        createdAt: json["created_at"] ?? "",
+        updatedAt: json["updated_at"] ?? "",
+        isPublished: json["is_published"] ?? "",
+        isFeatured: json["is_featured"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -134,15 +132,3 @@ class BookmarkedContent {
         "is_featured": isFeatured,
       };
 }
-
-
-
-
-
-
-
-
-
-
-
-

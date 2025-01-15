@@ -114,10 +114,13 @@ class _GiveFeedbackScoreScreenState extends State<GiveFeedbackScoreScreen>
                   tapAction: () =>
                       giveScore(screenArgs.videoId, screenArgs.feedback),
                   onSuccess: (x) {
+                    // if (mounted) {
+                    //   setState(() {
+                    //
+                    //   });
+                    // }
+                    screenArgs.onSuccess.call();
                     Navigator.pop(context, x);
-                    if (mounted) {
-                      setState(() {});
-                    }
                   },
                 ),
               ],

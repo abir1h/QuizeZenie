@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import '../../feature/bookmark/models/feedback.dart';
 import '../../feature/bookmark/models/form_category.dart';
 import '../../feature/profile/models/profile_entity.dart';
@@ -36,8 +38,9 @@ class AccountDetailsScreenArgs {
 class GiveScoreScreenArgs {
   String videoId;
   FeedbackEntity feedback;
-
-  GiveScoreScreenArgs({required this.videoId, required this.feedback});
+  VoidCallback onSuccess;
+  GiveScoreScreenArgs(
+      {required this.videoId, required this.feedback, required this.onSuccess});
 }
 
 class FeedbackScoreArgs {

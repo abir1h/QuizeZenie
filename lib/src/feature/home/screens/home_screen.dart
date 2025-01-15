@@ -630,19 +630,19 @@ class FeaturedItemWidget extends StatelessWidget with AppTheme {
                     borderRadius: BorderRadius.circular(50),
                     child: CachedNetworkImage(
                       imageUrl:
-                          "https://www.treasury.gov.ph/wp-content/uploads/2022/01/male-placeholder-image.jpeg",
+                         data.uploadedBy.profileUrl,
                       fit: BoxFit.cover,
                       height: size.s20,
                       width: size.s20,
                       placeholder: (context, url) =>
                           const CircularProgressIndicator(),
                       errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                         Image.asset(ImageAssets.placeholder),
                     ),
                   ),
                   SizedBox(width: size.s4),
                   Text(
-                    data.uploadedBy.firstName,
+                    data.uploadedBy.fullName,
                     style: TextStyle(
                       color: clr.subTitleColor,
                       fontSize: size.textXXSmall,
