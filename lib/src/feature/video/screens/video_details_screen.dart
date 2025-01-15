@@ -1,4 +1,5 @@
 import 'package:co_learning_mobile_app/src/common/widgets/custom_toasty.dart';
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/chapter.dart';
 import 'package:co_learning_mobile_app/src/feature/video/models/comment_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -83,21 +84,27 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                       interceptSeekTo: onInterceptPlaybackSeekToPosition,
                       playedPositionStream: onPlayedStreamController.stream,
                       chapters: data.chapters,
+                      onChangedChapter: (value) {
+                        initialSelectedChapter = value;
+                        chapterEntityController.sink.add(value);
+                      },
                       onTapChapter: () {
                         _scaffoldKey.currentState?.showBottomSheet(
                           (context) {
                             return DraggableScrollableSheet(
                               initialChildSize: 0.70,
                               minChildSize: 0.2,
-                              maxChildSize: 1,
+                              maxChildSize: .70,
                               expand: false,
                               builder: (_, controller) {
                                 return Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: size.s16),
                                   decoration: BoxDecoration(
                                     // color: Colors.white,
                                     borderRadius: BorderRadius.only(
-                                      topLeft: const Radius.circular(25.0),
-                                      topRight: const Radius.circular(25.0),
+                                      topLeft: Radius.circular(size.s12),
+                                      topRight: Radius.circular(size.s12),
                                     ),
                                   ),
                                   child: Column(
@@ -105,48 +112,67 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                       Icon(
                                         Icons.remove,
                                         color: Colors.grey[600],
+                                        size: size.s24,
                                       ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text("Chapter in this video"),
-                                          Icon(Icons.close)
+                                          Text(
+                                            "Chapter in this video",
+                                            style: TextStyle(
+                                                fontSize: size.textSmall,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          InkWell(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Icon(
+                                                Icons.close,
+                                                size: size.s24,
+                                              ))
                                         ],
                                       ),
-                                      Expanded(
-                                        child: ListView.builder(
-                                          controller: controller,
-                                          itemCount: data.chapters.length,
-                                          itemBuilder: (_, index) {
-                                            return ViewChapterItemWidget(
-                                              // key: ObjectKey(item),
-                                              // onTapEdit: () {
-                                              //
-                                              //   showCupertinoModalPopup(
-                                              //     context: context,
-                                              //     builder: (BuildContext context) {
-                                              //       return CreateChapterBottomSheet(
-                                              //         videoId: videoId,
-                                              //         totalDuration: totalVideoDuration!,
-                                              //         userPosition: userPlayedPosition!,
-                                              //         title: item.title,
-                                              //         chapterTime:  Duration(seconds:  item.startTimeSeconds.round()),
-                                              //         chapterId: item.id,
-                                              //
-                                              //         chapterList: (value) {
-                                              //           onLoadChapterList(value);
-                                              //         },
-                                              //       );
-                                              //     },
-                                              //   );
-                                              // },
-                                              data: data.chapters[index],
-                                              onTap: () {},
-                                            );
-                                          },
-                                        ),
+                                      SizedBox(height: size.s12),
+                                      Divider(
+                                        color: clr.iconGrey,
+                                        height: size.s1,
                                       ),
+                                      SizedBox(height: size.s12),
+                                      Expanded(
+                                          child: StreamBuilder<ChapterEntity>(
+                                              stream: chapterEntityController
+                                                  .stream,
+                                              initialData:
+                                                  initialSelectedChapter,
+                                              builder: (
+                                                BuildContext context,
+                                                AsyncSnapshot<ChapterEntity>
+                                                    snapshot,
+                                              ) {
+                                                return ListView.builder(
+                                                  controller: controller,
+                                                  itemCount:
+                                                      data.chapters.length,
+                                                  itemBuilder: (_, index) {
+                                                    return ViewChapterItemWidget(
+                                                      selectedChapter:
+                                                          snapshot.data,
+                                                      data:
+                                                          data.chapters[index],
+                                                      onTap: () {
+                                                        onPlayedStreamController.add(
+                                                            DataLoadedState(Duration(
+                                                                seconds: data
+                                                                    .chapters[
+                                                                        index]
+                                                                    .startTimeSeconds)));
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              })),
                                     ],
                                   ),
                                 );

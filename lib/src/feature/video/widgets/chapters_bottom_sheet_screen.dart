@@ -11,7 +11,8 @@ class ChaptersBottomSheet extends StatefulWidget {
   final ValueChanged<ChapterEntity> onSelectChapter;
   const ChaptersBottomSheet({
     super.key,
-    required this.chapterList, required this.onSelectChapter,
+    required this.chapterList,
+    required this.onSelectChapter,
   });
 
   @override
@@ -21,8 +22,6 @@ class ChaptersBottomSheet extends StatefulWidget {
 
 class _ExamInstructionBottomSheetState extends State<ChaptersBottomSheet>
     with AppTheme {
-
-
   @override
   Widget build(BuildContext context) {
     return AppScrollView(
@@ -34,7 +33,7 @@ class _ExamInstructionBottomSheetState extends State<ChaptersBottomSheet>
             items: widget.chapterList,
             buildItem: (context, index, item) {
               return GestureDetector(
-                onTap: (){
+                onTap: () {
                   widget.onSelectChapter.call(item);
                 },
                 child: ViewChapterItemWidget(
@@ -59,7 +58,7 @@ class _ExamInstructionBottomSheetState extends State<ChaptersBottomSheet>
                   //     },
                   //   );
                   // },
-                  data: item, onTap: () {  },
+                  data: item, onTap: () {},
                 ),
               );
             },
@@ -68,10 +67,7 @@ class _ExamInstructionBottomSheetState extends State<ChaptersBottomSheet>
       ),
     );
   }
-
 }
-
-
 
 class ViewChapterItemSectionWidget<T> extends StatelessWidget with AppTheme {
   final List<T> items;
@@ -102,92 +98,98 @@ class ViewChapterItemSectionWidget<T> extends StatelessWidget with AppTheme {
 class ViewChapterItemWidget extends StatelessWidget with AppTheme {
   final ChapterEntity data;
   final VoidCallback onTap;
-  const ViewChapterItemWidget({
-    super.key,
-    required this.data,
-    required this.onTap
-  });
+  final ChapterEntity? selectedChapter;
+  const ViewChapterItemWidget(
+      {super.key, required this.data, required this.onTap, this.selectedChapter});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s12),
-      decoration: BoxDecoration(
-          color: clr.whiteColor,
+    return GestureDetector(
+      onTap: () => onTap(),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: size.s16, vertical: size.s12),
+        decoration: BoxDecoration(
+          color: selectedChapter?.id!=data.id?clr.whiteColor:clr.grayColor.withOpacity(.2),
           borderRadius: BorderRadius.circular(size.s8),
-          border: Border.all(color: clr.borderGray, width: size.s1)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: ClipRRect(
-                  borderRadius:
-                  BorderRadius.circular(size.s8), // Rounded image
-                  child: AspectRatio(aspectRatio: 120/72,
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
+          // border: Border.all(color: clr.borderGray, width: size.s1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(size.s8), // Rounded image
+                    child: AspectRatio(
+                      aspectRatio: 120 / 72,
+                      child: Container(
+                        decoration: BoxDecoration(border: Border.all(color: const Color(0xff51A4FF),width: 2.w)),
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
 
-                      imageUrl: data.thumbnailUrl,
-                      // placeholder: (context, url) =>
-                      //     const CircularProgressIndicator(), // Placeholder widget
-                      errorWidget: (context, url, error) => Image.network(
-                        "https://archive.org/download/placeholder-image/placeholder-image.jpg",
-                        height: 60.h,
-                        width: 60.w,
-                        fit: BoxFit.cover,
-                        color: clr.borderGray,
-                      ), // Error widget
+                          imageUrl: data.thumbnailUrl,
+                          // placeholder: (context, url) =>
+                          //     const CircularProgressIndicator(), // Placeholder widget
+                          errorWidget: (context, url, error) => Image.network(
+                            "https://archive.org/download/placeholder-image/placeholder-image.jpg",
+                            height: 60.h,
+                            width: 60.w,
+                            fit: BoxFit.cover,
+                            color: clr.borderGray,
+                          ), // Error widget
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              size.s12.kWidth,
-              Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      data.title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: size.textSmall,
-                        color: clr.textColorGrey2,
+                size.s12.kWidth,
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: size.textXSmall,
+                          color: clr.textColorGrey2,
+                        ),
                       ),
-                    ),
-                    size.s20.kHeight,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: size.s12, vertical: size.s4),
-                          decoration: BoxDecoration(
-                            color: clr.scoreExpandedCardItemColor,
-                            borderRadius: BorderRadius.circular(size.s4),
-                          ),
-                          child: Text(
-                            formatDuration(data.startTimeSeconds),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: size.textSmall,
-                              color: clr.blackColor,
+                      size.s20.kHeight,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.s2, vertical: size.s2),
+                            decoration: BoxDecoration(
+                              color: clr.scoreExpandedCardItemColor,
+                              borderRadius: BorderRadius.circular(size.s4),
+                            ),
+                            child: Text(
+                              formatDuration(data.startTimeSeconds),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: size.textXXSmall,
+                                color: clr.blackColor,
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(child: size.s8.kWidth),
-                      ],
-                    )
-                  ],
+                          Expanded(child: size.s8.kWidth),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              size.s12.kWidth,
-            ],
-          ),
-        ],
+                size.s12.kWidth,
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

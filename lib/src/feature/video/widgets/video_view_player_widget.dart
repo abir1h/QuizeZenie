@@ -23,7 +23,8 @@ class VideoViewRawVideoPlayerController {
   }) {
     _onPlay?.call(url, playPosition, autoPlay);
   }
-  void onPlayedPosition( Duration playPosition) {
+
+  void onPlayedPosition(Duration playPosition) {
     _onPlayedPosition?.call(playPosition);
   }
 
@@ -46,7 +47,7 @@ class VideoViewRawVideoPlayerController {
     interceptSeekTo = null;
     _onPause = null;
     _onResume = null;
-    _onPlayedPosition=null;
+    _onPlayedPosition = null;
   }
 }
 
@@ -56,12 +57,15 @@ class VideoViewRawVideoPlayer extends StatefulWidget {
   final double aspectRatio;
   final List<ChapterEntity> chapters;
   final VoidCallback? onTapChapter;
+  final ValueChanged<ChapterEntity>? onSelectChapter;
   const VideoViewRawVideoPlayer({
     super.key,
     required this.controller,
     this.overlay,
     this.aspectRatio = 16 / 9,
-    required this.chapters,  this.onTapChapter,
+    required this.chapters,
+    this.onTapChapter,
+    this.onSelectChapter,
   });
 
   @override
@@ -96,7 +100,7 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
     widget.controller._onPause = _pause;
     widget.controller._onResume = _resume;
     widget.controller._onTogglePausePlay = _togglePausePlay;
-    widget.controller._onPlayedPosition= _onPlayedPosition;
+    widget.controller._onPlayedPosition = _onPlayedPosition;
 
     widget.controller.totalDuration = (duration) {
       if (duration != null) {
@@ -161,7 +165,8 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
       if (mounted) setState(() {});
     });
   }
-  void _onPlayedPosition(Duration playPosition)  {
+
+  void _onPlayedPosition(Duration playPosition) {
     if (_controller?.value.isInitialized ?? false) {
       if (_controller!.value.duration > playPosition) {
         _seekToPosition(playPosition.inMilliseconds.toDouble());
@@ -571,12 +576,13 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                                                 ),
                                               if (_getCurrentChapterName() !=
                                                   null)
-                                                Flexible(
-                                                  child: GestureDetector(
-                                                    onTap: (){
-                                                      widget.onTapChapter?.call();
-                                                    }
-                                                    ,child: Text(
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    widget.onTapChapter
+                                                        ?.call();
+                                                  }
+                                                  ,child: Flexible(
+                                                    child: Text(
                                                       _getCurrentChapterName()!,
                                                       // "Always Remember Us This Way Always Remember Us This Way",
                                                       style: const TextStyle(
@@ -593,14 +599,20 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                                                 ),
                                               if (_getCurrentChapterName() !=
                                                   null)
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(left: 4),
-                                                  child: Icon(
-                                                    Icons
-                                                        .arrow_forward_ios_outlined,
-                                                    color: Colors.white,
-                                                    size: 14,
+                                                GestureDetector(
+                                                  onTap: (){
+                                                    widget.onTapChapter
+                                                        ?.call();
+                                                  }
+                                                  ,child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.only(left: 4),
+                                                    child: Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_outlined,
+                                                      color: Colors.white,
+                                                      size: 14,
+                                                    ),
                                                   ),
                                                 ),
                                             ],
@@ -681,13 +693,18 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
     );
   }
 
+  String _currentChapterId = "";
+
   String? _getCurrentChapterName() {
     if (_controller == null || !_controller!.value.isInitialized) return null;
-
     final currentPosition = _sliderValue;
     for (int i = widget.chapters.length - 1; i >= 0; i--) {
       if (currentPosition >=
           convertSecondsToMilliseconds(widget.chapters[i].startTimeSeconds)) {
+        if (_currentChapterId != widget.chapters[i].id) {
+          _currentChapterId = widget.chapters[i].id;
+          widget.onSelectChapter?.call(widget.chapters[i]);
+        }
         return widget.chapters[i].title;
       }
     }
