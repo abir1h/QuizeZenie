@@ -33,6 +33,7 @@ class VideoDetailsScreen extends StatefulWidget {
 
 class _VideoDetailsScreenState extends State<VideoDetailsScreen>
     with VideoDetailsScreenService, AppTheme {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   // @override
   // void initState() {
   //   ///Initially load course details
@@ -60,6 +61,7 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
       top: MediaQuery.of(context).orientation == Orientation.portrait,
       bottom: true,
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: clr.whiteColor,
         body: AppStreamBuilder<VideoEntity>(
           stream: videoDetailsStreamController.stream,
@@ -81,19 +83,77 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                       interceptSeekTo: onInterceptPlaybackSeekToPosition,
                       playedPositionStream: onPlayedStreamController.stream,
                       chapters: data.chapters,
-                      onTapChapter: (){
-                        showCupertinoModalPopup(
-                          context: context,
-
-                          builder: (BuildContext context) {
-                            return ChaptersBottomSheet(
-                              chapterList: data.chapters,
-                              onSelectChapter: (chapter){
-                                onPlayedStreamController
-                                    .add(DataLoadedState<Duration>(Duration(seconds: chapter.startTimeSeconds)));
+                      onTapChapter: () {
+                        _scaffoldKey.currentState?.showBottomSheet(
+                          (context) {
+                            return DraggableScrollableSheet(
+                              initialChildSize: 0.70,
+                              minChildSize: 0.2,
+                              maxChildSize: 1,
+                              expand: false,
+                              builder: (_, controller) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    // color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: const Radius.circular(25.0),
+                                      topRight: const Radius.circular(25.0),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.remove,
+                                        color: Colors.grey[600],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Chapter in this video"),
+                                          Icon(Icons.close)
+                                        ],
+                                      ),
+                                      Expanded(
+                                        child: ListView.builder(
+                                          controller: controller,
+                                          itemCount: data.chapters.length,
+                                          itemBuilder: (_, index) {
+                                            return ViewChapterItemWidget(
+                                              // key: ObjectKey(item),
+                                              // onTapEdit: () {
+                                              //
+                                              //   showCupertinoModalPopup(
+                                              //     context: context,
+                                              //     builder: (BuildContext context) {
+                                              //       return CreateChapterBottomSheet(
+                                              //         videoId: videoId,
+                                              //         totalDuration: totalVideoDuration!,
+                                              //         userPosition: userPlayedPosition!,
+                                              //         title: item.title,
+                                              //         chapterTime:  Duration(seconds:  item.startTimeSeconds.round()),
+                                              //         chapterId: item.id,
+                                              //
+                                              //         chapterList: (value) {
+                                              //           onLoadChapterList(value);
+                                              //         },
+                                              //       );
+                                              //     },
+                                              //   );
+                                              // },
+                                              data: data.chapters[index],
+                                              onTap: () {},
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
                               },
                             );
                           },
+                          enableDrag: true, // Allow dragging the bottom sheet
                         );
                       },
                       onTotalVideoDuration: (e) {},

@@ -25,66 +25,48 @@ class _ExamInstructionBottomSheetState extends State<ChaptersBottomSheet>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          margin: EdgeInsets.only(top: 250),
-          decoration: BoxDecoration(
-            color: clr.whiteColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(size.s32),
-              topRight: Radius.circular(size.s32),
-            ),
-          ),
-          child: AppScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ViewChapterItemSectionWidget<ChapterEntity>(
-                  items: widget.chapterList,
-                  buildItem: (context, index, item) {
-                    return GestureDetector(
-                      onTap: (){
-                        widget.onSelectChapter.call(item);
-                      },
-                      child: ViewChapterItemWidget(
-                        key: ObjectKey(item),
-                        // onTapEdit: () {
-                        //
-                        //   showCupertinoModalPopup(
-                        //     context: context,
-                        //     builder: (BuildContext context) {
-                        //       return CreateChapterBottomSheet(
-                        //         videoId: videoId,
-                        //         totalDuration: totalVideoDuration!,
-                        //         userPosition: userPlayedPosition!,
-                        //         title: item.title,
-                        //         chapterTime:  Duration(seconds:  item.startTimeSeconds.round()),
-                        //         chapterId: item.id,
-                        //
-                        //         chapterList: (value) {
-                        //           onLoadChapterList(value);
-                        //         },
-                        //       );
-                        //     },
-                        //   );
-                        // },
-                        data: item, onTap: () {  },
-                      ),
-                    );
-                  },
+    return AppScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ViewChapterItemSectionWidget<ChapterEntity>(
+            items: widget.chapterList,
+            buildItem: (context, index, item) {
+              return GestureDetector(
+                onTap: (){
+                  widget.onSelectChapter.call(item);
+                },
+                child: ViewChapterItemWidget(
+                  key: ObjectKey(item),
+                  // onTapEdit: () {
+                  //
+                  //   showCupertinoModalPopup(
+                  //     context: context,
+                  //     builder: (BuildContext context) {
+                  //       return CreateChapterBottomSheet(
+                  //         videoId: videoId,
+                  //         totalDuration: totalVideoDuration!,
+                  //         userPosition: userPlayedPosition!,
+                  //         title: item.title,
+                  //         chapterTime:  Duration(seconds:  item.startTimeSeconds.round()),
+                  //         chapterId: item.id,
+                  //
+                  //         chapterList: (value) {
+                  //           onLoadChapterList(value);
+                  //         },
+                  //       );
+                  //     },
+                  //   );
+                  // },
+                  data: item, onTap: () {  },
                 ),
-                    ],
-                  ),
-            ),
+              );
+            },
           ),
-        ),
-      );
+        ],
+      ),
+    );
   }
 
 }
