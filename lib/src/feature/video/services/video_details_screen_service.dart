@@ -8,6 +8,7 @@ import '../../../common/models/action_result.dart';
 import '../../../common/routes/app_route_args.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../../bookmark/gateway/bookamark_gateway.dart';
+import '../../bookmark/models/bookmark_entity.dart';
 import '../../bookmark/models/feedback.dart';
 import '../../bookmark/models/form_category.dart';
 import '../../feedback_score/gateways/feedback_score_gateway.dart';
@@ -37,6 +38,10 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
 
   int selectedCategoryId = 0;
   int selectedTypeId = 0;
+
+  late VideoEntity videoData;
+  String videoStartTime = "";
+  String videoEndTime = "";
 
   ///Service configurations
   @override
@@ -78,7 +83,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
   final AppStreamController<List<FeedbackScoreEntity>>
       feedbackScoreStreamController = AppStreamController();
   final AppStreamController<Duration> onPlayedStreamController =
-  AppStreamController();
+      AppStreamController();
 
   ///Load Video Details Data
   void loadInitialData(String videoId) {
@@ -91,6 +96,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
       VideoGateway.getVideoDetails(videoId).then((value) {
         ///Data loaded state
         if (value.status == Status.success) {
+          videoData = value.data!;
           videoDetailsStreamController
               .add(DataLoadedState<VideoEntity>(value.data!));
           _onPlayVideo(value.data!);
@@ -149,24 +155,24 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
         _view.showWarning(value.message);
       } else {
         _view.showSuccess(value.message);
-        setState(() {
-          loadCommentData(videoId);
-        });
       }
       return value;
     });
   }
 
   ///Do Comment
-  Future<ActionResult<VideoEntity>> doBookmark(String videoId) async {
+  Future<ActionResult<BookmarkEntity>> doBookmark(String videoId) async {
     return BookmarkGateway.doBookmark(videoId).then((value) {
       if (value.status != Status.success) {
         _view.showWarning(value.message);
       } else {
+        videoData.isBookmarked = !videoData.isBookmarked;
+        videoDetailsStreamController
+            .add(DataLoadedState<VideoEntity>(videoData));
         _view.showSuccess(value.message);
-        setState(() {
-          loadInitialData(videoId);
-        });
+        // setState(() {
+        //   loadInitialData(videoId);
+        // });
       }
       return value;
     });
@@ -273,9 +279,24 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
         .add(DataLoadedState<VideoContentViewModel>(videoContent));
   }
 
+  String formatDuration(int totalSeconds) {
+    // Calculate hours, minutes, and seconds
+    int hours = totalSeconds ~/ 3600; // Divide by 3600 to get hours
+    int minutes = (totalSeconds % 3600) ~/ 60; // Get the remaining minutes
+    int seconds = totalSeconds % 60; // Get the remaining seconds
+
+    // Format the output as "hh:mm:ss" with leading zeros if necessary
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+
   void onPlaybackProgressChanged(double playedPosition, double totalDuration) {
     // ///Update last played position only if played position is larger
-    // int playedPositionSec = (playedPosition ~/ 1000).round();
+    int playedPositionSec = (playedPosition ~/ 1000).round();
+    videoStartTime = formatDuration(playedPositionSec);
+    videoEndTime = formatDuration(playedPositionSec + 10);
+
+    // print(
+    //     'VideoDetailsScreenService.onPlaybackProgressChanged$videoStartTime$videoEndTime');
     // if(currentContent.lastStudyTimeSec < playedPositionSec) {
     //   currentContent.lastStudyTimeSec = playedPositionSec;
     // }
@@ -296,6 +317,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     //   });
     // }
   }
+
   double onInterceptPlaybackSeekToPosition(
       double seekPosition, double totalDuration) {
     /// seekIntercept logic

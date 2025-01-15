@@ -3,13 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/constants/app_theme.dart';
 import '../../../common/widgets/action_button.dart';
-import '../../../common/widgets/custom_button.dart';
 import '../../../common/widgets/custom_toasty.dart';
 import '../../bookmark/models/feedback.dart';
 import '../../bookmark/models/form_category.dart';
 import '../../bookmark/models/form_category_type.dart';
-import '../models/comment_entity.dart';
-import '../screens/video_details_screen.dart';
 import '../services/video_details_screen_service.dart';
 
 /*class CommentCreateBottomSheet extends StatefulWidget {
@@ -135,13 +132,18 @@ class CommentCreateBottomSheet extends StatefulWidget {
   final String videoId;
   final String feedbackId;
   final List<FormCategory> formCategory;
-
+  final String startTime;
+  final String endTime;
+  final VoidCallback onSuccess;
   const CommentCreateBottomSheet({
     super.key,
     required this.isGood,
     required this.videoId,
     required this.feedbackId,
     required this.formCategory,
+    required this.startTime,
+    required this.endTime,
+    required this.onSuccess,
   });
 
   @override
@@ -207,19 +209,21 @@ class _CommentCreateBottomSheetState extends State<CommentCreateBottomSheet>
                                 List.generate(filteredItems.length, (index2) {
                               var filteredItem = filteredItems[index2];
                               bool isSelected =
-                                  selectedTypeId == filteredItem.type.id;
+                                  item.category.id == selectedCategoryId &&
+                                      filteredItem.type.id == selectedTypeId;
                               return GestureDetector(
                                 onTap: () {
                                   setState(() {
                                     if (isSelected) {
+                                      // Deselect the item
                                       selectedTypeId = 0;
                                       selectedCategoryId = 0;
                                     } else {
+                                      // Select the item
                                       selectedTypeId = filteredItem.type.id;
                                       selectedCategoryId = item.category.id;
                                     }
                                   });
-                                  // print('_CommentCreateBottomSheetState.build$selectedTypeId');
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(
@@ -332,8 +336,8 @@ class _CommentCreateBottomSheetState extends State<CommentCreateBottomSheet>
                               selectedCategoryId,
                               selectedTypeId,
                               widget.videoId,
-                              "00:05:50",
-                              "00:06:10",
+                              widget.startTime,
+                              widget.endTime,
                             ),
                             onCheck: () {
                               if (selectedTypeId == 0) {
@@ -346,9 +350,10 @@ class _CommentCreateBottomSheetState extends State<CommentCreateBottomSheet>
                             },
                             onSuccess: (x) {
                               Navigator.pop(context, x);
-                              if (mounted) {
-                                setState(() {});
-                              }
+                              widget.onSuccess.call();
+                              // if (mounted) {
+                              //   setState(() {});
+                              // }
                             },
                           ),
                         ),

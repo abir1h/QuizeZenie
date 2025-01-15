@@ -81,16 +81,16 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                       interceptSeekTo: onInterceptPlaybackSeekToPosition,
                       playedPositionStream: onPlayedStreamController.stream,
                       chapters: data.chapters,
-                      onTapChapter: (){
+                      onTapChapter: () {
                         showCupertinoModalPopup(
                           context: context,
-
                           builder: (BuildContext context) {
                             return ChaptersBottomSheet(
                               chapterList: data.chapters,
-                              onSelectChapter: (chapter){
-                                onPlayedStreamController
-                                    .add(DataLoadedState<Duration>(Duration(seconds: chapter.startTimeSeconds)));
+                              onSelectChapter: (chapter) {
+                                onPlayedStreamController.add(
+                                    DataLoadedState<Duration>(Duration(
+                                        seconds: chapter.startTimeSeconds)));
                               },
                             );
                           },
@@ -307,6 +307,8 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                 ),
                               ),
                               SizedBox(height: size.s8),
+
+                              ///Feedback Comment
                               AppStreamBuilder<List<CommentEntity>>(
                                 stream: commentStreamController.stream,
                                 loadingBuilder: (context) {
@@ -327,6 +329,8 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                 },
                               ),
                               SizedBox(height: size.s12),
+
+                              ///Feedback Score
                               AppStreamBuilder<List<FeedbackScoreEntity>>(
                                 stream: feedbackScoreStreamController.stream,
                                 loadingBuilder: (context) {
@@ -444,11 +448,17 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                     image: ImageAssets.chat,
                                     bgColor: clr.bgImprove,
                                     textColor: clr.improveText,
-                                    onTap: () => onTapComment(
-                                        true,
-                                        data.id,
-                                        data.feedback.id.toString(),
-                                        data.feedback.formCategories),
+                                    onTap: () {
+                                      onTapComment(
+                                          true,
+                                          data.id,
+                                          data.feedback.id.toString(),
+                                          data.feedback.formCategories,
+                                          videoStartTime,
+                                          videoEndTime);
+                                      print(
+                                          '_VideoDetailsScreenState.build$videoStartTime$videoEndTime');
+                                    },
                                   ),
                                   size.s16.kWidth,
                                   FeedBackWidget(
@@ -460,7 +470,9 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
                                         false,
                                         data.id,
                                         data.feedback.id.toString(),
-                                        data.feedback.formCategories),
+                                        data.feedback.formCategories,
+                                        videoStartTime,
+                                        videoEndTime),
                                   ),
                                 ],
                               ),
@@ -529,7 +541,7 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
   }
 
   void onTapComment(bool isGood, String videoId, String feedbackId,
-      List<FormCategory> fomCategory) {
+      List<FormCategory> fomCategory, String startTime, String endTime) {
     showCupertinoModalPopup(
       context: context,
       builder: (context) => CommentCreateBottomSheet(
@@ -537,6 +549,11 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
         videoId: videoId,
         feedbackId: feedbackId,
         formCategory: fomCategory,
+        startTime: startTime,
+        endTime: endTime,
+        onSuccess: () {
+          loadCommentData(videoId);
+        },
       ),
     );
   }
@@ -585,7 +602,10 @@ class _VideoDetailsScreenState extends State<VideoDetailsScreen>
   void navigateToGiveFeedbackScoreScreen(
       String videoId, FeedbackEntity feedback) {
     Navigator.of(context).pushNamed(AppRoute.giveFeedbackScoreScreen,
-        arguments: GiveScoreScreenArgs(videoId: videoId, feedback: feedback));
+        arguments: GiveScoreScreenArgs(
+            videoId: videoId,
+            feedback: feedback,
+            onSuccess: () => loadFeedbackScoreData(videoId)));
   }
 }
 
@@ -797,54 +817,56 @@ class ScoreItemSectionWidget<T> extends StatelessWidget with AppTheme {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: size.s16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return items.isNotEmpty
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Feedback Score",
-                style: TextStyle(
-                    color: clr.textColorBlack1,
-                    fontSize: size.textSmall,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Poppins"),
-              ),
-              if (items.isNotEmpty)
-                GestureDetector(
-                  onTap: onTapViewAll,
-                  child: Container(
-                    color: Colors.white,
-                    child: Text(
-                      "View all (${items.length})",
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size.s16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Feedback Score",
                       style: TextStyle(
-                          color: clr.textColorGrey2,
-                          fontSize: size.textXXSmall,
+                          color: clr.textColorBlack1,
+                          fontSize: size.textSmall,
                           fontWeight: FontWeight.w500,
                           fontFamily: "Poppins"),
                     ),
-                  ),
+                    if (items.length > 1)
+                      GestureDetector(
+                        onTap: onTapViewAll,
+                        child: Container(
+                          color: Colors.white,
+                          child: Text(
+                            "View all (${items.length})",
+                            style: TextStyle(
+                                color: clr.textColorGrey2,
+                                fontSize: size.textXXSmall,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: "Poppins"),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
+              ),
+              SizedBox(height: size.s8),
+              ListView.separated(
+                itemCount: items.length > 1 ? 1 : items.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: size.s16),
+                itemBuilder: (context, index) {
+                  return buildItem(context, index, items[index]);
+                },
+                separatorBuilder: (context, index) {
+                  return SizedBox(height: size.s12);
+                },
+              ),
             ],
-          ),
-        ),
-        SizedBox(height: size.s8),
-        ListView.separated(
-          itemCount: items.length > 1 ? 1 : items.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: size.s16),
-          itemBuilder: (context, index) {
-            return buildItem(context, index, items[index]);
-          },
-          separatorBuilder: (context, index) {
-            return SizedBox(height: size.s12);
-          },
-        ),
-      ],
-    );
+          )
+        : const Offstage();
   }
 }
