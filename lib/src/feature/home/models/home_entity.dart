@@ -106,6 +106,8 @@ class UploadedBy {
   String email;
   String firstName;
   String lastName;
+  String fullName;
+  String profileUrl;
   bool isVerified;
 
   UploadedBy({
@@ -113,17 +115,27 @@ class UploadedBy {
     required this.email,
     required this.firstName,
     required this.lastName,
+    required this.fullName,
+    required this.profileUrl,
     required this.isVerified,
   });
 
   factory UploadedBy.empty() => UploadedBy(
-      id: "", email: "", firstName: "", lastName: "", isVerified: false);
+      id: "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      fullName: "",
+      profileUrl: "",
+      isVerified: false);
 
   factory UploadedBy.fromJson(Map<String, dynamic> json) => UploadedBy(
         id: json["id"] ?? "",
         email: json["email"] ?? "",
         firstName: json["first_name"] ?? "",
         lastName: json["last_name"] ?? "",
+        fullName: json["full_name"] ?? "",
+        profileUrl: json["profile_url"] ?? "",
         isVerified: json["is_verified"] ?? false,
       );
 
