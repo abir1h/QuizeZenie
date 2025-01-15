@@ -576,13 +576,13 @@ class _VideoViewRawVideoPlayerState extends State<VideoViewRawVideoPlayer> {
                                                 ),
                                               if (_getCurrentChapterName() !=
                                                   null)
-                                                GestureDetector(
-                                                  onTap: (){
-                                                    widget.onTapChapter
-                                                        ?.call();
-                                                  }
-                                                  ,child: Flexible(
-                                                    child: Text(
+                                                Flexible(
+                                                  child: GestureDetector(
+                                                    onTap: (){
+                                                      widget.onTapChapter
+                                                          ?.call();
+                                                    }
+                                                    ,child: Text(
                                                       _getCurrentChapterName()!,
                                                       // "Always Remember Us This Way Always Remember Us This Way",
                                                       style: const TextStyle(

@@ -126,7 +126,7 @@ class ViewChapterItemWidget extends StatelessWidget with AppTheme {
                     child: AspectRatio(
                       aspectRatio: 120 / 72,
                       child: Container(
-                        decoration: BoxDecoration(border: Border.all(color: const Color(0xff51A4FF),width: 2.w)),
+                        decoration: BoxDecoration(border: Border.all(color: selectedChapter?.id!=data.id?clr.whiteColor:const Color(0xff51A4FF),width: 2.w)),
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
 
