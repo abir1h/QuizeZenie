@@ -141,6 +141,7 @@ mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
       if (value.status != Status.success) {
         _view.showWarning(value.message);
       }
+      _view.showSuccess(value.message);
       return value;
     });
   }

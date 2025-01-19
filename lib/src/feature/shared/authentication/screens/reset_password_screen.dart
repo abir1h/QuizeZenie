@@ -57,7 +57,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                 child: Text(
                   label(
                       e: en.resetPasswordSubTitleText,
-                      b: bn.forgotPasswordSubTitleText),
+                      b: bn.resetPasswordSubTitleText),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
