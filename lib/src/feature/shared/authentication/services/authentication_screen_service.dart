@@ -75,7 +75,6 @@ mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
 
   bool validateRegisterData(
       String username, String email, String password, bool checkTermCondition) {
-
     if (Validator.isEmpty(username)) {
       _view.showWarning("Name is required!");
       return false;
@@ -102,7 +101,6 @@ mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
     }
   }
 
-
   bool validateLoginData(String email, String password) {
     if (Validator.isEmpty(email)) {
       _view.showWarning("Email is required!");
@@ -116,7 +114,7 @@ mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
   }
 
   void startTimer() {
-    final DateTime targetTime = DateTime.now().add(const Duration(minutes: 5));
+    final DateTime targetTime = DateTime.now().add(const Duration(minutes: 1));
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
@@ -171,12 +169,38 @@ mixin UserAuthenticationService<T extends StatefulWidget> on State<T>
     }
   }
 
+  bool validateOTPData(String otp) {
+    if (Validator.isEmpty(otp)) {
+      _view.showWarning("Please Enter OTP First");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<ActionResult<UserSession>> verifyOTP(
       String userId, String otpId, String otp) async {
     return UserAuthenticationGateway.verifyOTPAction(userId, otpId, otp)
         .then((value) {
       if (value.status != Status.success) {
         _view.showWarning(value.message);
+      }
+      return value;
+    });
+  }
+
+  Future<ActionResult<UserSession>> resendOTP(
+      String email, String otpType) async {
+    return UserAuthenticationGateway.resendOTPAction(email, otpType)
+        .then((value) {
+      if (value.status != Status.success) {
+        _view.showWarning(value.message);
+      } else {
+        _view.showSuccess(value.message);
+        setState(() {
+          isResendButtonDisabled = !isResendButtonDisabled;
+          startTimer();
+        });
       }
       return value;
     });

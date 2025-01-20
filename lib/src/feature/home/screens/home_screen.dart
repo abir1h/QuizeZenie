@@ -130,7 +130,9 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                             fontSize: size.textXXSmall),
                       ),
                       Text(
-                        label(e: "e Learning Project", b: "e Learning Project"),
+                        label(
+                            e: "Co-Learning Platform",
+                            b: "Co-Learning Platform"),
                         style: TextStyle(
                             color: clr.whiteColor,
                             fontWeight: FontWeight.w600,
@@ -166,8 +168,8 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                           height: size.s32,
                           width: size.s32,
                           fit: BoxFit.fill,
-                          imageUrl:
-                          App.currentSession.user.profileUrl.isNotEmpty
+                          imageUrl: App
+                                  .currentSession.user.profileUrl.isNotEmpty
                               ? App.currentSession.user.profileUrl
                               : "https://www.treasury.gov.ph/wp-content/uploads/2022/01/male-placeholder-image.jpeg",
                           placeholder: (context, url) =>
@@ -207,7 +209,8 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               GestureDetector(
-                                onTap: ()=>Navigator.pushNamed(context, AppRoute.searchScreen),
+                                onTap: () => Navigator.pushNamed(
+                                    context, AppRoute.searchScreen),
                                 child: Container(
                                   height: size.s20 * 2,
                                   width: double.infinity,
@@ -353,7 +356,6 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                         return size.s20.kHeight;
                       },
                     ),
-
                   ],
                 ),
               ),
@@ -382,7 +384,6 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
   void showWarning(String message) {
     Toasty.of(context).showWarning(message);
   }
-
 }
 
 class ImageSliderWidget extends StatefulWidget {
@@ -629,15 +630,14 @@ class FeaturedItemWidget extends StatelessWidget with AppTheme {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(50),
                     child: CachedNetworkImage(
-                      imageUrl:
-                         data.uploadedBy.profileUrl,
+                      imageUrl: data.uploadedBy.profileUrl,
                       fit: BoxFit.cover,
                       height: size.s20,
                       width: size.s20,
                       placeholder: (context, url) =>
                           const CircularProgressIndicator(),
                       errorWidget: (context, url, error) =>
-                         Image.asset(ImageAssets.placeholder),
+                          Image.asset(ImageAssets.placeholder),
                     ),
                   ),
                   SizedBox(width: size.s4),

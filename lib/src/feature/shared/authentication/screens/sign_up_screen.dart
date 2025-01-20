@@ -246,7 +246,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                             fontWeight: FontWeight.w400),
                         children: [
                           TextSpan(
-                            text: "Sign In",
+                            text: " Sign In",
                             style: TextStyle(
                                 color: clr.appPrimaryColor,
                                 fontSize: size.textXSmall,

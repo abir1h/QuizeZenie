@@ -1,4 +1,3 @@
-
 import 'package:co_learning_mobile_app/src/common/service/notifier/app_events_notifier.dart';
 import 'package:flutter/material.dart';
 
@@ -75,33 +74,48 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen>
                         label: label(e: "Email Address", b: "អាសយដ្ឋានអ៊ីមែល"),
                       ),
                       CustomDropDown(
-                          onLoadData: loadFeedBack,
-                          onSelected: (status) {},
-                          hintText: label(
-                              e: "School or Collage name",
-                              b: "ឈ្មោះសាលា ឬ Collage"),
-                          onGenerateTitle: (x) => x!.title),
+                          onLoadData: getSchoolList,
+                          onSelected: (x) {
+                            schoolName = x.name;
+                          },
+                          hintText: schoolName.isNotEmpty
+                              ? schoolName
+                              : label(
+                                  e: "School or Collage name",
+                                  b: "ឈ្មោះសាលា ឬ Collage"),
+                          onGenerateTitle: (x) => x.name),
                       size.s20.kHeight,
                       CustomDropDown(
-                          onLoadData: loadFeedBack,
-                          onSelected: (status) {},
-                          hintText:
-                              label(e: "Select Country", b: "ជ្រើសរើសប្រទេស"),
-                          onGenerateTitle: (x) => x!.title),
+                          onLoadData: getCountryList,
+                          onSelected: (x) {
+                            countryId = x.id;
+                            countryName = x.name;
+                          },
+                          hintText: countryName.isNotEmpty
+                              ? countryName
+                              : label(e: "Select Country", b: "ជ្រើសរើសប្រទេស"),
+                          onGenerateTitle: (x) => x.name),
                       size.s20.kHeight,
                       CustomDropDown(
-                          onLoadData: loadFeedBack,
-                          onSelected: (status) {},
-                          hintText: label(e: "Select State", b: "ជ្រើសរើសរដ្ឋ"),
-                          onGenerateTitle: (x) => x!.title),
+                          onLoadData: () => getStateList(countryId),
+                          onSelected: (x) {
+                            stateId = x.id;
+                            stateName = x.name;
+                          },
+                          hintText: stateName.isNotEmpty
+                              ? stateName
+                              : label(e: "Select State", b: "ជ្រើសរើសរដ្ឋ"),
+                          onGenerateTitle: (x) => x.name),
                       size.s20.kHeight,
                       CustomDropDown(
-
-                          onLoadData: loadFeedBack,
-                          onSelected: (status) {},
-                          hintText:
-                              label(e: "Select City", b: "ជ្រើសរើសទីក្រុង"),
-                          onGenerateTitle: (x) => x!.title),
+                          onLoadData: () => getCityList(stateId),
+                          onSelected: (x) {
+                            cityName = x.name;
+                          },
+                          hintText: cityName.isNotEmpty
+                              ? cityName
+                              : label(e: "Select City", b: "ជ្រើសរើសទីក្រុង"),
+                          onGenerateTitle: (x) => x.name),
                       size.s20.kHeight,
                       ProfileTextField(
                         controller: postalCodeController,
@@ -187,7 +201,6 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen>
   void releaseUI() {
     Toasty.of(context).releaseUI();
   }
-
 }
 
 class ProfileTextField extends StatefulWidget {

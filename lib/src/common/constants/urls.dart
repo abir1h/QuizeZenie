@@ -8,6 +8,7 @@ class ApiCredential {
 
   static String registerUser = "auth/mobile/user-registration/";
   static String verifyOTP = "otp/verification/verify/";
+  static String resendOTP = "otp/verification/resend/";
   static String loginWithMobile = "auth/mobile/password-login/";
   static String verifyPassword = "verify-password";
   static String forgotPassword = "auth/mobile/forgot-password-request/";
@@ -29,4 +30,8 @@ class ApiCredential {
   static String doComment = "comments/";
   static String feedbackScore = "feedback-scorings/";
   static String createChapter = "chapters/";
+  static String schoolList = "school/";
+  static String countryList = "location/countries/";
+  static String stateList = "location/states";
+  static String cityList = "location/cities";
 }

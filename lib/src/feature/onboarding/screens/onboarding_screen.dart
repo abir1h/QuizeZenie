@@ -41,7 +41,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       ),
     ),
     OnboardingWidget(
-      image: ImageAssets.icOnBoarding1,
+      image: ImageAssets.icOnBoarding3,
       title: label(
         e: LanguageEn.instance.onboardingTitleText3,
         b: LanguageBn.instance.onboardingTitleText3,

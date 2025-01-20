@@ -59,6 +59,25 @@ mixin UserAuthenticationGateway {
     });
   }
 
+  ///OTP Verification
+  static Future<ActionResult<UserSession>> resendOTPAction(
+      String email, String otpType) async {
+    return Server.instance.postRequest(
+      url: ApiCredential.resendOTP,
+      postData: {
+        "email": email,
+        "otp_type": otpType,
+      },
+    ).then((value) {
+      return ActionResult<UserSession>.fromServerResponse(
+        response: value,
+        generateData: (x) => UserSession.fromJson(x),
+      );
+    }).catchError((e) {
+      return ActionResult<UserSession>.error();
+    });
+  }
+
   static Future<ActionResult<UserSession>> verifyPasswordAction(
       String id, String password, String device, String phoneName) async {
     return Server.instance.postRequest(
@@ -83,9 +102,7 @@ mixin UserAuthenticationGateway {
       String phoneOrEmail) async {
     return Server.instance.postRequest(
       url: ApiCredential.forgotPassword,
-      postData:{
-        "email": phoneOrEmail
-      },
+      postData: {"email": phoneOrEmail},
     ).then((value) {
       return ActionResult<UserSession>.fromServerResponse(
         response: value,
@@ -96,8 +113,12 @@ mixin UserAuthenticationGateway {
     });
   }
 
-  static Future<ActionResult<UserSession>> resetPasswordAction(String userId,
-      String otpId, String newPassword,String confirmPassword,) async {
+  static Future<ActionResult<UserSession>> resetPasswordAction(
+    String userId,
+    String otpId,
+    String newPassword,
+    String confirmPassword,
+  ) async {
     return Server.instance.postRequest(
       url: ApiCredential.resetPassword,
       postData: {

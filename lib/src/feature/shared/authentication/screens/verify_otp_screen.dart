@@ -31,7 +31,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
   void initState() {
     verifyOtpScreenArgs = widget.arguments as VerifyOtpScreenArgs?;
     errorController = StreamController<ErrorAnimationType>();
-    // startTimer();///Todo later
+    startTimer();
+
     super.initState();
   }
 
@@ -128,8 +129,6 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
               size.s16.kHeight,
               ActionButton<UserSession>(
                 title: label(e: "Verify OTP", b: bn.continueText),
-                // onCheck: () => validateLoginWithPhoneOrEmailData(
-                //     phoneOrEmailController.text.trim()),
                 radius: size.s8,
                 textColor: clr.whiteColor,
                 buttonColor: isVerifyButtonEnabled
@@ -140,6 +139,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                   verifyOtpScreenArgs!.authDataModel!.user.otpId,
                   otpController.text.trim(),
                 ),
+                onCheck: () => validateOTPData(otpController.text.trim()),
                 onSuccess: (success) {
                   App.setCurrentSession(success).then((value) {
                     verifyOtpScreenArgs!.isForgotPassword != null
@@ -155,53 +155,47 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                   //     .pushReplacementNamed(AppRoute.signInScreen);
                 },
               ),
-
-              ///Todo later
-              // CustomButton(
-              //     onTap: () => Navigator.pushNamed(
-              //         context, AppRoute.resetPasswordScreen),
-              //     title: "Continue")
-              // Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 25.w),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       TextButton(
-              //         onPressed: () {},
-              //         // onPressed: () => isResendButtonDisabled
-              //         //     ? null
-              //         //     : loginWithPhoneOrEmail(
-              //         //     verifyOtpScreenArgs!.phoneOrEmailData!
-              //         //         .trim(),
-              //         //     true),
-              //         child: Text(
-              //           isResendButtonDisabled
-              //               ? "Send the Code Again"
-              //               : "Send the Code Again",
-              //           style: TextStyle(
-              //               color: isResendButtonDisabled
-              //                   ? clr.textColorGrey
-              //                   : clr.appPrimaryColor,
-              //               fontWeight: FontWeight.w600,
-              //               fontSize: size.textXXSmall,
-              //               decoration: !isResendButtonDisabled
-              //                   ? TextDecoration.underline
-              //                   : null),
-              //         ),
-              //       ),
-              //       isResendButtonDisabled
-              //           ? Text(Helper.formatDuration(remainingTime),
-              //               style: TextStyle(
-              //                   color: clr.textColorGrey,
-              //                   fontWeight: FontWeight.w600,
-              //                   fontSize: size.textXXSmall,
-              //                   decoration: !isResendButtonDisabled
-              //                       ? TextDecoration.underline
-              //                       : null))
-              //           : const SizedBox(),
-              //     ],
-              //   ),
-              // ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      // onPressed: () {},
+                      onPressed: () => isResendButtonDisabled
+                          ? null
+                          : resendOTP(
+                              verifyOtpScreenArgs!.authDataModel!.user.email,
+                              ""),
+                      child: Text(
+                        isResendButtonDisabled
+                            ? "Send the Code Again"
+                            : "Send the Code Again",
+                        style: TextStyle(
+                            color: isResendButtonDisabled
+                                ? clr.textColorGrey
+                                : clr.appPrimaryColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: size.textXXSmall,
+                            decoration: !isResendButtonDisabled
+                                ? TextDecoration.underline
+                                : null,
+                            decorationColor: clr.appPrimaryColor),
+                      ),
+                    ),
+                    isResendButtonDisabled
+                        ? Text(Helper.formatDuration(remainingTime),
+                            style: TextStyle(
+                                color: clr.textColorGrey,
+                                fontWeight: FontWeight.w600,
+                                fontSize: size.textXXSmall,
+                                decoration: !isResendButtonDisabled
+                                    ? TextDecoration.underline
+                                    : null))
+                        : const SizedBox(),
+                  ],
+                ),
+              ),
               size.s28.kHeight,
             ],
           )),

@@ -18,7 +18,9 @@ import '../../../common/service/notifier/app_events_notifier.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../../../common/widgets/custom_dialog_widget.dart';
 import '../../video/services/video_upload_info_screen_service.dart';
+import '../models/location_entity.dart';
 import '../models/profile_entity.dart';
+import '../models/school_entity.dart';
 
 abstract class _ViewModel {
   void showWarning(String message);
@@ -43,6 +45,16 @@ mixin ProfileScreenService<T extends StatefulWidget> on State<T>
   TextEditingController confirmPasswordController = TextEditingController();
 
   AccountDetailsScreenArgs? screenArgs;
+
+  String schoolName = "";
+
+  String countryId = "";
+  String countryName = "";
+
+  String stateId = "";
+  String stateName = "";
+
+  String cityName = "";
 
   @override
   void dispose() {
@@ -107,6 +119,12 @@ mixin ProfileScreenService<T extends StatefulWidget> on State<T>
         TextEditingController(text: args.profileData.designation);
     permanentAddressController =
         TextEditingController(text: args.profileData.presentAddress);
+    schoolName = args.profileData.schoolName;
+    countryName = args.profileData.country;
+    countryId = args.profileData.countryId;
+    stateName = args.profileData.state;
+    stateId = args.profileData.stateId;
+    cityName = args.profileData.city;
     AppEventsNotifier.notify(EventAction.profileScreen);
     // permanentAddressController = TextEditingController(text: args.profileData.);
   }
@@ -126,6 +144,10 @@ mixin ProfileScreenService<T extends StatefulWidget> on State<T>
     addIfNotEmpty(data, "present_address", permanentAddressController.text);
     addIfNotEmpty(data, "postal_code", postalCodeController.text);
     addIfNotEmpty(data, "designation", designationController.text);
+    addIfNotEmpty(data, "school_name", schoolName);
+    addIfNotEmpty(data, "country", countryName);
+    addIfNotEmpty(data, "state", stateName);
+    addIfNotEmpty(data, "city", cityName);
 
     /*if (selectedGender.isNotEmpty && selectedGender.isNotEmpty) {
       data["gender"] = selectedGender;
@@ -221,6 +243,50 @@ mixin ProfileScreenService<T extends StatefulWidget> on State<T>
           AppRoute.signInScreen,
           (Route<dynamic> route) => false,
         );
+      }
+    });
+  }
+
+  Future<List<SchoolEntity>> getSchoolList() async {
+    return ProfileGateway.getSchoolList().then((value) {
+      if (value.status == Status.success) {
+        return value.data!;
+      } else {
+        _view.showWarning(value.message);
+        return [];
+      }
+    });
+  }
+
+  Future<List<LocationEntity>> getCountryList() async {
+    return ProfileGateway.getCountryList().then((value) {
+      if (value.status == Status.success) {
+        return value.data!;
+      } else {
+        _view.showWarning(value.message);
+        return [];
+      }
+    });
+  }
+
+  Future<List<LocationEntity>> getStateList(String countryId) async {
+    return ProfileGateway.getStateList(countryId).then((value) {
+      if (value.status == Status.success) {
+        return value.data!;
+      } else {
+        _view.showWarning(value.message);
+        return [];
+      }
+    });
+  }
+
+  Future<List<LocationEntity>> getCityList(String stateId) async {
+    return ProfileGateway.getCityList(stateId).then((value) {
+      if (value.status == Status.success) {
+        return value.data!;
+      } else {
+        _view.showWarning(value.message);
+        return [];
       }
     });
   }
