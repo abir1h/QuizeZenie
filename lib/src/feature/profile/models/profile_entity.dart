@@ -70,7 +70,7 @@ class ProfileEntity {
         email: json["email"] ?? "",
         firstName: json["first_name"] ?? "",
         lastName: json["last_name"] ?? "",
-        userFullName: json["user_full_name"] ?? "",
+        userFullName: json["full_name"] ?? "",
         designation: json["designation"] ?? "",
         schoolName: json["school_name"] ?? "",
         state: json["state"] ?? "",

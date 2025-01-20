@@ -46,7 +46,7 @@ class LanguageEn {
   String resetPasswordTitleText = "Reset Password";
   String newPasswordTitleText = "Set New Password";
 
-  String resetPasswordSubTitleText = "It was popularised in the 1960s with the release of Letraset sheetscontaining Lorem Ipsum.";
+  String resetPasswordSubTitleText = "To set new password please enter your new password and confirm your new password.";
   String myProfileText = "My Profile";
   String accountDetails = "Account Details";
   String myVideos = "My Videos";

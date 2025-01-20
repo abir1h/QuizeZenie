@@ -14,6 +14,7 @@ class VideoViewPlayerWidget extends StatefulWidget {
   final Stream<DataState<Duration>>? playedPositionStream;
   final Widget? overlay;
   final VoidCallback? onTapChapter;
+  final ValueChanged<ChapterEntity>? onChangedChapter;
 
   final double Function(
       double seekPosition, double totalDuration)? interceptSeekTo;
@@ -29,7 +30,7 @@ class VideoViewPlayerWidget extends StatefulWidget {
     this.playedPositionStream,
     this.overlay,
     this.interceptSeekTo,
-    this.onProgressChanged, this.onTotalVideoDuration, required this.chapters,
+    this.onProgressChanged, this.onTotalVideoDuration, required this.chapters,this.onChangedChapter
   });
 
   @override
@@ -109,6 +110,9 @@ class _VideoViewPlayerWidgetState extends State<VideoViewPlayerWidget> {
       chapters: widget.chapters,
       onTapChapter: (){
         widget.onTapChapter?.call();
+      },
+      onSelectChapter: (chapterEntity){
+        widget.onChangedChapter?.call(chapterEntity);
       },
       aspectRatio: 16/9,
       overlay: Align(alignment: Alignment.topLeft, child: widget.overlay),

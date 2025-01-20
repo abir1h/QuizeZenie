@@ -239,7 +239,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        text: "Already have an account?",
+                        text: "Already have an account? ",
                         style: TextStyle(
                             color: clr.textDarkGrey,
                             fontSize: size.textXSmall,

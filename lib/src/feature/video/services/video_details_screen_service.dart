@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:co_learning_mobile_app/src/feature/bookmark/models/chapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -84,6 +85,9 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
       feedbackScoreStreamController = AppStreamController();
   final AppStreamController<Duration> onPlayedStreamController =
       AppStreamController();
+  final StreamController<ChapterEntity> chapterEntityController=  StreamController<ChapterEntity>.broadcast();
+  ChapterEntity initialSelectedChapter=ChapterEntity.empty();
+
 
   ///Load Video Details Data
   void loadInitialData(String videoId) {
@@ -294,6 +298,7 @@ mixin VideoDetailsScreenService<T extends StatefulWidget> on State<T>
     int playedPositionSec = (playedPosition ~/ 1000).round();
     videoStartTime = formatDuration(playedPositionSec);
     videoEndTime = formatDuration(playedPositionSec + 10);
+
 
     // print(
     //     'VideoDetailsScreenService.onPlaybackProgressChanged$videoStartTime$videoEndTime');
