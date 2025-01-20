@@ -387,13 +387,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                           padding: EdgeInsets.symmetric(vertical: size.s10),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(size.s8),
-                              color: clr.inactiveToggleColor),
+                              color: clr.logoutBColor),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.login_outlined,
-                                color: clr.iconColorGray,
+                                color: clr.appPrimaryColor,
                               ),
                               size.s4.kWidth,
                               Text(
@@ -401,7 +401,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: size.textXSmall,
-                                    color: clr.iconColorGray),
+                                    color: clr.appPrimaryColor),
                               )
                             ],
                           ),

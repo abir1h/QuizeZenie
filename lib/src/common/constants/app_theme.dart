@@ -121,7 +121,7 @@ class ThemeColor {
   Color get scoreIconColor => HexColor("3E5FBD");
   Color get scoreCardColor2 => HexColor("F0F8FF");
   Color get durationColor => HexColor("9CABC233");
-
+  Color get logoutBColor => HexColor("EFF8FF");
 }
 
 // final localStorage = Get.find<LocalStorageServiceWithGetX>();
@@ -177,13 +177,14 @@ extension DoubleExtension on double {
         width: toDouble(),
       );
 }
+
 Widget get kDash => DashedLine(
-  height: 20,
-  width: double.infinity,
-  axis: Axis.horizontal,
-  color: HexColor("B6B6B6"),
-  dashSpace: 5,
-  dashWidth: 4,
-  padding: EdgeInsets.zero,
-  strokeWidth: 1,
-);
+      height: 20,
+      width: double.infinity,
+      axis: Axis.horizontal,
+      color: HexColor("B6B6B6"),
+      dashSpace: 5,
+      dashWidth: 4,
+      padding: EdgeInsets.zero,
+      strokeWidth: 1,
+    );

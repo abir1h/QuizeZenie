@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../common/constants/common_imports.dart';
+import '../../../common/routes/app_route.dart';
 import '../../../common/routes/app_route_args.dart';
 import '../../../common/widgets/app_stream.dart';
 import '../../../common/widgets/circular_loader.dart';
@@ -36,56 +37,61 @@ class _CategoryWiseVideoListScreenState
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(title:  screenArgs.categoryName, child: Container(
-      width: double.maxFinite,
-      height: double.maxFinite,
-      decoration: BoxDecoration(
-          color: clr.whiteColor,
-          border: Border(
-              top: BorderSide(
+    return AppScaffold(
+        title: screenArgs.categoryName,
+        child: Container(
+          width: double.maxFinite,
+          height: double.maxFinite,
+          decoration: BoxDecoration(
+              color: clr.whiteColor,
+              border: Border(
+                  top: BorderSide(
                 color: clr.backgroundColor1,
                 width: 8.w,
               ))),
-      child: AppStreamBuilder<PaginatedListViewController<CategoryEntity>>(
-        stream: videoListStreamController.stream,
-        loadingBuilder: (context) {
-          return const Center(
-            child: CircularLoader(),
-          );
-        },
-        dataBuilder: (context, data) {
-          return PaginatedListView<CategoryEntity>(
-            controller: paginationController,
-            padding: EdgeInsets.symmetric(vertical: size.s8,horizontal: size.s12),
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, item, index) {
-              return CategoryWiseVideoItemWidget(
-                key: ObjectKey(item.id),
-                onTap: (){},
-                data: item,
+          child: AppStreamBuilder<PaginatedListViewController<CategoryEntity>>(
+            stream: videoListStreamController.stream,
+            loadingBuilder: (context) {
+              return const Center(
+                child: CircularLoader(),
               );
             },
-            separatorBuilder: (context) {
-              return  SizedBox(height: size.s12);
-            },
-            loaderBuilder: (context) => Padding(
-              padding: EdgeInsets.all(size.s4),
-              child: Center(
-                child: CircularLoader(
-                  loaderSize: size.s16,
+            dataBuilder: (context, data) {
+              return PaginatedListView<CategoryEntity>(
+                controller: paginationController,
+                padding: EdgeInsets.symmetric(
+                    vertical: size.s8, horizontal: size.s12),
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, item, index) {
+                  return CategoryWiseVideoItemWidget(
+                    key: ObjectKey(item.id),
+                    onTap: () => Navigator.of(context).pushNamed(
+                        AppRoute.videoDetailsScreen,
+                        arguments: VideoDetailsScreenArgs(videoId: item.id)),
+                    data: item,
+                  );
+                },
+                separatorBuilder: (context) {
+                  return SizedBox(height: size.s12);
+                },
+                loaderBuilder: (context) => Padding(
+                  padding: EdgeInsets.all(size.s4),
+                  child: Center(
+                    child: CircularLoader(
+                      loaderSize: size.s16,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
-        emptyBuilder: (context, message, icon) {
-          return EmptyStateWidget(
-            message: message,
-            icon: ImageAssets.icBookmarkFilled,
-          );
-        },
-      ),
-    ));
+              );
+            },
+            emptyBuilder: (context, message, icon) {
+              return EmptyStateWidget(
+                message: message,
+                icon: ImageAssets.icBookmarkFilled,
+              );
+            },
+          ),
+        ));
   }
 
   @override
@@ -125,12 +131,11 @@ class EmptyStateWidget extends StatelessWidget with AppTheme {
   }
 }
 
-
-
 class CategoryWiseVideoItemWidget extends StatelessWidget with AppTheme {
   final CategoryEntity data;
   final VoidCallback onTap;
-  const CategoryWiseVideoItemWidget({super.key, required this.data, required this.onTap});
+  const CategoryWiseVideoItemWidget(
+      {super.key, required this.data, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -148,8 +153,7 @@ class CategoryWiseVideoItemWidget extends StatelessWidget with AppTheme {
                   height: size.s20 * 4,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  imageUrl:
-                      data.thumbnailUrl,
+                  imageUrl: data.thumbnailUrl,
                   placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator()), // Placeholder widget
                   errorWidget: (context, url, error) =>
@@ -185,7 +189,6 @@ class CategoryWiseVideoItemWidget extends StatelessWidget with AppTheme {
               ],
             ),
           ),
-
         ],
       ),
     );

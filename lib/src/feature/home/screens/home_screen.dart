@@ -277,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
                               opacity: isContentVisible ? 1.0 : 0.0,
                               duration: const Duration(milliseconds: 250),
                               child: ImageSliderWidget(
-                                imgList: imgList,
+                                imgList: data.featuredVideos,
                                 initialIndex: 0,
                               ),
                             ),
@@ -387,9 +387,8 @@ class _HomeScreenState extends State<HomeScreen> with AppTheme, HomeService {
 }
 
 class ImageSliderWidget extends StatefulWidget {
-  final List<String> imgList;
+  final List<Video> imgList;
   final int initialIndex;
-
   const ImageSliderWidget(
       {super.key, required this.imgList, required this.initialIndex});
 
@@ -414,22 +413,55 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> with AppTheme {
         CarouselSlider.builder(
           itemCount: widget.imgList.length,
           itemBuilder: (BuildContext context, int index, int realIndex) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(AppRoute.videoDetailsScreen,
+                    arguments: VideoDetailsScreenArgs(
+                        videoId: widget.imgList[index].id));
+              },
               child: Container(
-                color: Colors.cyan,
+                decoration: BoxDecoration(
+                  color: clr.imgBorderColor.withOpacity(.4),
+                  borderRadius: BorderRadius.circular(size.s8),
+                  border: Border.all(color: clr.imgBorderColor, width: size.s1),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(size.s8),
+                  child: Stack(
+                    children: [
+                      CachedNetworkImage(
+                        height: double.infinity,
+                        width: double.infinity,
+                        fit: BoxFit.fill,
+                        imageUrl: widget.imgList[index].thumbnailUrl,
+                        placeholder: (context, url) =>
+                            const Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error_outline),
+                      ),
+                      Positioned(
+                        left: size.s16,
+                        bottom: size.s12,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: size.s12, vertical: size.s4),
+                          decoration: BoxDecoration(
+                            color: clr.appPrimaryColor,
+                            borderRadius: BorderRadius.circular(size.s4),
+                          ),
+                          child: Text(
+                            "Watch Now",
+                            style: TextStyle(
+                                color: clr.whiteColor,
+                                fontSize: size.textXXSmall,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
-              // You can customize this size
-              // child: CachedNetworkImage(
-              //   height: double.infinity,
-              //   width: double.infinity,
-              //   fit: BoxFit.fill,
-              //   imageUrl: widget.imgList[index],
-              //   placeholder: (context, url) =>
-              //       const Center(child: CircularProgressIndicator()),
-              //   errorWidget: (context, url, error) =>
-              //       const Icon(Icons.error_outline),
-              // ),
             );
           },
           options: CarouselOptions(

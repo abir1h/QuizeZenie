@@ -3,16 +3,22 @@ class HomeEntity {
   int totalChapters;
   int totalSchools;
   List<Category> categories;
+  List<Video> featuredVideos;
 
   HomeEntity({
     required this.totalVideos,
     required this.totalChapters,
     required this.totalSchools,
     required this.categories,
+    required this.featuredVideos,
   });
 
   factory HomeEntity.empty() => HomeEntity(
-      totalVideos: 0, totalChapters: 0, totalSchools: 0, categories: []);
+      totalVideos: 0,
+      totalChapters: 0,
+      totalSchools: 0,
+      categories: [],
+      featuredVideos: []);
 
   factory HomeEntity.fromJson(Map<String, dynamic> json) => HomeEntity(
         totalVideos: json["total_videos"] ?? 0,
@@ -22,6 +28,10 @@ class HomeEntity {
             ? List<Category>.from(
                 json["categories"].map((x) => Category.fromJson(x)))
             : [],
+        featuredVideos: json["featured_videos"] != null
+            ? List<Video>.from(
+                json["featured_videos"].map((x) => Video.fromJson(x)))
+            : [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -29,6 +39,8 @@ class HomeEntity {
         "total_chapters": totalChapters,
         "total_schools": totalSchools,
         "categories": List<dynamic>.from(categories.map((x) => x.toJson())),
+        "featured_videos":
+            List<dynamic>.from(featuredVideos.map((x) => x.toJson())),
       };
 }
 
