@@ -1,3 +1,4 @@
+import 'package:co_learning_mobile_app/src/feature/home/screens/home_screen.dart';
 import 'package:co_learning_mobile_app/src/feature/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ class AppRoute {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   static const String splashScreen = "splashScreen";
+  static const String homeScreen = "homeScreen";
 
 }
 
@@ -17,7 +19,8 @@ mixin RouteGenerator {
         switch (setting.name) {
           ///StartUp
 
-
+          case AppRoute.homeScreen:
+            return  HomeScreen();
           default:
             return  SplashScreen();
         }

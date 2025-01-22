@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void navigateToOnBoardingScreen() {
-    // Navigator.of(context)
-    //     .pushNamedAndRemoveUntil(AppRoute.onboardingScreen, (x) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(AppRoute.splashScreen, (x) => false);
   }
 }
