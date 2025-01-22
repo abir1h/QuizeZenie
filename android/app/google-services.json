@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "517673954491",
+    "project_id": "quiz-zenie",
+    "storage_bucket": "quiz-zenie.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517673954491:android:a8f1f77770a025f9de8d9e",
+        "android_client_info": {
+          "package_name": "com.quizeZine.example"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5ULJik8yQ05iYcppZng7xQrlXEGGD3-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
