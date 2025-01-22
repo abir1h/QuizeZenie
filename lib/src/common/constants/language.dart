@@ -34,7 +34,7 @@ class LanguageEn {
   String forgetPasswordText = "Forget Password?";
   String loginText = "Log In";
   String signUpTitleText = "Sign Up";
-  String signUpSubTitleText = "Want to evaluate your skills and share your learning feedbacks with everyone? Signup.";
+  String signUpSubTitleText = "Evaluate your skills and share your learning feedbacks with everyone.";
   String signUpText = "Create Account";
   String forgotPasswordTitleText = "Forget Password";
   String forgotPasswordSubTitleText = "Please enter your email address or mobile number to reset your password.";

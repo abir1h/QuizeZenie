@@ -1,52 +1,13 @@
-import 'package:co_learning_mobile_app/src/feature/serach/screens/search_screen.dart';
+import 'package:co_learning_mobile_app/src/feature/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../../feature/feedback_score/screens/feedback_score_details_screen.dart';
-import '../../feature/feedback_score/screens/feedback_score_screen.dart';
-import '../../feature/feedback_score/screens/give_feedback_score_screen.dart';
-import '../../feature/profile/screens/profile_screen.dart';
-import '../../feature/home/screens/home_screen.dart';
-import '../../feature/landing/screens/landing_screen.dart';
-import '../../feature/onboarding/screens/onboarding_screen.dart';
-import '../../feature/video/screens/my_video_screen.dart';
-import '../../feature/video/screens/video_details_screen.dart';
-import '../../feature/video/screens/video_record_screen.dart';
-import '../../feature/video/screens/video_upload_info_screen.dart';
-import '../../feature/shared/authentication/screens/sign_up_screen.dart';
-import '../../feature/shared/authentication/screens/signin_screen.dart';
-import '../../feature/shared/splash/presentation/screens/splash_screen.dart';
-import '../../feature/shared/authentication/screens/verify_otp_screen.dart';
-import '../../feature/shared/authentication/screens/forgot_password_screen.dart';
-import '../../feature/shared/authentication/screens/reset_password_screen.dart';
-import '../../feature/profile/screens/account_details.dart';
-import '../../feature/password/screens/change_password_screen.dart';
-import '../../feature/category_list/screens/category_wise_video_list.dart';
+
 
 class AppRoute {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   static const String splashScreen = "splashScreen";
-  static const String onboardingScreen = "onboardingScreen";
-  static const String landingScreen = "landingScreen";
-  static const String homeScreen = "homeScreen";
-  static const String signInScreen = "signInScreen";
-  static const String signUpScreen = "signUpScreen";
-  static const String videoUploadInfoScreen = "videoUploadInfoScreen";
-  static const String videoRecordScreen = "videoRecordScreen";
-  static const String forgotPasswordScreen = "forgotPasswordScreen";
-  static const String verifyOtpScreen = "verifyOtpScreen";
-  static const String resetPasswordScreen = "resetPasswordScreen";
-  static const String profileScreen = "profileScreen";
-  static const String accountDetailsScreen = "accountDetailsScreen";
-  static const String changePasswordScreen = "changePasswordScreen";
-  static const String myVideoScreen = "myVideoScreen";
-  static const String videoDetailsScreen = "videoDetailsScreen";
-  static const String categoryWiseVideoListScreen =
-      "categoryWiseVideoListScreen";
-  static const String searchScreen = "searchScreen";
-  static const String feedbackScoreScreen = "feedbackScoreScreen";
-  static const String feedbackScoreDetailsScreen = "feedbackScoreDetailsScreen";
-  static const String giveFeedbackScoreScreen = "giveFeedbackScoreScreen";
+
 }
 
 mixin RouteGenerator {
@@ -55,51 +16,10 @@ mixin RouteGenerator {
       builder: (context) {
         switch (setting.name) {
           ///StartUp
-          case AppRoute.splashScreen:
-            return const SplashScreen();
-          case AppRoute.onboardingScreen:
-            return const OnboardingScreen();
-          case AppRoute.landingScreen:
-            return LandingScreen();
-          case AppRoute.homeScreen:
-            return const HomeScreen();
-          case AppRoute.signInScreen:
-            return const SignInScreen();
-          case AppRoute.signUpScreen:
-            return const SignUpScreen();
-          case AppRoute.videoUploadInfoScreen:
-            return const VideoUploadInfoScreen();
-          case AppRoute.videoRecordScreen:
-            return const VideoRecordScreen();
-          case AppRoute.forgotPasswordScreen:
-            return const ForgotPasswordScreen();
-          case AppRoute.verifyOtpScreen:
-            return VerifyOtpScreen(arguments: setting.arguments);
-          case AppRoute.resetPasswordScreen:
-            return  ResetPasswordScreen(arguments: setting.arguments);
-          case AppRoute.profileScreen:
-            return const ProfileScreen();
-          case AppRoute.accountDetailsScreen:
-            return AccountDetailsScreen(arguments: setting.arguments);
-          case AppRoute.changePasswordScreen:
-            return const ChangePasswordScreen();
-          case AppRoute.categoryWiseVideoListScreen:
-            return CategoryWiseVideoListScreen(arguments: setting.arguments);
-          case AppRoute.myVideoScreen:
-            return const MyVideoScreen();
-          case AppRoute.videoDetailsScreen:
-            return VideoDetailsScreen(arguments: setting.arguments);
-          case AppRoute.searchScreen:
-            return const VideoSearchScreen();
-          case AppRoute.feedbackScoreScreen:
-            return FeedbackScoreScreen(arguments: setting.arguments);
-          case AppRoute.feedbackScoreDetailsScreen:
-            return FeedbackScoreDetailsScreen(arguments: setting.arguments);
-          case AppRoute.giveFeedbackScoreScreen:
-            return GiveFeedbackScoreScreen(arguments: setting.arguments);
+
 
           default:
-            return const SplashScreen();
+            return  SplashScreen();
         }
       },
     );
